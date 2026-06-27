@@ -5,6 +5,7 @@ import { PLANTS } from "../content/plants";
 import { localized, localizedList } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import heroImage from "../assets/approach-plants.jpg";
+import { buildSeoHead } from "../lib/seo";
 import { getServerLocale } from "../lib/locale-server";
 import { tServer } from "../lib/t-server";
 
@@ -12,12 +13,11 @@ export const Route = createFileRoute("/plantes-et-remedes")({
   loader: async () => ({ locale: await getServerLocale() }),
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
-    return {
-      meta: [
-        { title: tServer(loc, "seo.plantes.title") },
-        { name: "description", content: tServer(loc, "seo.plantes.description") },
-      ],
-    };
+    return buildSeoHead({
+      path: "/plantes-et-remedes",
+      title: tServer(loc, "seo.plantes.title"),
+      description: tServer(loc, "seo.plantes.description"),
+    });
   },
   component: PlantsPage,
 });

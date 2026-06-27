@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { findTherapy, localized, localizedList } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { CALENDLY_URL } from "../lib/config";
+import { buildSeoHead, SITE_URL } from "../lib/seo";
 import { getServerLocale } from "../lib/locale-server";
 
 const ICONS = {
@@ -22,16 +23,47 @@ export const Route = createFileRoute("/soins-et-therapies/$slug")({
   },
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
+    const therapy = loaderData?.therapy;
+    const slug = therapy?.slug ?? "";
+    const title = therapy ? `${localized(therapy.title, loc)} — Jabamiah` : "Soin — Jabamiah";
+    const description = therapy ? localized(therapy.short, loc) : "";
+    const head = buildSeoHead({ path: `/soins-et-therapies/${slug}`, title, description });
     return {
-      meta: [
-        {
-          title: `${loaderData?.therapy ? localized(loaderData.therapy.title, loc) : "Soin"} — Jabamiah`,
-        },
-        {
-          name: "description",
-          content: loaderData?.therapy ? localized(loaderData.therapy.short, loc) : "",
-        },
-      ],
+      ...head,
+      scripts: therapy
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Service",
+                name: localized(therapy.title, "fr"),
+                description: localized(therapy.short, "fr"),
+                provider: { "@type": "LocalBusiness", name: "Jabamiah", url: SITE_URL },
+                offers: {
+                  "@type": "Offer",
+                  price: "0",
+                  priceCurrency: "EUR",
+                  availability: "https://schema.org/InStock",
+                },
+                areaServed: "France",
+                url: `${SITE_URL}/soins-et-therapies/${slug}`,
+              }),
+            },
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
+                  { "@type": "ListItem", position: 2, name: "Soins & Thérapies", item: `${SITE_URL}/soins-et-therapies` },
+                  { "@type": "ListItem", position: 3, name: localized(therapy.title, "fr"), item: `${SITE_URL}/soins-et-therapies/${slug}` },
+                ],
+              }),
+            },
+          ]
+        : [],
     };
   },
   component: TherapyDetail,

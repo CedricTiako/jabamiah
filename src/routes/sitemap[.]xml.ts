@@ -13,6 +13,7 @@ const STATIC_PATHS = [
   { path: "/temoignages", priority: "0.7", changefreq: "monthly" as const },
   { path: "/blog", priority: "0.8", changefreq: "weekly" as const },
   { path: "/contact", priority: "0.7", changefreq: "yearly" as const },
+  { path: "/don", priority: "0.7", changefreq: "monthly" as const },
   { path: "/mentions-legales", priority: "0.3", changefreq: "yearly" as const },
   { path: "/politique-de-confidentialite", priority: "0.3", changefreq: "yearly" as const },
 ];

@@ -74,7 +74,72 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: ({ loaderData }) => {
     const locale = loaderData?.locale ?? "fr";
     const ogLocale = LOCALE_TO_OG[locale as keyof typeof LOCALE_TO_OG] ?? "fr_FR";
+    const SITE = "https://jabamiah.smartsolution-it.com";
     return {
+    scripts: [
+      // SSR lang attribute — runs before React hydration so crawlers see the right lang
+      { children: `document.documentElement.lang=${JSON.stringify(locale)};` },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": ["LocalBusiness", "HealthAndWellnessService"],
+          name: "Jabamiah",
+          description: "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
+          url: SITE,
+          telephone: "+33745155451",
+          email: "contact@jabamiah.eu",
+          image: `${SITE}/og-default.jpg`,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Forges-les-Eaux",
+            postalCode: "76440",
+            addressRegion: "Normandie",
+            addressCountry: "FR",
+          },
+          geo: { "@type": "GeoCoordinates", latitude: 49.6183, longitude: 1.5431 },
+          priceRange: "Gratuit",
+          areaServed: [
+            { "@type": "AdministrativeArea", name: "Normandie" },
+            { "@type": "Country", name: "France" },
+            "À distance — France & Europe",
+          ],
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: "Soins énergétiques et thérapies naturelles",
+            itemListElement: [
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Soins énergétiques" }, price: "0", priceCurrency: "EUR" },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Guérison par la pensée" }, price: "0", priceCurrency: "EUR" },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Plantes médicinales & remèdes naturels" }, price: "0", priceCurrency: "EUR" },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Harmonisation globale" }, price: "0", priceCurrency: "EUR" },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Développement spirituel" }, price: "0", priceCurrency: "EUR" },
+            ],
+          },
+          contactPoint: {
+            "@type": "ContactPoint",
+            telephone: "+33745155451",
+            contactType: "customer service",
+            availableLanguage: ["French", "English"],
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Jabamiah",
+          url: SITE,
+          description: "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites.",
+          inLanguage: ["fr", "en", "de", "es", "it", "nl", "pl", "pt"],
+          potentialAction: {
+            "@type": "SearchAction",
+            target: { "@type": "EntryPoint", urlTemplate: `${SITE}/blog?q={search_term_string}` },
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
+    ],
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

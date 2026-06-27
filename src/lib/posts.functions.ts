@@ -29,6 +29,7 @@ export interface PostDetail extends PostListItem {
   body: string | null;
   meta_description: string | null;
   locale: string;
+  updated_at?: string | null;
 }
 
 export const listPublishedPosts = createServerFn({ method: "GET" })
@@ -61,7 +62,7 @@ export const getPostBySlug = createServerFn({ method: "GET" })
     const sb = getPublicClient();
     const { data: post, error } = await sb
       .from("posts")
-      .select("id, slug, cover_image_url, published_at, post_translations(title, excerpt, body, meta_description, locale)")
+      .select("id, slug, cover_image_url, published_at, updated_at, post_translations(title, excerpt, body, meta_description, locale)")
       .eq("status", "published")
       .eq("slug", data.slug)
       .maybeSingle();
@@ -75,6 +76,7 @@ export const getPostBySlug = createServerFn({ method: "GET" })
       slug: post.slug,
       cover_image_url: post.cover_image_url,
       published_at: post.published_at,
+      updated_at: post.updated_at,
       title: t.title,
       excerpt: t.excerpt,
       body: t.body,

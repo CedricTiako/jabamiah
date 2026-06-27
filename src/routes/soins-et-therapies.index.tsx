@@ -5,6 +5,7 @@ import { THERAPIES, localized, type Therapy } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import heroImage from "../assets/hero-home.jpg";
 import { CALENDLY_URL } from "../lib/config";
+import { buildSeoHead } from "../lib/seo";
 import { getServerLocale } from "../lib/locale-server";
 import { tServer } from "../lib/t-server";
 
@@ -20,12 +21,11 @@ export const Route = createFileRoute("/soins-et-therapies/")({
   loader: async () => ({ locale: await getServerLocale() }),
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
-    return {
-      meta: [
-        { title: tServer(loc, "seo.soins.title") },
-        { name: "description", content: tServer(loc, "seo.soins.description") },
-      ],
-    };
+    return buildSeoHead({
+      path: "/soins-et-therapies",
+      title: tServer(loc, "seo.soins.title"),
+      description: tServer(loc, "seo.soins.description"),
+    });
   },
   component: TherapiesIndex,
 });

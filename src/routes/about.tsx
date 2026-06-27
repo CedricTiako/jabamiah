@@ -13,12 +13,86 @@ export const Route = createFileRoute("/about")({
   loader: async () => ({ locale: await getServerLocale() }),
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
-    return buildSeoHead({
+    const head = buildSeoHead({
       path: "/about",
       title: tServer(loc, "seo.about.title"),
       description: tServer(loc, "seo.about.description"),
       image: `${SITE_URL}${heroAbout}`,
     });
+    return {
+      ...head,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: "Jabamiah",
+            jobTitle: "Thérapeute holistique & guérisseur énergétique",
+            description: "Jabamiah accompagne ses patients grâce aux soins énergétiques, à la guérison par la pensée, aux plantes médicinales et à l'harmonisation spirituelle. Consultations 100% gratuites.",
+            url: SITE_URL,
+            telephone: "+33745155451",
+            email: "contact@jabamiah.eu",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Forges-les-Eaux",
+              postalCode: "76440",
+              addressRegion: "Normandie",
+              addressCountry: "FR",
+            },
+            knowsAbout: [
+              "Soins énergétiques",
+              "Guérison par la pensée",
+              "Plantes médicinales",
+              "Harmonisation des chakras",
+              "Développement spirituel",
+              "Médecine naturelle",
+            ],
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Les consultations de Jabamiah sont-elles vraiment gratuites ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Oui, absolument. Jabamiah n'a jamais voulu faire payer ses soins. L'aide doit rester accessible à toutes et tous, sans condition.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Comment prendre rendez-vous avec Jabamiah ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Vous pouvez réserver directement en ligne via Calendly, ou contacter Jabamiah par WhatsApp au 07 45 15 54 51, par téléphone ou par email à contact@jabamiah.eu.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Les séances avec Jabamiah sont-elles disponibles à distance ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Oui. Jabamiah propose des consultations en présentiel à Forges-les-Eaux (Normandie, 76440) et entièrement à distance, par téléphone ou visioconférence.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Combien de temps dure une séance avec Jabamiah ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Une séance dure en général entre 45 minutes et 1 heure, selon votre demande et vos besoins.",
+                },
+              },
+            ],
+          }),
+        },
+      ],
+    };
   },
   component: AboutPage,
 });

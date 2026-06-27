@@ -4,6 +4,7 @@ import { ArrowRight, Heart, Lock, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { getPublicSettings, type PublicSettings } from "../lib/settings.functions";
+import { buildSeoHead } from "../lib/seo";
 import { getServerLocale } from "../lib/locale-server";
 import { tServer } from "../lib/t-server";
 import { WHATSAPP_HREF } from "../lib/config";
@@ -20,10 +21,47 @@ export const Route = createFileRoute("/don")({
   },
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
+    const head = buildSeoHead({
+      path: "/don",
+      title: tServer(loc, "seo.donate.title"),
+      description: tServer(loc, "seo.donate.description"),
+    });
     return {
-      meta: [
-        { title: tServer(loc, "seo.donate.title") },
-        { name: "description", content: tServer(loc, "seo.donate.description") },
+      ...head,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Où vont les dons collectés par Jabamiah ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "100% des dons sont intégralement reversés à des associations partenaires et à la Ligue contre le Cancer. Aucune commission n'est prélevée.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Comment faire un don à Jabamiah ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Via PayPal ou carte bancaire (Visa, Mastercard) directement sur la page don. La cagnotte en ligne sera disponible très prochainement.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Les consultations sont gratuites, pourquoi faire un don ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Les soins sont et resteront toujours gratuits. Vos dons volontaires permettent de soutenir des causes humanitaires et la recherche contre le cancer. Aucune pression, aucune obligation.",
+                },
+              },
+            ],
+          }),
+        },
       ],
     };
   },

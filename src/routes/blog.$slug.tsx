@@ -35,6 +35,7 @@ export const Route = createFileRoute("/blog/$slug")({
                 description,
                 image: post.cover_image_url ?? undefined,
                 datePublished: post.published_at ?? undefined,
+                dateModified: post.updated_at ?? post.published_at ?? undefined,
                 author: { "@type": "Person", name: "Jabamiah" },
                 publisher: { "@type": "Organization", name: "Jabamiah" },
                 mainEntityOfPage: absoluteUrl(`/blog/${params.slug}`),
