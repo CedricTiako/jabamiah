@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
   Calendar,
   Compass,
   Ear,
+  Heart,
   HeartHandshake,
   Leaf,
   Mail,
@@ -211,18 +212,59 @@ function ApproachesSection() {
 function GagnoteSection() {
   const { t } = useTranslation();
   return (
-    <section className="bg-cream-warm py-20">
+    <section className="bg-forest py-20 text-cream">
       <div className="mx-auto max-w-4xl px-6 text-center">
-        <LeafDivider className="mb-8" />
-        <span className="eyebrow text-rose-text">{t("home.gagnoteEyebrow")}</span>
-        <h2 className="mt-4 font-serif text-3xl text-forest md:text-4xl">
-          {t("home.gagnoteTitle")} <Users className="ml-2 inline size-6 text-gold" aria-hidden="true" />
-        </h2>
-        <p className="mt-6 text-sm leading-relaxed text-earth/85 md:text-base">{t("home.gagnoteP1")}</p>
-        <p className="mt-4 text-sm leading-relaxed text-earth/85 md:text-base">{t("home.gagnoteP2")}</p>
-        <a href="/about" className="mt-8 inline-flex items-center gap-2 rounded-md border border-gold/30 bg-cream px-6 py-3 text-xs uppercase tracking-[0.18em] text-forest hover:border-gold hover:bg-cream-warm/60">
-          {t("home.gagnoteCta")} <ArrowRight className="size-4" />
-        </a>
+        <LeafDivider className="mb-8 text-gold" />
+        <span className="eyebrow text-gold">{t("home.gagnoteEyebrow")}</span>
+        <h2 className="mt-4 font-serif text-3xl md:text-4xl">{t("home.gagnoteTitle")}</h2>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
+          <div className="text-center">
+            <p className="font-serif text-3xl text-gold">100%</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.15em] text-cream/60">Gratuit</p>
+          </div>
+          <div className="hidden h-8 w-px bg-cream/20 sm:block" />
+          <div className="text-center">
+            <p className="font-serif text-3xl text-gold">
+              <Users className="inline size-7" aria-hidden="true" />
+            </p>
+            <p className="mt-1 text-xs uppercase tracking-[0.15em] text-cream/60">Pour vous</p>
+          </div>
+          <div className="hidden h-8 w-px bg-cream/20 sm:block" />
+          <div className="text-center">
+            <p className="font-serif text-3xl text-gold">♡</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.15em] text-cream/60">Solidarité</p>
+          </div>
+        </div>
+
+        <p className="mt-8 text-sm leading-relaxed text-cream/85 md:text-base">{t("home.gagnoteP1")}</p>
+        <p className="mt-4 text-sm leading-relaxed text-cream/85 md:text-base">{t("home.gagnoteP2")}</p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            to="/about"
+            className="inline-flex items-center gap-2 rounded-md border border-cream/30 px-6 py-3 text-xs uppercase tracking-[0.18em] text-cream hover:border-cream hover:bg-cream/10"
+          >
+            {t("home.gagnoteCta")} <ArrowRight className="size-4" />
+          </Link>
+          <Link
+            to="/don"
+            className="inline-flex items-center gap-2 rounded-md bg-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-forest hover:bg-gold-soft"
+          >
+            <Heart className="size-4" />
+            {t("home.gagnoteDonate")}
+          </Link>
+        </div>
+
+        <div className="mt-8 flex items-center justify-center gap-3 text-cream/40">
+          <span className="text-xs uppercase tracking-[0.12em]">Paiement via</span>
+          <span className="rounded border border-cream/20 px-3 py-1 text-xs font-bold tracking-wide text-cream/40">
+            PayPal
+          </span>
+          <span className="rounded border border-cream/20 px-3 py-1 text-xs font-bold tracking-wide text-cream/40">
+            VISA
+          </span>
+        </div>
       </div>
     </section>
   );

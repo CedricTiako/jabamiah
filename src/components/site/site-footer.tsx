@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { HeartHandshake, Mail, MessageCircle, Phone } from "lucide-react";
+import { Heart, HeartHandshake, Mail, MessageCircle, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Logo } from "./logo";
 import { EMAIL, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from "../../lib/config";
@@ -49,6 +49,16 @@ export function SiteFooter() {
             <HeartHandshake className="mt-0.5 size-4 text-gold" aria-hidden="true" />
             <span>{t("footer.engagementText")}</span>
           </p>
+
+          <div className="mt-6">
+            <Link
+              to="/don"
+              className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-2.5 text-xs uppercase tracking-[0.18em] text-forest hover:bg-gold-soft"
+            >
+              <Heart className="size-3.5" />
+              {t("footer.donate")}
+            </Link>
+          </div>
 
           <h3 className="eyebrow mt-8 mb-4 text-gold">{t("footer.follow")}</h3>
           <div className="flex items-center gap-3">

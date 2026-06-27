@@ -7,9 +7,8 @@ import { nl } from "../i18n/locales/nl";
 import { pl } from "../i18n/locales/pl";
 import { pt } from "../i18n/locales/pt";
 
-type Translation = typeof fr.translation;
-
-const resources: Record<string, { translation: Translation }> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const resources: Record<string, { translation: Record<string, any> }> = {
   fr, en, es, de, it, nl, pl, pt,
 };
 

@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politique-de-confidentialite'
 import { Route as PlantesEtRemedesRouteImport } from './routes/plantes-et-remedes'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as DonRouteImport } from './routes/don'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
@@ -49,6 +50,11 @@ const PlantesEtRemedesRoute = PlantesEtRemedesRouteImport.update({
 const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
   id: '/mentions-legales',
   path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonRoute = DonRouteImport.update({
+  id: '/don',
+  path: '/don',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
+  '/don': typeof DonRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
+  '/don': typeof DonRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
+  '/don': typeof DonRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/blog'
     | '/contact'
+    | '/don'
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/blog'
     | '/contact'
+    | '/don'
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/blog'
     | '/contact'
+    | '/don'
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BlogRoute: typeof BlogRouteWithChildren
   ContactRoute: typeof ContactRoute
+  DonRoute: typeof DonRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PlantesEtRemedesRoute: typeof PlantesEtRemedesRoute
   PolitiqueDeConfidentialiteRoute: typeof PolitiqueDeConfidentialiteRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/mentions-legales'
       fullPath: '/mentions-legales'
       preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/don': {
+      id: '/don'
+      path: '/don'
+      fullPath: '/don'
+      preLoaderRoute: typeof DonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -350,6 +370,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BlogRoute: BlogRouteWithChildren,
   ContactRoute: ContactRoute,
+  DonRoute: DonRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   PlantesEtRemedesRoute: PlantesEtRemedesRoute,
   PolitiqueDeConfidentialiteRoute: PolitiqueDeConfidentialiteRoute,

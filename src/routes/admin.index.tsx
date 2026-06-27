@@ -10,6 +10,7 @@ import {
   adminListContactMessages,
   checkIsAdmin,
 } from "../lib/posts.functions";
+import { adminGetSettings, adminUpdateSetting } from "../lib/settings.functions";
 import { SUPPORTED_LANGUAGES } from "../i18n";
 
 export const Route = createFileRoute("/admin/")({
@@ -217,8 +218,112 @@ function AdminDashboard({ onSignOut }: { onSignOut: () => void }) {
           )}
         </div>
 
+        <SettingsSection />
+
         <p className="mt-12 text-xs text-earth/50">{SUPPORTED_LANGUAGES.length} langues prises en charge</p>
       </div>
     </section>
+  );
+}
+
+function SettingsSection() {
+  const { t } = useTranslation();
+  const getSettings = useServerFn(adminGetSettings);
+  const updateSetting = useServerFn(adminUpdateSetting);
+
+  const { data: settings } = useQuery({
+    queryKey: ["admin-settings"],
+    queryFn: () => getSettings(),
+  });
+
+  const [paypalClientId, setPaypalClientId] = useState("");
+  const [donationAmounts, setDonationAmounts] = useState("5,10,20,50");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  useEffect(() => {
+    if (!settings) return;
+    setPaypalClientId(settings.paypal_client_id ?? "");
+    try {
+      const parsed = JSON.parse(settings.donation_amounts ?? "[5,10,20,50]") as number[];
+      setDonationAmounts(parsed.join(","));
+    } catch {
+      setDonationAmounts("5,10,20,50");
+    }
+  }, [settings]);
+
+  async function handleSave() {
+    setSaveStatus("saving");
+    try {
+      await updateSetting({ data: { key: "paypal_client_id", value: paypalClientId.trim() } });
+      const amounts = donationAmounts
+        .split(",")
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => !isNaN(n) && n > 0);
+      await updateSetting({ data: { key: "donation_amounts", value: JSON.stringify(amounts) } });
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2500);
+    } catch {
+      setSaveStatus("error");
+    }
+  }
+
+  const isConfigured = Boolean(settings?.paypal_client_id);
+
+  return (
+    <div className="mt-12">
+      <h2 className="font-serif text-2xl text-forest">{t("admin.settingsTitle")}</h2>
+      <div className="mt-4 rounded-xl bg-card p-6 ring-1 ring-gold/20">
+        <div className="space-y-5">
+          <label className="block">
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.paypalClientId")}</span>
+            <p className="mt-0.5 text-xs text-earth/60">{t("admin.paypalClientIdHint")}</p>
+            <input
+              type="text"
+              value={paypalClientId}
+              onChange={(e) => setPaypalClientId(e.target.value)}
+              placeholder="AZDxx… ou SB-xxx…"
+              className="mt-2 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 font-mono text-sm text-forest focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.donationAmounts")}</span>
+            <p className="mt-0.5 text-xs text-earth/60">{t("admin.donationAmountsHint")}</p>
+            <input
+              type="text"
+              value={donationAmounts}
+              onChange={(e) => setDonationAmounts(e.target.value)}
+              placeholder="5,10,20,50"
+              className="mt-2 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm text-forest focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </label>
+        </div>
+
+        <div className="mt-6 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saveStatus === "saving"}
+            className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.18em] text-cream hover:bg-forest-soft disabled:opacity-60"
+          >
+            {saveStatus === "saving" ? t("admin.saving") : t("admin.save")}
+          </button>
+          {saveStatus === "saved" && <p className="text-xs text-forest">{t("admin.settingsSaved")}</p>}
+          {saveStatus === "error" && <p className="text-xs text-red-700">{t("admin.settingsSaveError")}</p>}
+        </div>
+
+        <div className="mt-5">
+          {isConfigured ? (
+            <p className="rounded-md bg-forest/10 px-4 py-3 text-xs text-forest">
+              ✓ PayPal configuré — la page /don affiche le bouton de paiement.
+            </p>
+          ) : (
+            <p className="rounded-md bg-cream-warm px-4 py-3 text-xs text-earth/70">
+              ⚠ Aucun PayPal Client ID — la page /don affiche un placeholder « bientôt disponible ».
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
