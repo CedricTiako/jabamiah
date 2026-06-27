@@ -1,20 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import {
-  Facebook,
-  HeartHandshake,
-  Instagram,
-  Mail,
-  MessageCircle,
-  Phone,
-  Youtube,
-} from "lucide-react";
+import { HeartHandshake, Mail, MessageCircle, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Logo } from "./logo";
-
-const PHONE = "07 45 15 54 51";
-const PHONE_HREF = "tel:+33745155451";
-const WHATSAPP_HREF = "https://wa.me/33745155451";
-const EMAIL = "contact@jabamiah.eu";
+import { EMAIL, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from "../../lib/config";
 
 export function SiteFooter() {
   const { t } = useTranslation();
@@ -42,7 +30,7 @@ export function SiteFooter() {
               <Phone className="mt-0.5 size-4 text-gold" aria-hidden="true" />
               <a href={PHONE_HREF} className="text-cream/90 hover:text-gold">
                 {t("nav.contact")}
-                <span className="block text-xs text-cream/60">{PHONE}</span>
+                <span className="block text-xs text-cream/60">{PHONE_DISPLAY}</span>
               </a>
             </li>
             <li className="flex items-start gap-3">
@@ -64,20 +52,6 @@ export function SiteFooter() {
 
           <h3 className="eyebrow mt-8 mb-4 text-gold">{t("footer.follow")}</h3>
           <div className="flex items-center gap-3">
-            {([
-              { Icon: Facebook, label: "Facebook" },
-              { Icon: Instagram, label: "Instagram" },
-              { Icon: Youtube, label: "YouTube" },
-            ] as const).map(({ Icon, label }) => (
-              <a
-                key={label}
-                href="#"
-                aria-label={label}
-                className="rounded-full border border-gold/30 p-2 text-gold hover:bg-gold hover:text-forest"
-              >
-                <Icon className="size-4" />
-              </a>
-            ))}
             <a
               href={WHATSAPP_HREF}
               target="_blank"

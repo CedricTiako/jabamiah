@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { buildSeoHead } from "../lib/seo";
+import { CALENDLY_EMBED_URL, EMAIL, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
 
 export const Route = createFileRoute("/contact")({
   head: () =>
@@ -65,9 +66,9 @@ function ContactPage() {
         </div>
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <ContactCard icon={MessageCircle} label={t("contact.whatsapp")} value={t("contact.whatsappValue")} href="https://wa.me/33745155451" />
-          <ContactCard icon={Phone} label={t("contact.phone")} value="07 45 15 54 51" href="tel:+33745155451" />
-          <ContactCard icon={Mail} label={t("contact.email")} value="contact@jabamiah.eu" href="mailto:contact@jabamiah.eu" />
+          <ContactCard icon={MessageCircle} label={t("contact.whatsapp")} value={t("contact.whatsappValue")} href={WHATSAPP_HREF} />
+          <ContactCard icon={Phone} label={t("contact.phone")} value={PHONE_DISPLAY} href={PHONE_HREF} />
+          <ContactCard icon={Mail} label={t("contact.email")} value={EMAIL} href={`mailto:${EMAIL}`} />
           <ContactCard icon={MapPin} label={t("contact.location")} value={t("contact.locationValue")} />
         </div>
 
@@ -143,7 +144,7 @@ function ContactPage() {
             <h2 className="font-serif text-2xl text-forest md:text-3xl">{t("contact.calendarTitle")}</h2>
             <div className="mt-4 overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-gold/20">
               <iframe
-                src="https://calendly.com/eirl-omont/60min?embed_domain=jabamiah.eu&embed_type=Inline&hide_gdpr_banner=1&background_color=f5f0e6&text_color=2c3a24&primary_color=c4a661"
+                src={CALENDLY_EMBED_URL}
                 width="100%"
                 height="620"
                 frameBorder="0"

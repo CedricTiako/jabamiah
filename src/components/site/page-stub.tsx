@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Calendar } from "lucide-react";
+import { CALENDLY_URL } from "../../lib/config";
 
 type StubProps = {
   eyebrow: string;
@@ -16,7 +17,7 @@ export function PageStub({ eyebrow, title, description }: StubProps) {
         <p className="mt-6 text-base leading-relaxed text-earth/75">{description}</p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <a
-            href="https://calendly.com/eirl-omont/60min"
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-md bg-forest px-6 py-3 text-xs uppercase tracking-[0.18em] text-cream hover:bg-forest-soft"

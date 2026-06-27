@@ -4,8 +4,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Logo } from "./logo";
 import { LanguageSwitcher } from "./language-switcher";
-
-const CALENDLY_URL = "https://calendly.com/eirl-omont/60min";
+import { CALENDLY_URL } from "../../lib/config";
 
 export function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);

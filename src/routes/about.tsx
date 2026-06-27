@@ -5,8 +5,7 @@ import heroAbout from "../assets/hero-about.jpg";
 import forestPath from "../assets/forest-path.jpg";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { buildSeoHead, SITE_URL } from "../lib/seo";
-
-const CALENDLY_URL = "https://calendly.com/eirl-omont/60min";
+import { CALENDLY_URL } from "../lib/config";
 
 export const Route = createFileRoute("/about")({
   head: () =>
@@ -41,7 +40,7 @@ function AboutHero() {
     <section className="relative overflow-hidden bg-forest text-cream">
       <div className="absolute inset-0">
         <img src={heroAbout} alt="" width={1920} height={1280} className="size-full object-cover opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/55 to-forest/20" />
+        <div className="absolute inset-0 bg-linear-to-r from-forest/95 via-forest/55 to-forest/20" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">

@@ -3,8 +3,7 @@ import { ArrowLeft, Calendar, Compass, HeartHandshake, Leaf, Sparkles, Sun } fro
 import { useTranslation } from "react-i18next";
 import { findTherapy, localized, localizedList } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
-
-const CALENDLY_URL = "https://calendly.com/eirl-omont/60min";
+import { CALENDLY_URL } from "../lib/config";
 
 const ICONS = {
   sparkles: Sparkles,
@@ -45,7 +44,7 @@ function TherapyDetail() {
       <section className="relative overflow-hidden bg-forest text-cream">
         <div className="absolute inset-0">
           <img src={therapy.image} alt="" className="size-full object-cover opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/80 to-forest/50" />
+          <div className="absolute inset-0 bg-linear-to-r from-forest/95 via-forest/80 to-forest/50" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 py-20">
           <Link

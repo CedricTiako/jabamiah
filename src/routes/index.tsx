@@ -23,8 +23,7 @@ import approachHarmony from "../assets/approach-harmony.jpg";
 import approachSpirit from "../assets/approach-spirit.jpg";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { buildSeoHead, SITE_URL } from "../lib/seo";
-
-const CALENDLY_URL = "https://calendly.com/eirl-omont/60min";
+import { CALENDLY_URL, EMAIL, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -60,7 +59,7 @@ function HeroSection() {
     <section className="relative overflow-hidden bg-forest text-cream">
       <div className="absolute inset-0">
         <img src={heroImage} alt="Forêt lumineuse symbolisant l'harmonie et le soin énergétique" width={1920} height={1280} className="size-full object-cover opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/60 to-forest/30" />
+        <div className="absolute inset-0 bg-linear-to-r from-forest/95 via-forest/60 to-forest/30" />
       </div>
 
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-12 lg:py-28">
@@ -122,15 +121,15 @@ function HeroSection() {
             </a>
             <p className="mt-3 text-center text-xs text-cream/60">{t("home.heroPresentialOrRemote")}</p>
             <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-4 text-xs uppercase tracking-[0.15em] text-cream/70">
-              <a href="tel:+33745155451" className="flex flex-col items-center gap-1 hover:text-gold">
+              <a href={PHONE_HREF} className="flex flex-col items-center gap-1 hover:text-gold">
                 <Phone className="size-4 text-gold" aria-hidden="true" />
                 {t("contact.phone")}
               </a>
-              <a href="https://wa.me/33745155451" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-gold">
+              <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-gold">
                 <MessageCircle className="size-4 text-gold" aria-hidden="true" />
                 {t("contact.whatsapp")}
               </a>
-              <a href="mailto:contact@jabamiah.eu" className="flex flex-col items-center gap-1 hover:text-gold">
+              <a href={`mailto:${EMAIL}`} className="flex flex-col items-center gap-1 hover:text-gold">
                 <Mail className="size-4 text-gold" aria-hidden="true" />
                 {t("contact.email")}
               </a>
@@ -230,7 +229,7 @@ function QuoteSection() {
   return (
     <section className="relative overflow-hidden py-24">
       <img src={forestPath} alt="" width={1920} height={900} loading="lazy" className="absolute inset-0 size-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-forest/60 via-forest/40 to-forest/70" />
+      <div className="absolute inset-0 bg-linear-to-b from-forest/60 via-forest/40 to-forest/70" />
       <div className="relative mx-auto max-w-4xl px-6 text-center text-cream">
         <p className="font-serif text-2xl italic leading-relaxed md:text-3xl">{t("home.quote")}</p>
         <LeafDivider className="mt-6 text-gold" />

@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import { THERAPIES, localized, type Therapy } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import heroImage from "../assets/hero-home.jpg";
-
-const CALENDLY_URL = "https://calendly.com/eirl-omont/60min";
+import { CALENDLY_URL } from "../lib/config";
 
 const ICONS = {
   sparkles: Sparkles,
@@ -38,7 +37,7 @@ function TherapiesIndex() {
       <section className="relative overflow-hidden bg-forest text-cream">
         <div className="absolute inset-0">
           <img src={heroImage} alt="" className="size-full object-cover opacity-80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/70 to-forest/40" />
+          <div className="absolute inset-0 bg-linear-to-r from-forest/95 via-forest/70 to-forest/40" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
           <span className="eyebrow text-gold">{t("therapiesPage.eyebrow")}</span>
