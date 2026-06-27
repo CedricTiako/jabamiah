@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemoignagesRouteImport } from './routes/temoignages'
-import { Route as SoinsEtTherapiesRouteImport } from './routes/soins-et-therapies'
 import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politique-de-confidentialite'
 import { Route as PlantesEtRemedesRouteImport } from './routes/plantes-et-remedes'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
@@ -18,15 +17,12 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-therapies.index'
+import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-therapies.$slug'
 
 const TemoignagesRoute = TemoignagesRouteImport.update({
   id: '/temoignages',
   path: '/temoignages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SoinsEtTherapiesRoute = SoinsEtTherapiesRouteImport.update({
-  id: '/soins-et-therapies',
-  path: '/soins-et-therapies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PolitiqueDeConfidentialiteRoute =
@@ -65,6 +61,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SoinsEtTherapiesIndexRoute = SoinsEtTherapiesIndexRouteImport.update({
+  id: '/soins-et-therapies/',
+  path: '/soins-et-therapies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoinsEtTherapiesSlugRoute = SoinsEtTherapiesSlugRouteImport.update({
+  id: '/soins-et-therapies/$slug',
+  path: '/soins-et-therapies/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,8 +80,9 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
-  '/soins-et-therapies': typeof SoinsEtTherapiesRoute
   '/temoignages': typeof TemoignagesRoute
+  '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
+  '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,8 +92,9 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
-  '/soins-et-therapies': typeof SoinsEtTherapiesRoute
   '/temoignages': typeof TemoignagesRoute
+  '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
+  '/soins-et-therapies': typeof SoinsEtTherapiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,8 +105,9 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
-  '/soins-et-therapies': typeof SoinsEtTherapiesRoute
   '/temoignages': typeof TemoignagesRoute
+  '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
+  '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,8 +119,9 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
-    | '/soins-et-therapies'
     | '/temoignages'
+    | '/soins-et-therapies/$slug'
+    | '/soins-et-therapies/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -121,8 +131,9 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
-    | '/soins-et-therapies'
     | '/temoignages'
+    | '/soins-et-therapies/$slug'
+    | '/soins-et-therapies'
   id:
     | '__root__'
     | '/'
@@ -132,8 +143,9 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
-    | '/soins-et-therapies'
     | '/temoignages'
+    | '/soins-et-therapies/$slug'
+    | '/soins-et-therapies/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -144,8 +156,9 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PlantesEtRemedesRoute: typeof PlantesEtRemedesRoute
   PolitiqueDeConfidentialiteRoute: typeof PolitiqueDeConfidentialiteRoute
-  SoinsEtTherapiesRoute: typeof SoinsEtTherapiesRoute
   TemoignagesRoute: typeof TemoignagesRoute
+  SoinsEtTherapiesSlugRoute: typeof SoinsEtTherapiesSlugRoute
+  SoinsEtTherapiesIndexRoute: typeof SoinsEtTherapiesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -155,13 +168,6 @@ declare module '@tanstack/react-router' {
       path: '/temoignages'
       fullPath: '/temoignages'
       preLoaderRoute: typeof TemoignagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/soins-et-therapies': {
-      id: '/soins-et-therapies'
-      path: '/soins-et-therapies'
-      fullPath: '/soins-et-therapies'
-      preLoaderRoute: typeof SoinsEtTherapiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politique-de-confidentialite': {
@@ -213,6 +219,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/soins-et-therapies/': {
+      id: '/soins-et-therapies/'
+      path: '/soins-et-therapies'
+      fullPath: '/soins-et-therapies/'
+      preLoaderRoute: typeof SoinsEtTherapiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soins-et-therapies/$slug': {
+      id: '/soins-et-therapies/$slug'
+      path: '/soins-et-therapies/$slug'
+      fullPath: '/soins-et-therapies/$slug'
+      preLoaderRoute: typeof SoinsEtTherapiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -224,8 +244,9 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   PlantesEtRemedesRoute: PlantesEtRemedesRoute,
   PolitiqueDeConfidentialiteRoute: PolitiqueDeConfidentialiteRoute,
-  SoinsEtTherapiesRoute: SoinsEtTherapiesRoute,
   TemoignagesRoute: TemoignagesRoute,
+  SoinsEtTherapiesSlugRoute: SoinsEtTherapiesSlugRoute,
+  SoinsEtTherapiesIndexRoute: SoinsEtTherapiesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

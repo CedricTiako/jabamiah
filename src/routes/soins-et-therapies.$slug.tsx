@@ -38,7 +38,7 @@ function TherapyDetail() {
   const { therapy } = Route.useLoaderData();
   const { t, i18n } = useTranslation();
   const locale = (i18n.resolvedLanguage ?? "fr").slice(0, 2);
-  const Icon = ICONS[therapy.iconName];
+  const Icon = ICONS[therapy.iconName as keyof typeof ICONS];
 
   return (
     <>
