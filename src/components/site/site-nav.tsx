@@ -1,30 +1,33 @@
 import { Link } from "@tanstack/react-router";
 import { Calendar, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Logo } from "./logo";
+import { LanguageSwitcher } from "./language-switcher";
 
 const CALENDLY_URL = "https://calendly.com/eirl-omont/60min";
 
-const NAV_ITEMS = [
-  { to: "/", label: "Accueil" },
-  { to: "/about", label: "À propos" },
-  { to: "/soins-et-therapies", label: "Soins & Thérapies" },
-  { to: "/plantes-et-remedes", label: "Plantes & Remèdes" },
-  { to: "/temoignages", label: "Témoignages" },
-  { to: "/blog", label: "Blog" },
-  { to: "/contact", label: "Contact" },
-] as const;
-
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const items = [
+    { to: "/", label: t("nav.home") },
+    { to: "/about", label: t("nav.about") },
+    { to: "/soins-et-therapies", label: t("nav.soins") },
+    { to: "/plantes-et-remedes", label: t("nav.plantes") },
+    { to: "/temoignages", label: t("nav.temoignages") },
+    { to: "/blog", label: t("nav.blog") },
+    { to: "/contact", label: t("nav.contact") },
+  ] as const;
 
   return (
     <header className="sticky top-0 z-40 border-b border-gold/20 bg-cream/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
         <Logo />
 
-        <nav className="hidden items-center gap-7 xl:flex" aria-label="Navigation principale">
-          {NAV_ITEMS.map((item) => (
+        <nav className="hidden items-center gap-6 xl:flex" aria-label="Navigation">
+          {items.map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -37,28 +40,31 @@ export function SiteNav() {
           ))}
         </nav>
 
-        <a
-          href={CALENDLY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden items-center gap-3 rounded-md border border-gold/40 bg-cream-warm/60 px-4 py-2.5 text-left transition-all hover:border-gold hover:bg-cream-warm lg:flex"
-        >
-          <Calendar className="size-5 text-gold" aria-hidden="true" />
-          <span className="flex flex-col leading-tight">
-            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-forest">
-              Prendre rendez-vous
+        <div className="hidden items-center gap-3 lg:flex">
+          <LanguageSwitcher />
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 rounded-md border border-gold/40 bg-cream-warm/60 px-4 py-2.5 text-left transition-all hover:border-gold hover:bg-cream-warm"
+          >
+            <Calendar className="size-5 text-gold" aria-hidden="true" />
+            <span className="flex flex-col leading-tight">
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-forest">
+                {t("nav.ctaTitle")}
+              </span>
+              <span className="text-[0.65rem] uppercase tracking-[0.18em] text-gold">
+                {t("nav.ctaSub")}
+              </span>
             </span>
-            <span className="text-[0.65rem] uppercase tracking-[0.18em] text-gold">
-              Consultation gratuite
-            </span>
-          </span>
-        </a>
+          </a>
+        </div>
 
         <button
           type="button"
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => setOpen((v) => !v)}
           className="rounded-md border border-gold/30 p-2 text-forest xl:hidden"
-          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-label="Menu"
           aria-expanded={open}
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -66,12 +72,12 @@ export function SiteNav() {
       </div>
 
       {open ? (
-        <nav
-          className="border-t border-gold/20 bg-cream xl:hidden"
-          aria-label="Navigation mobile"
-        >
+        <nav className="border-t border-gold/20 bg-cream xl:hidden" aria-label="Mobile">
           <div className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
-            {NAV_ITEMS.map((item) => (
+            <div className="mb-2">
+              <LanguageSwitcher />
+            </div>
+            {items.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -89,7 +95,7 @@ export function SiteNav() {
               className="mt-4 flex items-center justify-center gap-2 rounded-md bg-forest px-4 py-3 text-sm uppercase tracking-[0.15em] text-cream"
             >
               <Calendar className="size-4" aria-hidden="true" />
-              Prendre rendez-vous
+              {t("nav.ctaTitle")}
             </a>
           </div>
         </nav>
