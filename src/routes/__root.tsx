@@ -87,6 +87,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
+      { name: "description", content: "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Basé à Forges-les-Eaux, en Norman" },
+      { property: "og:description", content: "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Basé à Forges-les-Eaux, en Norman" },
+      { name: "twitter:description", content: "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Basé à Forges-les-Eaux, en Norman" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/1P55axkM51aQq34kcmIP9HVh8bl1/social-images/social-1782555777785-jabamiah-social-image.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/1P55axkM51aQq34kcmIP9HVh8bl1/social-images/social-1782555777785-jabamiah-social-image.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
