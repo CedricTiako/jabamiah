@@ -53,6 +53,7 @@
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.5rem;
 
   /* Brand palette (OKLCH equivalents of the mockup colors) */
