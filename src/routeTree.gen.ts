@@ -19,9 +19,11 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-therapies.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-therapies.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
+import { Route as AdminPostsIdRouteImport } from './routes/admin.posts.$id'
 
 const TemoignagesRoute = TemoignagesRouteImport.update({
   id: '/temoignages',
@@ -74,6 +76,11 @@ const SoinsEtTherapiesIndexRoute = SoinsEtTherapiesIndexRouteImport.update({
   path: '/soins-et-therapies/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SoinsEtTherapiesSlugRoute = SoinsEtTherapiesSlugRouteImport.update({
   id: '/soins-et-therapies/$slug',
   path: '/soins-et-therapies/$slug',
@@ -89,6 +96,11 @@ const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   path: '/api/public/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPostsIdRoute = AdminPostsIdRouteImport.update({
+  id: '/admin/posts/$id',
+  path: '/admin/posts/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,7 +114,9 @@ export interface FileRoutesByFullPath {
   '/temoignages': typeof TemoignagesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
+  '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRoutesByTo {
@@ -117,7 +131,9 @@ export interface FileRoutesByTo {
   '/temoignages': typeof TemoignagesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/soins-et-therapies': typeof SoinsEtTherapiesIndexRoute
+  '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRoutesById {
@@ -133,7 +149,9 @@ export interface FileRoutesById {
   '/temoignages': typeof TemoignagesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
+  '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRouteTypes {
@@ -150,7 +168,9 @@ export interface FileRouteTypes {
     | '/temoignages'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
+    | '/admin/'
     | '/soins-et-therapies/'
+    | '/admin/posts/$id'
     | '/api/public/contact'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,7 +185,9 @@ export interface FileRouteTypes {
     | '/temoignages'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
+    | '/admin'
     | '/soins-et-therapies'
+    | '/admin/posts/$id'
     | '/api/public/contact'
   id:
     | '__root__'
@@ -180,7 +202,9 @@ export interface FileRouteTypes {
     | '/temoignages'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
+    | '/admin/'
     | '/soins-et-therapies/'
+    | '/admin/posts/$id'
     | '/api/public/contact'
   fileRoutesById: FileRoutesById
 }
@@ -195,7 +219,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemoignagesRoute: typeof TemoignagesRoute
   SoinsEtTherapiesSlugRoute: typeof SoinsEtTherapiesSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   SoinsEtTherapiesIndexRoute: typeof SoinsEtTherapiesIndexRoute
+  AdminPostsIdRoute: typeof AdminPostsIdRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
 }
 
@@ -271,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoinsEtTherapiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/soins-et-therapies/$slug': {
       id: '/soins-et-therapies/$slug'
       path: '/soins-et-therapies/$slug'
@@ -290,6 +323,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/contact'
       fullPath: '/api/public/contact'
       preLoaderRoute: typeof ApiPublicContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/posts/$id': {
+      id: '/admin/posts/$id'
+      path: '/admin/posts/$id'
+      fullPath: '/admin/posts/$id'
+      preLoaderRoute: typeof AdminPostsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -316,7 +356,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemoignagesRoute: TemoignagesRoute,
   SoinsEtTherapiesSlugRoute: SoinsEtTherapiesSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
   SoinsEtTherapiesIndexRoute: SoinsEtTherapiesIndexRoute,
+  AdminPostsIdRoute: AdminPostsIdRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
 }
 export const routeTree = rootRouteImport
