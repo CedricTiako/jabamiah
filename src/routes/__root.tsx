@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -126,6 +127,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    const lang = (i18n.resolvedLanguage ?? i18n.language ?? "fr").slice(0, 2);
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = lang;
+    }
+  }, [i18n.resolvedLanguage, i18n.language]);
 
   return (
     <QueryClientProvider client={queryClient}>
