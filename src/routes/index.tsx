@@ -11,7 +11,6 @@ import {
   MessageCircle,
   Phone,
   Sparkles,
-  Star,
   Sun,
   Users,
 } from "lucide-react";
@@ -57,11 +56,10 @@ function HomePage() {
 
 function HeroSection() {
   const { t } = useTranslation();
-  const heroItems = t("home.heroFreeItems", { returnObjects: true }) as string[];
   return (
     <section className="relative overflow-hidden bg-forest text-cream">
       <div className="absolute inset-0">
-        <img src={heroImage} alt="" width={1920} height={1280} className="size-full object-cover opacity-90" />
+        <img src={heroImage} alt="Forêt lumineuse symbolisant l'harmonie et le soin énergétique" width={1920} height={1280} className="size-full object-cover opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/60 to-forest/30" />
       </div>
 
@@ -100,62 +98,30 @@ function HeroSection() {
             </a>
           </div>
 
-          <div className="mt-10 flex items-center gap-4">
-            <div className="flex -space-x-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="size-9 rounded-full border-2 border-forest bg-gradient-to-br from-cream-warm to-gold/40" />
-              ))}
-            </div>
-            <div>
-              <div className="flex items-center gap-1 text-gold">
-                {[0, 1, 2, 3, 4].map((i) => <Star key={i} className="size-3 fill-gold" />)}
-              </div>
-              <p className="mt-1 text-sm text-cream/80">
-                {t("home.heroPeopleHelped")} <span className="text-gold">♡</span>
-                <span className="block text-xs text-cream/60">{t("home.heroWithCare")}</span>
-              </p>
-            </div>
-          </div>
+          <p className="mt-10 font-serif italic text-gold">
+            {t("home.heroPeopleHelped")} <span aria-hidden="true">♡</span>
+            <span className="ml-2 not-italic text-sm text-cream/60">{t("home.heroWithCare")}</span>
+          </p>
         </div>
 
-        <div className="space-y-5 lg:col-span-5">
-          <div className="rounded-xl border border-gold/30 bg-forest-deep/80 p-7 backdrop-blur">
-            <h2 className="flex items-center gap-2 font-serif text-xl text-cream">
-              <Leaf className="size-5 text-gold" aria-hidden="true" />
-              {t("home.heroFreeTitle")}
-            </h2>
-            <ul className="mt-5 space-y-3 text-sm text-cream/85">
-              {heroItems.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <Leaf className="mt-0.5 size-3.5 shrink-0 text-gold" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-5 flex items-center gap-3 border-t border-cream/10 pt-4 text-xs text-cream/70">
-              <span className="h-px w-6 bg-gold" />
-              <Sparkles className="size-3.5 text-gold" aria-hidden="true" />
-              {t("home.heroFreeFootnote")}
-            </div>
-          </div>
-
+        <div className="lg:col-span-5">
           <div className="rounded-xl border border-gold/30 bg-forest-deep/80 p-7 backdrop-blur">
             <div className="flex items-center gap-3 text-cream">
               <Calendar className="size-5 text-gold" aria-hidden="true" />
-              <h3 className="eyebrow text-cream">{t("home.heroBookEyebrow")}</h3>
+              <h2 className="eyebrow text-cream">{t("home.heroBookEyebrow")}</h2>
             </div>
             <p className="mt-3 text-sm text-gold">{t("home.heroBookSub")}</p>
             <a
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 flex items-center justify-between rounded-md bg-gradient-to-r from-gold to-gold-soft px-5 py-3.5 text-xs uppercase tracking-[0.18em] text-forest hover:opacity-95"
+              className="mt-5 flex items-center justify-between rounded-md bg-linear-to-r from-gold to-gold-soft px-5 py-3.5 text-xs uppercase tracking-[0.18em] text-forest hover:opacity-95"
             >
               <span className="font-semibold">{t("cta.bookNow")}</span>
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
             <p className="mt-3 text-center text-xs text-cream/60">{t("home.heroPresentialOrRemote")}</p>
-            <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-4 text-[0.65rem] uppercase tracking-[0.15em] text-cream/70">
+            <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-4 text-xs uppercase tracking-[0.15em] text-cream/70">
               <a href="tel:+33745155451" className="flex flex-col items-center gap-1 hover:text-gold">
                 <Phone className="size-4 text-gold" aria-hidden="true" />
                 {t("contact.phone")}
@@ -190,7 +156,7 @@ function ValuesStrip() {
                 <Icon className="size-7 text-gold" aria-hidden="true" />
               </div>
               <h3 className="eyebrow mt-5 text-forest">{value.title}</h3>
-              <p className="mt-2 max-w-[16ch] text-xs leading-relaxed text-earth/70">{value.text}</p>
+              <p className="mt-2 max-w-[18ch] text-xs leading-relaxed text-earth/70">{value.text}</p>
             </div>
           );
         })}
@@ -212,7 +178,7 @@ function ApproachesSection() {
           <LeafDivider className="mt-6" />
         </div>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
           {approaches.map((item, idx) => {
             const Icon = APPROACH_ICONS[idx] ?? Sparkles;
             const image = APPROACH_IMAGES[idx] ?? approachEnergy;
@@ -242,15 +208,16 @@ function ApproachesSection() {
 function GagnoteSection() {
   const { t } = useTranslation();
   return (
-    <section className="bg-rose-soft/60 py-20">
+    <section className="bg-cream-warm py-20">
       <div className="mx-auto max-w-4xl px-6 text-center">
-        <span className="eyebrow text-[#c46868]">{t("home.gagnoteEyebrow")}</span>
+        <LeafDivider className="mb-8" />
+        <span className="eyebrow text-rose-text">{t("home.gagnoteEyebrow")}</span>
         <h2 className="mt-4 font-serif text-3xl text-forest md:text-4xl">
           {t("home.gagnoteTitle")} <Users className="ml-2 inline size-6 text-gold" aria-hidden="true" />
         </h2>
         <p className="mt-6 text-sm leading-relaxed text-earth/85 md:text-base">{t("home.gagnoteP1")}</p>
         <p className="mt-4 text-sm leading-relaxed text-earth/85 md:text-base">{t("home.gagnoteP2")}</p>
-        <a href="/about" className="mt-8 inline-flex items-center gap-2 rounded-md border border-rose-soft bg-cream px-6 py-3 text-xs uppercase tracking-[0.18em] text-[#c46868] hover:bg-rose-soft/40">
+        <a href="/about" className="mt-8 inline-flex items-center gap-2 rounded-md border border-gold/30 bg-cream px-6 py-3 text-xs uppercase tracking-[0.18em] text-forest hover:border-gold hover:bg-cream-warm/60">
           {t("home.gagnoteCta")} <ArrowRight className="size-4" />
         </a>
       </div>

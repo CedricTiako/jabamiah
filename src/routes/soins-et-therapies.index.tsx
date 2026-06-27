@@ -37,7 +37,7 @@ function TherapiesIndex() {
     <>
       <section className="relative overflow-hidden bg-forest text-cream">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="" className="size-full object-cover opacity-70" />
+          <img src={heroImage} alt="" className="size-full object-cover opacity-80" />
           <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/70 to-forest/40" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">

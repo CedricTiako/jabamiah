@@ -1,10 +1,10 @@
-export const pl = {
+﻿export const pl = {
   translation: {
     banner: {
       gratuit: "Bezpłatne konsultacje energetyczne po umówieniu",
       solidaire: "Skarbonka solidarnościowa: Twoje darowizny wspierają potrzebujących",
     },
-    nav: { home: "Strona główna", about: "O mnie", soins: "Terapie & Zabiegi", plantes: "Rośliny & Remedia", temoignages: "Świadectwa", blog: "Blog", contact: "Kontakt", ctaTitle: "Umów spotkanie", ctaSub: "Bezpłatna konsultacja", languageLabel: "Język" },
+    nav: { home: "Strona główna", about: "O mnie", approches: "Podejścia", soins: "Terapie & Zabiegi", plantes: "Rośliny & Remedia", temoignages: "Świadectwa", blog: "Blog", contact: "Kontakt", ctaTitle: "Umów spotkanie", ctaSub: "Bezpłatna konsultacja", languageLabel: "Język" },
     cta: { bookNow: "Zarezerwuj teraz", bookAppointment: "Umów spotkanie", freeConsult: "Bezpłatna konsultacja", learnMore: "Dowiedz się więcej", discoverApproaches: "Poznaj moje podejścia" },
     footer: { tagline: "Miłość, światło i uzdrowienie są w każdym z nas. Towarzyszę Ci na tej drodze z życzliwością.", consultations: "Konsultacje", free: "Bezpłatne", byAppt: "Po umówieniu", contactRapide: "Szybki kontakt", whatsappSub: "Bezpośrednia wiadomość", engagement: "Zaangażowanie", engagementText: "Słuchanie, życzliwość i poufność w sercu każdej konsultacji.", follow: "Śledź mnie", copyright: "Medycyna równoległa. Wszelkie prawa zastrzeżone.", legal: "Informacje prawne", privacy: "Polityka prywatności" },
     home: {
@@ -70,7 +70,8 @@ export const pl = {
       miniConfidential: { title: "Poufność", text: "Nasze rozmowy zostają między nami." },
       miniListening: { title: "Szczere słuchanie", text: "Bez osądu, w Twoim tempie." },
       miniFree: { title: "Zawsze bezpłatnie", text: "Bez wymaganego wkładu." },
-      quote: "„Dobro, które dziś czynisz, zawsze powraca do Twojej duszy.”",
+      quote: '„Dobro, które dziś czynisz, zawsze powraca do Twojej duszy.”',
+      quoteFooter: '„Miłość, którą dajesz, zawsze wraca, przemieniona w światło.”',
     },
     contact: {
       eyebrow: "Kontakt", title: "Porozmawiajmy",

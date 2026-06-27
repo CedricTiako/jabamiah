@@ -46,6 +46,7 @@
   --color-cream-warm: var(--cream-warm);
   --color-earth: var(--earth);
   --color-rose-soft: var(--rose-soft);
+  --color-rose-text: var(--rose-text);
 
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
@@ -64,6 +65,7 @@
   --cream-warm: oklch(0.93 0.025 80);      /* cartes / encarts crème */
   --earth: oklch(0.28 0.025 60);           /* texte foncé brun */
   --rose-soft: oklch(0.91 0.035 30);       /* #F4D7CE bandeau solidaire */
+  --rose-text: oklch(0.52 0.10 25);        /* rouge rosé lisible sur fond clair */
 
   /* shadcn tokens mapped onto Jabamiah palette */
   --background: var(--cream);
@@ -158,16 +160,3 @@
   }
 }
 
-@keyframes gentle-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@utility animate-float {
-  animation: gentle-float 5s ease-in-out infinite;
-}

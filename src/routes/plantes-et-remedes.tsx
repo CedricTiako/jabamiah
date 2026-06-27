@@ -27,7 +27,7 @@ function PlantsPage() {
     <>
       <section className="relative overflow-hidden bg-forest text-cream">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="" className="size-full object-cover opacity-60" />
+          <img src={heroImage} alt="" className="size-full object-cover opacity-80" />
           <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/75 to-forest/45" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
@@ -46,13 +46,13 @@ function PlantsPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {PLANTS.map((plant) => (
-              <article key={plant.slug} className="overflow-hidden rounded-lg bg-card ring-1 ring-gold/20">
+              <article key={plant.slug} className="group overflow-hidden rounded-lg bg-card ring-1 ring-gold/20 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-forest/10">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
                     src={plant.image}
                     alt={localized(plant.commonName, locale)}
                     loading="lazy"
-                    className="size-full object-cover"
+                    className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
                 <div className="p-5">
@@ -64,7 +64,7 @@ function PlantsPage() {
                       {localizedList(plant.properties, locale).map((prop) => (
                         <li
                           key={prop}
-                          className="rounded-full bg-cream-warm px-3 py-1 text-[0.7rem] text-forest ring-1 ring-gold/20"
+                          className="rounded-full bg-cream-warm px-3 py-1 text-xs text-forest ring-1 ring-gold/20"
                         >
                           {prop}
                         </li>

@@ -4,7 +4,7 @@ export const es = {
       gratuit: "Consultas energéticas gratuitas con cita previa",
       solidaire: "Bote solidario: tus donativos ayudan a quienes lo necesitan",
     },
-    nav: { home: "Inicio", about: "Acerca de", soins: "Cuidados & Terapias", plantes: "Plantas & Remedios", temoignages: "Testimonios", blog: "Blog", contact: "Contacto", ctaTitle: "Pedir cita", ctaSub: "Consulta gratuita", languageLabel: "Idioma" },
+    nav: { home: "Inicio", about: "Acerca de", approches: "Enfoques", soins: "Cuidados & Terapias", plantes: "Plantas & Remedios", temoignages: "Testimonios", blog: "Blog", contact: "Contacto", ctaTitle: "Pedir cita", ctaSub: "Consulta gratuita", languageLabel: "Idioma" },
     cta: { bookNow: "Reservar ahora", bookAppointment: "Pedir cita", freeConsult: "Consulta gratuita", learnMore: "Saber más", discoverApproaches: "Descubrir mis enfoques" },
     footer: { tagline: "El amor, la luz y la sanación están en cada uno de nosotros. Te acompaño en este camino con bondad.", consultations: "Consultas", free: "Gratuitas", byAppt: "Con cita", contactRapide: "Contacto rápido", whatsappSub: "Mensaje directo", engagement: "Compromiso", engagementText: "Escucha, bondad y confidencialidad en el corazón de cada consulta.", follow: "Sígueme", copyright: "Medicina paralela. Todos los derechos reservados.", legal: "Aviso legal", privacy: "Política de privacidad" },
     home: {
@@ -71,6 +71,7 @@ export const es = {
       miniListening: { title: "Escucha sincera", text: "Sin juicio, a tu ritmo." },
       miniFree: { title: "Siempre gratuito", text: "Sin contribución obligatoria." },
       quote: "«El bien que haces hoy siempre regresa a tu alma.»",
+      quoteFooter: "«El amor que das siempre regresa, transformado en luz.»",
     },
     contact: {
       eyebrow: "Contacto", title: "Hablemos juntos",

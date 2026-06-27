@@ -4,7 +4,7 @@ export const it = {
       gratuit: "Consulenze energetiche gratuite su appuntamento",
       solidaire: "Cassetta solidale: le tue donazioni aiutano chi ne ha bisogno",
     },
-    nav: { home: "Home", about: "Chi sono", soins: "Cure & Terapie", plantes: "Piante & Rimedi", temoignages: "Testimonianze", blog: "Blog", contact: "Contatti", ctaTitle: "Prenota un appuntamento", ctaSub: "Consulenza gratuita", languageLabel: "Lingua" },
+    nav: { home: "Home", about: "Chi sono", approches: "Approcci", soins: "Cure & Terapie", plantes: "Piante & Rimedi", temoignages: "Testimonianze", blog: "Blog", contact: "Contatti", ctaTitle: "Prenota un appuntamento", ctaSub: "Consulenza gratuita", languageLabel: "Lingua" },
     cta: { bookNow: "Prenota ora", bookAppointment: "Prenota un appuntamento", freeConsult: "Consulenza gratuita", learnMore: "Scopri di più", discoverApproaches: "Scopri i miei approcci" },
     footer: { tagline: "Amore, luce e guarigione sono in ognuno di noi. Ti accompagno con dolcezza su questo cammino.", consultations: "Consulenze", free: "Gratuite", byAppt: "Su appuntamento", contactRapide: "Contatto rapido", whatsappSub: "Messaggio diretto", engagement: "Impegno", engagementText: "Ascolto, gentilezza e riservatezza al cuore di ogni consulenza.", follow: "Seguimi", copyright: "Medicina parallela. Tutti i diritti riservati.", legal: "Note legali", privacy: "Privacy policy" },
     home: {
@@ -71,6 +71,7 @@ export const it = {
       miniListening: { title: "Ascolto sincero", text: "Senza giudizio, al tuo ritmo." },
       miniFree: { title: "Sempre gratuito", text: "Nessun contributo richiesto." },
       quote: "«Il bene che fai oggi ritorna sempre alla tua anima.»",
+      quoteFooter: "«L'amore che doni ritorna sempre, trasformato in luce.»",
     },
     contact: {
       eyebrow: "Contatti", title: "Parliamo insieme",

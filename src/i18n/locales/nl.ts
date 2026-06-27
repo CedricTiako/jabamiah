@@ -1,10 +1,10 @@
-export const nl = {
+﻿export const nl = {
   translation: {
     banner: {
       gratuit: "Gratis energetische consulten op afspraak",
       solidaire: "Solidariteitspot: jouw giften helpen wie het nodig heeft",
     },
-    nav: { home: "Home", about: "Over mij", soins: "Behandelingen & Therapieën", plantes: "Planten & Remedies", temoignages: "Getuigenissen", blog: "Blog", contact: "Contact", ctaTitle: "Afspraak maken", ctaSub: "Gratis consult", languageLabel: "Taal" },
+    nav: { home: "Home", about: "Over mij", approches: "Aanpak", soins: "Behandelingen & Therapieën", plantes: "Planten & Remedies", temoignages: "Getuigenissen", blog: "Blog", contact: "Contact", ctaTitle: "Afspraak maken", ctaSub: "Gratis consult", languageLabel: "Taal" },
     cta: { bookNow: "Nu boeken", bookAppointment: "Afspraak maken", freeConsult: "Gratis consult", learnMore: "Meer weten", discoverApproaches: "Ontdek mijn aanpak" },
     footer: { tagline: "Liefde, licht en heling wonen in ieder van ons. Ik begeleid je liefdevol op dit pad.", consultations: "Consulten", free: "Gratis", byAppt: "Op afspraak", contactRapide: "Snel contact", whatsappSub: "Direct bericht", engagement: "Toewijding", engagementText: "Luisteren, vriendelijkheid en vertrouwelijkheid staan centraal bij elk consult.", follow: "Volg mij", copyright: "Parallelle geneeskunde. Alle rechten voorbehouden.", legal: "Juridische info", privacy: "Privacybeleid" },
     home: {
@@ -70,7 +70,8 @@ export const nl = {
       miniConfidential: { title: "Vertrouwelijkheid", text: "Onze gesprekken blijven tussen ons." },
       miniListening: { title: "Oprecht luisteren", text: "Zonder oordeel, op jouw tempo." },
       miniFree: { title: "Altijd gratis", text: "Geen bijdrage vereist." },
-      quote: "„Het goede dat je vandaag doet, keert altijd terug naar je ziel.”",
+      quote: '„Het goede dat je vandaag doet, keert altijd terug naar je ziel.”',
+      quoteFooter: '„De liefde die je geeft keert altijd terug, omgevormd tot licht.”',
     },
     contact: {
       eyebrow: "Contact", title: "Laten we praten",

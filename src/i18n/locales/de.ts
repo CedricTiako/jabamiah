@@ -1,10 +1,10 @@
-export const de = {
+﻿export const de = {
   translation: {
     banner: {
       gratuit: "Kostenlose Energie-Konsultationen nach Vereinbarung",
       solidaire: "Solidaritätstopf: Ihre Spenden unterstützen Bedürftige",
     },
-    nav: { home: "Startseite", about: "Über mich", soins: "Behandlungen & Therapien", plantes: "Pflanzen & Heilmittel", temoignages: "Erfahrungen", blog: "Blog", contact: "Kontakt", ctaTitle: "Termin vereinbaren", ctaSub: "Kostenlose Beratung", languageLabel: "Sprache" },
+    nav: { home: "Startseite", about: "Über mich", approches: "Ansätze", soins: "Behandlungen & Therapien", plantes: "Pflanzen & Heilmittel", temoignages: "Erfahrungen", blog: "Blog", contact: "Kontakt", ctaTitle: "Termin vereinbaren", ctaSub: "Kostenlose Beratung", languageLabel: "Sprache" },
     cta: { bookNow: "Jetzt buchen", bookAppointment: "Termin vereinbaren", freeConsult: "Kostenlose Beratung", learnMore: "Mehr erfahren", discoverApproaches: "Meine Ansätze entdecken" },
     footer: { tagline: "Liebe, Licht und Heilung wohnen in jedem von uns. Ich begleite Sie liebevoll auf diesem Weg.", consultations: "Konsultationen", free: "Kostenlos", byAppt: "Nach Vereinbarung", contactRapide: "Schnellkontakt", whatsappSub: "Direkte Nachricht", engagement: "Engagement", engagementText: "Zuhören, Mitgefühl und Vertraulichkeit stehen im Mittelpunkt jeder Konsultation.", follow: "Folgen Sie mir", copyright: "Parallelmedizin. Alle Rechte vorbehalten.", legal: "Impressum", privacy: "Datenschutzerklärung" },
     home: {
@@ -38,7 +38,7 @@ export const de = {
       gagnoteP1: "Ich wollte nie Geld für meine Behandlungen verlangen. Hilfe muss für alle zugänglich bleiben, ohne Bedingungen.",
       gagnoteP2: "Wenn Sie möchten, können Sie sich am Solidaritätstopf beteiligen: Freie Spenden helfen, jene zu begleiten, die es am meisten brauchen.",
       gagnoteCta: "Mehr über den Ansatz erfahren",
-      quote: "„Das Gute, das du heute tust, kehrt immer zu deiner Seele zurück.“",
+      quote: '„Das Gute, das du heute tust, kehrt immer zu deiner Seele zurück.”',
     },
     about: {
       heroEyebrow: "Wer ich bin", heroTitle1: "Ein Weg des Herzens", heroTitle2: "im Dienst des Menschen.",
@@ -70,7 +70,8 @@ export const de = {
       miniConfidential: { title: "Vertraulichkeit", text: "Unsere Gespräche bleiben unter uns." },
       miniListening: { title: "Aufrichtiges Zuhören", text: "Ohne Urteil, in Ihrem Tempo." },
       miniFree: { title: "Immer kostenlos", text: "Kein Beitrag erforderlich." },
-      quote: "„Das Gute, das du heute tust, kehrt immer zu deiner Seele zurück.“",
+      quote: '„Das Gute, das du heute tust, kehrt immer zu deiner Seele zurück.”',
+      quoteFooter: '„Die Liebe, die du gibst, kehrt immer zurück, verwandelt in Licht.”',
     },
     contact: {
       eyebrow: "Kontakt", title: "Lassen Sie uns sprechen",

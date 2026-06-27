@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { listPublishedPosts } from "../lib/posts.functions";
 import { buildSeoHead } from "../lib/seo";
+import { LeafDivider } from "../components/site/leaf-divider";
 
 export const Route = createFileRoute("/blog")({
   head: () => buildSeoHead({
@@ -24,23 +26,29 @@ function BlogIndex() {
   });
 
   return (
-    <section className="bg-cream py-20">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="text-center">
+    <>
+      <section className="relative overflow-hidden bg-forest text-cream">
+        <div className="absolute inset-0 bg-linear-to-b from-forest-deep/90 to-forest/80" />
+        <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
           <span className="eyebrow text-gold">{t("blog.eyebrow")}</span>
-          <h1 className="mt-4 font-serif text-4xl text-forest md:text-5xl">{t("blog.title")}</h1>
-          <p className="mt-4 mx-auto max-w-xl text-sm text-earth/75">{t("blog.subtitle")}</p>
+          <h1 className="mt-6 font-serif text-5xl leading-[1.05] md:text-6xl">{t("blog.title")}</h1>
+          <p className="mx-auto mt-6 max-w-xl text-base text-cream/85">{t("blog.subtitle")}</p>
+          <LeafDivider className="mt-8 text-gold" />
         </div>
+      </section>
 
-        <div className="mt-14">
+      <section className="bg-cream py-20">
+        <div className="mx-auto max-w-6xl px-6">
           {isLoading ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {[0,1,2].map((i) => (
+              {[0, 1, 2].map((i) => (
                 <div key={i} className="h-72 animate-pulse rounded-xl bg-cream-warm" />
               ))}
             </div>
           ) : !posts || posts.length === 0 ? (
-            <p className="text-center text-earth/70">{t("blog.noPosts")}</p>
+            <div className="mx-auto max-w-md py-16 text-center">
+              <p className="font-serif text-xl italic text-earth/60">{t("blog.noPosts")}</p>
+            </div>
           ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
@@ -55,10 +63,10 @@ function BlogIndex() {
                       src={post.cover_image_url}
                       alt=""
                       loading="lazy"
-                      className="aspect-[16/10] w-full object-cover"
+                      className="aspect-16/10 w-full object-cover"
                     />
                   ) : (
-                    <div className="aspect-[16/10] w-full bg-gradient-to-br from-forest-soft to-forest-deep" />
+                    <div className="aspect-16/10 w-full bg-linear-to-br from-forest-soft to-forest-deep" />
                   )}
                   <div className="flex flex-1 flex-col p-6">
                     {post.published_at && (
@@ -72,8 +80,9 @@ function BlogIndex() {
                     {post.excerpt && (
                       <p className="mt-3 line-clamp-3 text-sm text-earth/75">{post.excerpt}</p>
                     )}
-                    <span className="mt-6 text-xs uppercase tracking-[0.18em] text-forest">
-                      {t("blog.readMore")} →
+                    <span className="mt-6 inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.18em] text-forest">
+                      {t("blog.readMore")}
+                      <ArrowRight className="size-3.5" aria-hidden="true" />
                     </span>
                   </div>
                 </Link>
@@ -81,7 +90,7 @@ function BlogIndex() {
             </div>
           )}
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import {
-  Calendar,
   Facebook,
   HeartHandshake,
   Instagram,
@@ -21,7 +20,7 @@ export function SiteFooter() {
   const { t } = useTranslation();
   return (
     <footer className="relative bg-forest text-cream">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/40 to-transparent" />
 
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
@@ -29,23 +28,7 @@ export function SiteFooter() {
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-cream/70">{t("footer.tagline")}</p>
         </div>
 
-        <div className="lg:col-span-2">
-          <h3 className="eyebrow mb-5 text-gold">{t("footer.consultations")}</h3>
-          <a
-            href="https://calendly.com/eirl-omont/60min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-start gap-3 text-sm text-cream/90 transition-colors hover:text-gold"
-          >
-            <Calendar className="mt-0.5 size-4 text-gold" aria-hidden="true" />
-            <span>
-              {t("footer.free")}
-              <span className="block text-xs text-cream/60">{t("footer.byAppt")}</span>
-            </span>
-          </a>
-        </div>
-
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-5">
           <h3 className="eyebrow mb-5 text-gold">{t("footer.contactRapide")}</h3>
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-3">
@@ -81,11 +64,15 @@ export function SiteFooter() {
 
           <h3 className="eyebrow mt-8 mb-4 text-gold">{t("footer.follow")}</h3>
           <div className="flex items-center gap-3">
-            {[Facebook, Instagram, Youtube].map((Icon, idx) => (
+            {([
+              { Icon: Facebook, label: "Facebook" },
+              { Icon: Instagram, label: "Instagram" },
+              { Icon: Youtube, label: "YouTube" },
+            ] as const).map(({ Icon, label }) => (
               <a
-                key={idx}
+                key={label}
                 href="#"
-                aria-label={Icon.displayName ?? "social"}
+                aria-label={label}
                 className="rounded-full border border-gold/30 p-2 text-gold hover:bg-gold hover:text-forest"
               >
                 <Icon className="size-4" />
@@ -95,7 +82,7 @@ export function SiteFooter() {
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="WhatsApp"
+              aria-label="WhatsApp — Envoyer un message"
               className="rounded-full border border-gold/30 p-2 text-gold hover:bg-gold hover:text-forest"
             >
               <MessageCircle className="size-4" />
@@ -105,7 +92,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-cream/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 text-[0.7rem] uppercase tracking-[0.18em] text-cream/60 md:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 text-xs uppercase tracking-[0.15em] text-cream/60 md:flex-row">
           <p>© {new Date().getFullYear()} Jabamiah — {t("footer.copyright")}</p>
           <div className="flex flex-wrap items-center justify-center gap-6">
             <Link to="/mentions-legales" className="hover:text-gold">{t("footer.legal")}</Link>

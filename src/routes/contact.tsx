@@ -72,35 +72,61 @@ function ContactPage() {
         </div>
 
         <div className="mt-16 grid gap-10 lg:grid-cols-5">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <h2 className="font-serif text-2xl text-forest md:text-3xl">{t("contact.formTitle")}</h2>
             <p className="mt-2 text-sm text-earth/70">{t("contact.formSubtitle")}</p>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate aria-describedby="contact-form-status">
               <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
               <label className="block">
                 <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formName")}</span>
-                <input name="name" type="text" required minLength={2} className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  minLength={2}
+                  aria-required="true"
+                  className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                />
               </label>
               <label className="block">
                 <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formEmail")}</span>
-                <input name="email" type="email" required className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  aria-required="true"
+                  className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                />
               </label>
               <label className="block">
                 <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formSubject")}</span>
-                <input name="subject" type="text" className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+                <input
+                  name="subject"
+                  type="text"
+                  className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                />
               </label>
               <label className="block">
                 <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formMessage")}</span>
-                <textarea name="message" required minLength={10} rows={6} className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+                <textarea
+                  name="message"
+                  required
+                  minLength={10}
+                  rows={6}
+                  aria-required="true"
+                  className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                />
               </label>
 
-              {status === "error" && errorMsg && (
-                <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMsg}</p>
-              )}
-              {status === "success" && (
-                <p className="rounded-md bg-forest/10 px-3 py-2 text-sm text-forest">{t("contact.formSuccess")}</p>
-              )}
+              <div id="contact-form-status" aria-live="polite">
+                {status === "error" && errorMsg && (
+                  <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMsg}</p>
+                )}
+                {status === "success" && (
+                  <p className="rounded-md bg-forest/10 px-3 py-2 text-sm text-forest">{t("contact.formSuccess")}</p>
+                )}
+              </div>
 
               <button
                 type="submit"
@@ -113,13 +139,13 @@ function ContactPage() {
             </form>
           </div>
 
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-2">
             <h2 className="font-serif text-2xl text-forest md:text-3xl">{t("contact.calendarTitle")}</h2>
             <div className="mt-4 overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-gold/20">
               <iframe
                 src="https://calendly.com/eirl-omont/60min?embed_domain=jabamiah.eu&embed_type=Inline&hide_gdpr_banner=1&background_color=f5f0e6&text_color=2c3a24&primary_color=c4a661"
                 width="100%"
-                height="780"
+                height="620"
                 frameBorder="0"
                 title="Prendre rendez-vous"
               />

@@ -151,11 +151,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:left-4 focus:top-4 focus:rounded-md focus:bg-forest focus:px-4 focus:py-2 focus:text-sm focus:text-cream focus:outline-none"
+      >
+        Aller au contenu principal
+      </a>
       <div className="flex min-h-screen flex-col bg-cream">
         <TopBanner />
         <SiteNav />
-        <main className="flex-1">
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <main id="main-content" className="flex-1">
           <Outlet />
         </main>
         <SiteFooter />

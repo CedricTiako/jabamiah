@@ -1,4 +1,4 @@
-export const en = {
+﻿export const en = {
   translation: {
     banner: {
       gratuit: "Free energy consultations by appointment",
@@ -7,6 +7,7 @@ export const en = {
     nav: {
       home: "Home",
       about: "About",
+      approches: "Approaches",
       soins: "Care & Therapies",
       plantes: "Plants & Remedies",
       temoignages: "Testimonials",
@@ -80,7 +81,7 @@ export const en = {
       gagnoteP1: "I have never wanted to charge for my care. Help must remain accessible to all, unconditionally.",
       gagnoteP2: "If you wish, you can contribute to the solidarity jar: free donations help support those most in need.",
       gagnoteCta: "Learn more about this approach",
-      quote: "“The good you do today always returns to your soul.”",
+      quote: '"The good you do today always returns to your soul."',
     },
     about: {
       heroEyebrow: "Who I am",
@@ -118,7 +119,8 @@ export const en = {
       miniConfidential: { title: "Confidentiality", text: "Our exchanges stay between us." },
       miniListening: { title: "Sincere listening", text: "No judgement, at your own pace." },
       miniFree: { title: "Always free", text: "No contribution required." },
-      quote: "“The good you do today always returns to your soul.”",
+      quote: '”The good you do today always returns to your soul.”',
+      quoteFooter: '”The love you give always returns, transformed into light.”',
     },
     contact: {
       eyebrow: "Contact",

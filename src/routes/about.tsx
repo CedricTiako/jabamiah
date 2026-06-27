@@ -40,7 +40,7 @@ function AboutHero() {
   return (
     <section className="relative overflow-hidden bg-forest text-cream">
       <div className="absolute inset-0">
-        <img src={heroAbout} alt="" width={1920} height={1280} className="size-full object-cover opacity-90" />
+        <img src={heroAbout} alt="" width={1920} height={1280} className="size-full object-cover opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/55 to-forest/20" />
       </div>
 
@@ -209,9 +209,9 @@ function QuoteSection() {
   return (
     <section className="relative overflow-hidden py-24">
       <img src={forestPath} alt="" width={1920} height={900} loading="lazy" className="absolute inset-0 size-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-forest/60 via-forest/40 to-forest/70" />
+      <div className="absolute inset-0 bg-linear-to-b from-forest/60 via-forest/40 to-forest/70" />
       <div className="relative mx-auto max-w-4xl px-6 text-center text-cream">
-        <p className="font-serif text-2xl italic leading-relaxed md:text-3xl">{t("about.quote")}</p>
+        <p className="font-serif text-2xl italic leading-relaxed md:text-3xl">{t("about.quoteFooter")}</p>
         <LeafDivider className="mt-6 text-gold" />
       </div>
     </section>

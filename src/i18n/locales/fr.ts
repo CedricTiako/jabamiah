@@ -7,6 +7,7 @@ export const fr = {
     nav: {
       home: "Accueil",
       about: "À propos",
+      approches: "Approches",
       soins: "Soins & Thérapies",
       plantes: "Plantes & Remèdes",
       temoignages: "Témoignages",
@@ -119,6 +120,7 @@ export const fr = {
       miniListening: { title: "Écoute sincère", text: "Sans jugement, à votre rythme." },
       miniFree: { title: "Toujours gratuit", text: "Aucune contribution requise." },
       quote: "« Le bien que tu fais aujourd'hui, revient toujours à ton âme. »",
+      quoteFooter: "« L'amour que tu donnes revient toujours, transformé en lumière. »",
     },
     contact: {
       eyebrow: "Contact",
