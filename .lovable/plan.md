@@ -1,98 +1,88 @@
-## Pages détaillées + Multilingue 8 langues
+## Objectif
 
-Deux chantiers livrés ensemble : remplacer les stubs `soins-et-therapies`, `plantes-et-remedes`, `temoignages` par des pages riches alignées sur la charte « Médecine Parallèle », puis brancher i18next sur l'ensemble du site avec 8 langues UE.
+Finaliser la refonte de jabamiah.smartsolution-it.com avec : i18n complet sur les pages principales, SEO multilingue (sitemap + hreflang + og:image), blog dynamique avec back-office admin, et formulaire de contact opérationnel via Resend.
 
-### 1. Pages détaillées
+---
 
-**`/soins-et-therapies`** — liste des 5 approches
-- Hero : étiquette `SOINS & THÉRAPIES`, titre serif (mots clés italique or), sous-titre, séparateur feuille
-- Grille 5 cartes (photo carrée + badge icône or + titre majuscules + paragraphe + lien « En savoir plus ») : Soins énergétiques · Guérison par la pensée · Plantes & remèdes · Harmonisation globale · Développement spirituel
-- Bande « Comment se déroule une séance » (3 étapes numérotées or)
-- Bandeau citation + CTA Calendly
+## 1. Internationalisation des pages restantes
 
-**`/soins-et-therapies/$slug`** — page détail par approche
-- Données statiques typées dans `src/content/therapies.ts` (slug, title, eyebrow, intro, sections, bienfaits[], deroulement, image)
-- Hero image + intro, sections body, liste bienfaits avec puces feuille, encart vert « Pour qui ? », CTA RDV
-- `notFoundComponent` si slug inconnu
+Extraire tout le texte visible de `index.tsx` (Accueil), `about.tsx` (À propos) et `contact.tsx` (Contact) vers les fichiers de traduction i18next, dans les 8 langues (FR, EN, ES, DE, IT, NL, PL, PT).
 
-**`/plantes-et-remedes`**
-- Hero + intro sur la phytothérapie pratiquée
-- Grille de 8-10 plantes (carte : photo, nom commun, nom latin italique or, propriétés clés, indications) — données dans `src/content/plants.ts`
-- Section « Mes remèdes naturels » (tisanes, élixirs floraux, huiles) en 3 colonnes
-- Avertissement médical encadré
-- CTA consultation
+- Découper les contenus en namespaces : `home`, `about`, `contact`
+- Réutiliser les clés communes (CTA, labels formulaire) depuis `common`
+- Traductions FR rédigées, puis adaptées pour les 7 autres langues (ton spirituel/wellness préservé)
+- Vérifier les `<title>` et `<meta>` par route (voir section SEO)
 
-**`/temoignages`**
-- Hero + sous-titre
-- Filtres pills (Tous / Soin énergétique / Guérison / Accompagnement spirituel)
-- Grille masonry de 9-12 témoignages (avatar initiale or, 5 étoiles, citation serif italique, prénom + ville + date)
-- Bandeau « Partagez votre expérience » avec lien vers `/contact`
-- Données dans `src/content/testimonials.ts` (placeholders réalistes marqués `// TODO: remplacer par vrais témoignages`)
+## 2. SEO multilingue complet
 
-Génération de 6-8 images IA supplémentaires (plantes, séance, mains soignantes, portraits anonymes flous).
+**Sitemap dynamique** (`src/routes/sitemap[.]xml.ts`) :
+- Une entrée par route × par langue (8 versions)
+- Inclut routes statiques + routes dynamiques (soins, plantes, articles blog)
+- `<xhtml:link rel="alternate" hreflang="...">` pour chaque variante + `x-default` (FR)
 
-### 2. Internationalisation (i18next)
+**Hreflang par route** :
+- Helper `buildHreflangLinks(path)` qui génère les `<link rel="alternate">` pour les 8 langues
+- Intégré dans le `head()` de chaque `createFileRoute`
+- Canonical auto-pointé sur la version de la langue active
 
-**Langues** : FR (défaut), EN, ES, DE, IT, NL, PL, PT
+**og:image par route** :
+- Image hero existante réutilisée comme og:image pour Accueil, À propos, Soins, Plantes, Témoignages, Contact
+- Pour les articles de blog : image de couverture de l'article
+- `og:title`, `og:description`, `twitter:card` par route, traduits via i18n côté serveur (loader)
 
-**Stack** : `i18next` + `react-i18next` + `i18next-browser-languagedetector` (détection navigateur + localStorage)
+**robots.txt** mis à jour avec la directive `Sitemap:`.
 
-**Structure** :
-```
-src/i18n/
-  index.ts                  init i18next
-  locales/
-    fr/{common,nav,home,about,therapies,plants,testimonials,contact,footer}.json
-    en/...
-    ...
-```
+## 3. Blog dynamique avec back-office admin
 
-**Intégration** :
-- Provider initialisé dans `src/router.tsx` (côté client uniquement — pas de SSR i18n pour rester simple)
-- Hook `useTranslation(ns)` dans tous les composants
-- Extraction de TOUTES les chaînes FR existantes (top-banner, nav, footer, home, about, contact, nouvelles pages) en clés
-- Sélecteur de langue : dropdown discret `FR ▾` dans la nav (desktop droite avant CTA, mobile en haut du menu)
-- Persistance choix utilisateur via `localStorage` (`i18nextLng`)
-- `<html lang>` dynamique mis à jour via `useEffect` au changement de langue
-- Balises `hreflang` alternates dans `head()` du root
+**Schéma base (Lovable Cloud)** :
+- `posts` : id, slug, status (draft/published), cover_image_url, author_id, published_at, created_at, updated_at
+- `post_translations` : id, post_id, locale, title, excerpt, body (markdown/HTML), meta_description
+- `app_role` enum + `user_roles` + fonction `has_role()` (pattern sécurisé)
+- RLS : lecture publique des `published`, écriture réservée aux `admin`
+- GRANTs explicites pour `anon` (SELECT published) / `authenticated` / `service_role`
 
-**Traductions** :
-- FR : rédaction complète (source de vérité)
-- EN, ES, DE, IT, NL, PL, PT : traductions générées (qualité native, ton wellness/spirituel, vouvoiement adapté à chaque langue)
-- Contenus statiques (`therapies.ts`, `plants.ts`, `testimonials.ts`) : structure `{ fr: {...}, en: {...}, ... }` ou clés i18n référencées
+**Routes publiques** :
+- `/blog` : liste paginée des articles publiés (filtrée par locale active, fallback FR)
+- `/blog/$slug` : article détail avec SEO complet (og:image = cover, JSON-LD Article, hreflang vers les autres locales)
 
-### 3. Détails techniques
+**Back-office admin** (sous `_authenticated/admin/`) :
+- Garde de route via `has_role('admin')`
+- `/admin/posts` : liste avec statut, recherche, création
+- `/admin/posts/$id` : éditeur multilingue avec onglets par langue, upload de cover image (Supabase Storage), preview, toggle publish/unpublish
+- Éditeur de contenu : zone markdown simple (textarea + preview) — pas de WYSIWYG complexe
 
-```text
-src/
-├── content/
-│   ├── therapies.ts          # 5 approches typées
-│   ├── plants.ts             # ~10 plantes
-│   └── testimonials.ts       # ~12 témoignages
-├── components/site/
-│   ├── therapy-card.tsx
-│   ├── plant-card.tsx
-│   ├── testimonial-card.tsx
-│   └── language-switcher.tsx
-├── i18n/
-│   ├── index.ts
-│   └── locales/{8 langues}/*.json
-└── routes/
-    ├── soins-et-therapies.tsx          # remplace stub
-    ├── soins-et-therapies.$slug.tsx    # nouveau
-    ├── plantes-et-remedes.tsx          # remplace stub
-    └── temoignages.tsx                 # remplace stub
-```
+**Server functions** (`src/lib/posts.functions.ts`) :
+- `listPublishedPosts({ locale })`, `getPostBySlug({ slug, locale })` — publics, via client publishable
+- `adminListPosts`, `adminUpsertPost`, `adminPublishPost`, `adminDeletePost` — protégés par `requireSupabaseAuth` + check `has_role('admin')`
 
-Dépendances à installer : `i18next`, `react-i18next`, `i18next-browser-languagedetector`.
+## 4. Formulaire de contact opérationnel (Resend)
 
-`head()` par route : title/description traduits via `i18n.t()` (lecture synchrone après init).
+**Connecteur Resend** :
+- Vérifier les connexions existantes ; sinon brancher via le connecteur standard Resend
+- Sender : domaine `jabamiah.smartsolution-it.com` (à vérifier côté Resend) ou `onboarding@resend.dev` en fallback
 
-### 4. Hors périmètre (lots suivants)
+**Server route publique** (`src/routes/api/public/contact.ts`) :
+- POST : validation Zod (nom, email, sujet, message, honeypot anti-bot, rate-limit léger par IP en mémoire)
+- Envoi via gateway Resend → 1 email à l'adresse de Jabamiah + 1 accusé réception au visiteur
+- Templates HTML inline, aux couleurs de la marque (vert forêt / or / crème)
+- Réponses i18n côté client (succès / erreur)
 
-- Lovable Cloud / auth / espace client / blog dynamique
-- Connecteur Resend pour le formulaire de contact
-- Traduction des contenus du blog (sera multilingue par enregistrement DB)
-- SEO complet (sitemap.xml, robots.txt, JSON-LD)
+**Côté client** :
+- `contact.tsx` : passage en `react-hook-form` + `zodResolver`, états loading/success/error traduits
+- Stockage optionnel du message en base (`contact_messages`) pour traçabilité admin
 
-Approuve pour que je passe en build.
+---
+
+## Détails techniques
+
+- **i18n SSR** : charger la locale active au niveau du `__root.tsx` loader pour que les `head()` aient accès aux traductions côté serveur (sinon les meta tags ne sont pas traduits dans le HTML initial → mauvais pour SEO)
+- **Routes localisées** : on garde les mêmes chemins (`/blog`, `/soins-et-therapies`) avec contenu traduit selon `?lang=` ou cookie ; pas de préfixe `/en/`, `/de/` (plus simple, hreflang gère l'indexation)
+- **Storage** : bucket `blog-covers` public pour les images d'articles
+- **Sécurité** : roles dans table dédiée (jamais sur profile), fonction `has_role` en SECURITY DEFINER, validation Zod sur toutes les server functions
+
+## Hors périmètre (à confirmer si besoin)
+
+- Système de commentaires sur le blog
+- Newsletter / abonnement email
+- Analytics (Plausible/GA)
+- Préfixes d'URL par langue (`/fr/`, `/en/`) — pourrait être ajouté plus tard si besoin SEO renforcé
