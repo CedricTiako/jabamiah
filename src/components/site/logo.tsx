@@ -1,17 +1,22 @@
 import { Link } from "@tanstack/react-router";
-import logoLight from "../../assets/logo/jabamiah-horizontal-light.svg";
-import logoDark from "../../assets/logo/jabamiah-horizontal-dark.svg";
+import logoHorizontalLight from "../../assets/logo/jabamiah-horizontal-light.svg";
+import logoHorizontalDark from "../../assets/logo/jabamiah-horizontal-dark.svg";
+import logoIconLight from "../../assets/logo/jabamiah-icon-light.svg";
+import logoIconDark from "../../assets/logo/jabamiah-icon-dark.svg";
 
 type LogoProps = {
   variant?: "light" | "dark";
   className?: string;
-  /** When true, hide the wordmark and only show the seed-of-life icon. */
+  /** When true, render only the seed-of-life icon (no wordmark). */
   iconOnly?: boolean;
 };
 
 export function Logo({ variant = "light", className, iconOnly = false }: LogoProps) {
   const isDark = variant === "dark";
-  const src = isDark ? logoDark : logoLight;
+  const src = iconOnly
+    ? isDark ? logoIconDark : logoIconLight
+    : isDark ? logoHorizontalDark : logoHorizontalLight;
+
   return (
     <Link
       to="/"
@@ -21,14 +26,15 @@ export function Logo({ variant = "light", className, iconOnly = false }: LogoPro
       <img
         src={src}
         alt="Jabamiah — Médecine parallèle"
-        width={420}
-        height={140}
+        width={iconOnly ? 120 : 420}
+        height={iconOnly ? 120 : 140}
         className={
           iconOnly
-            ? "h-10 w-auto sm:h-11"
+            ? "size-10 sm:size-11"
             : "h-10 w-auto sm:h-12 md:h-14"
         }
-        style={iconOnly ? { objectFit: "contain", objectPosition: "left", clipPath: "inset(0 64% 0 0)" } : undefined}
+        loading="eager"
+        decoding="async"
       />
     </Link>
   );
