@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { getServerLocale, LOCALE_TO_OG } from "../lib/locale-server";
 import { useTranslation } from "react-i18next";
 
 import appCss from "../styles.css?url";
@@ -69,7 +70,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const locale = loaderData?.locale ?? "fr";
+    const ogLocale = LOCALE_TO_OG[locale as keyof typeof LOCALE_TO_OG] ?? "fr_FR";
+    return {
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -89,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:locale", content: "fr_FR" },
+      { property: "og:locale", content: ogLocale },
       { property: "og:image", content: "https://jabamiah.smartsolution-it.com/og-default.jpg" },
       { property: "og:image:width", content: "1216" },
       { property: "og:image:height", content: "640" },
@@ -117,7 +122,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap",
       },
     ],
-  }),
+  };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

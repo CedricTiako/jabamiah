@@ -24,16 +24,20 @@ import approachSpirit from "../assets/approach-spirit.jpg";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { buildSeoHead, SITE_URL } from "../lib/seo";
 import { CALENDLY_URL, EMAIL, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 
 export const Route = createFileRoute("/")({
-  head: () =>
-    buildSeoHead({
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return buildSeoHead({
       path: "/",
-      title: "Jabamiah — Soins énergétiques & médecine parallèle",
-      description:
-        "Retrouvez l'équilibre du corps, de l'esprit et de l'âme. Consultations énergétiques 100% gratuites avec Jabamiah, à Forges-les-Eaux ou à distance.",
+      title: tServer(loc, "seo.home.title"),
+      description: tServer(loc, "seo.home.description"),
       image: `${SITE_URL}${heroImage}`,
-    }),
+    });
+  },
   component: HomePage,
 });
 

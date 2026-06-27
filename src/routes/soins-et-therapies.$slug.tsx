@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { findTherapy, localized, localizedList } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { CALENDLY_URL } from "../lib/config";
+import { getServerLocale } from "../lib/locale-server";
 
 const ICONS = {
   sparkles: Sparkles,
@@ -14,22 +15,25 @@ const ICONS = {
 } as const;
 
 export const Route = createFileRoute("/soins-et-therapies/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
     const therapy = findTherapy(params.slug);
     if (!therapy) throw notFound();
-    return { therapy };
+    return { therapy, locale: await getServerLocale() };
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: `${loaderData?.therapy ? localized(loaderData.therapy.title, "fr") : "Soin"} — Jabamiah`,
-      },
-      {
-        name: "description",
-        content: loaderData?.therapy ? localized(loaderData.therapy.short, "fr") : "",
-      },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return {
+      meta: [
+        {
+          title: `${loaderData?.therapy ? localized(loaderData.therapy.title, loc) : "Soin"} — Jabamiah`,
+        },
+        {
+          name: "description",
+          content: loaderData?.therapy ? localized(loaderData.therapy.short, loc) : "",
+        },
+      ],
+    };
+  },
   component: TherapyDetail,
 });
 

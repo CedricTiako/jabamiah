@@ -5,14 +5,20 @@ import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { listPublishedPosts } from "../lib/posts.functions";
 import { buildSeoHead } from "../lib/seo";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 import { LeafDivider } from "../components/site/leaf-divider";
 
 export const Route = createFileRoute("/blog")({
-  head: () => buildSeoHead({
-    path: "/blog",
-    title: "Blog — Jabamiah",
-    description: "Réflexions, méditations et guidances autour des soins énergétiques, des plantes et du chemin de l'âme.",
-  }),
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return buildSeoHead({
+      path: "/blog",
+      title: tServer(loc, "seo.blog.title"),
+      description: tServer(loc, "seo.blog.description"),
+    });
+  },
   component: BlogIndex,
 });
 

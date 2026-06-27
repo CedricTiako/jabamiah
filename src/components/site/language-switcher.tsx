@@ -22,7 +22,9 @@ export function LanguageSwitcher({ variant = "light" }: Props) {
       <select
         value={current}
         onChange={(event) => {
-          void i18n.changeLanguage(event.target.value);
+          const code = event.target.value;
+          void i18n.changeLanguage(code);
+          document.cookie = `i18nextLng=${code};path=/;max-age=${365 * 24 * 3600};SameSite=Lax`;
         }}
         className="cursor-pointer bg-transparent pr-1 text-xs uppercase tracking-[0.15em] outline-none"
       >

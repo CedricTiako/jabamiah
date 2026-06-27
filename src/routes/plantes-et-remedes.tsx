@@ -5,17 +5,20 @@ import { PLANTS } from "../content/plants";
 import { localized, localizedList } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import heroImage from "../assets/approach-plants.jpg";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 
 export const Route = createFileRoute("/plantes-et-remedes")({
-  head: () => ({
-    meta: [
-      { title: "Plantes & Remèdes naturels — Jabamiah" },
-      {
-        name: "description",
-        content: "La sagesse des plantes médicinales et des remèdes naturels au service de votre bien-être.",
-      },
-    ],
-  }),
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return {
+      meta: [
+        { title: tServer(loc, "seo.plantes.title") },
+        { name: "description", content: tServer(loc, "seo.plantes.description") },
+      ],
+    };
+  },
   component: PlantsPage,
 });
 

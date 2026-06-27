@@ -5,6 +5,8 @@ import { THERAPIES, localized, type Therapy } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import heroImage from "../assets/hero-home.jpg";
 import { CALENDLY_URL } from "../lib/config";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 
 const ICONS = {
   sparkles: Sparkles,
@@ -15,16 +17,16 @@ const ICONS = {
 } as const;
 
 export const Route = createFileRoute("/soins-et-therapies/")({
-  head: () => ({
-    meta: [
-      { title: "Soins & Thérapies — Jabamiah" },
-      {
-        name: "description",
-        content:
-          "Soins énergétiques, guérison par la pensée, plantes médicinales, harmonisation et développement spirituel.",
-      },
-    ],
-  }),
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return {
+      meta: [
+        { title: tServer(loc, "seo.soins.title") },
+        { name: "description", content: tServer(loc, "seo.soins.description") },
+      ],
+    };
+  },
   component: TherapiesIndex,
 });
 
@@ -111,7 +113,7 @@ function TherapyCard({ therapy, locale }: { therapy: Therapy; locale: string }) 
   const { t } = useTranslation();
   return (
     <article className="group flex flex-col overflow-hidden rounded-lg bg-card ring-1 ring-gold/20 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-forest/10">
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-4/3 overflow-hidden">
         <img
           src={therapy.image}
           alt={localized(therapy.title, locale)}

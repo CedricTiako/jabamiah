@@ -6,16 +6,20 @@ import forestPath from "../assets/forest-path.jpg";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { buildSeoHead, SITE_URL } from "../lib/seo";
 import { CALENDLY_URL } from "../lib/config";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 
 export const Route = createFileRoute("/about")({
-  head: () =>
-    buildSeoHead({
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return buildSeoHead({
       path: "/about",
-      title: "À propos — Jabamiah, un chemin de cœur au service de l'humain",
-      description:
-        "Découvrez Jabamiah, medium et thérapeute holistique animé par l'amour et le besoin d'aider. Consultations énergétiques gratuites sur rendez-vous.",
+      title: tServer(loc, "seo.about.title"),
+      description: tServer(loc, "seo.about.description"),
       image: `${SITE_URL}${heroAbout}`,
-    }),
+    });
+  },
   component: AboutPage,
 });
 

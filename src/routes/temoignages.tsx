@@ -6,14 +6,20 @@ import { TESTIMONIALS, type TestimonialCategory } from "../content/testimonials"
 import { localized } from "../content/therapies";
 import { LeafDivider } from "../components/site/leaf-divider";
 import heroImage from "../assets/hero-about.jpg";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 
 export const Route = createFileRoute("/temoignages")({
-  head: () => ({
-    meta: [
-      { title: "Témoignages — Jabamiah" },
-      { name: "description", content: "Découvrez les témoignages de celles et ceux qui ont été accompagnés." },
-    ],
-  }),
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return {
+      meta: [
+        { title: tServer(loc, "seo.temoignages.title") },
+        { name: "description", content: tServer(loc, "seo.temoignages.description") },
+      ],
+    };
+  },
   component: TestimonialsPage,
 });
 

@@ -4,15 +4,19 @@ import { useTranslation } from "react-i18next";
 import { Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { buildSeoHead } from "../lib/seo";
 import { CALENDLY_EMBED_URL, EMAIL, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
+import { getServerLocale } from "../lib/locale-server";
+import { tServer } from "../lib/t-server";
 
 export const Route = createFileRoute("/contact")({
-  head: () =>
-    buildSeoHead({
+  loader: async () => ({ locale: await getServerLocale() }),
+  head: ({ loaderData }) => {
+    const loc = loaderData?.locale ?? "fr";
+    return buildSeoHead({
       path: "/contact",
-      title: "Contact — Jabamiah",
-      description:
-        "Contactez Jabamiah pour une consultation énergétique gratuite : WhatsApp, téléphone, email ou prise de rendez-vous en ligne.",
-    }),
+      title: tServer(loc, "seo.contact.title"),
+      description: tServer(loc, "seo.contact.description"),
+    });
+  },
   component: ContactPage,
 });
 
