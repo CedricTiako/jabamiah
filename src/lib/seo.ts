@@ -30,8 +30,11 @@ interface BuildHeadInput {
   type?: "website" | "article";
 }
 
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.jpg`;
+
 export function buildSeoHead({ path, title, description, image, type = "website" }: BuildHeadInput) {
   const url = absoluteUrl(path);
+  const ogImage = image ?? DEFAULT_OG_IMAGE;
   const meta: Array<Record<string, string>> = [
     { title },
     { name: "description", content: description },
@@ -40,14 +43,13 @@ export function buildSeoHead({ path, title, description, image, type = "website"
     { property: "og:url", content: url },
     { property: "og:type", content: type },
     { property: "og:site_name", content: "Jabamiah" },
+    { property: "og:image", content: ogImage },
+    { property: "og:image:alt", content: title },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
+    { name: "twitter:image", content: ogImage },
   ];
-  if (image) {
-    meta.push({ property: "og:image", content: image });
-    meta.push({ name: "twitter:image", content: image });
-  }
   const links = [
     { rel: "canonical", href: url },
     ...buildHreflangLinks(path),

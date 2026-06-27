@@ -73,13 +73,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#1E3A2B" },
       { title: "Jabamiah — Médecine parallèle & soins énergétiques" },
       {
         name: "description",
         content:
-          "Consultations énergétiques gratuites avec Jabamiah, medium et thérapeute holistique à Forges-les-Eaux. Soins, plantes et accompagnement pour le corps, l'esprit et l'âme.",
+          "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Consultations 100% gratuites à Forges-les-Eaux (Normandie) ou à distance.",
       },
       { name: "author", content: "Jabamiah" },
+      { property: "og:site_name", content: "Jabamiah" },
       { property: "og:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
       {
         property: "og:description",
@@ -87,16 +89,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: "https://jabamiah.smartsolution-it.com/og-default.jpg" },
+      { property: "og:image:width", content: "1216" },
+      { property: "og:image:height", content: "640" },
+      { property: "og:image:alt", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
-      { name: "description", content: "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Basé à Forges-les-Eaux, en Norman" },
-      { property: "og:description", content: "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Basé à Forges-les-Eaux, en Norman" },
-      { name: "twitter:description", content: "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Basé à Forges-les-Eaux, en Norman" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/1P55axkM51aQq34kcmIP9HVh8bl1/social-images/social-1782555777785-jabamiah-social-image.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/1P55axkM51aQq34kcmIP9HVh8bl1/social-images/social-1782555777785-jabamiah-social-image.webp" },
+      {
+        name: "twitter:description",
+        content:
+          "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
+      },
+      { name: "twitter:image", content: "https://jabamiah.smartsolution-it.com/og-default.jpg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/jabamiah-icon.svg" },
+      { rel: "icon", type: "image/svg+xml", media: "(prefers-color-scheme: dark)", href: "/jabamiah-icon-dark.svg" },
+      { rel: "alternate icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/jabamiah-icon.svg" },
+      { rel: "mask-icon", href: "/jabamiah-icon.svg", color: "#1E3A2B" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
