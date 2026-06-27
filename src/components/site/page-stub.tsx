@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, Calendar } from "lucide-react";
 
 type StubProps = {
@@ -37,7 +37,3 @@ export function PageStub({ eyebrow, title, description }: StubProps) {
     </section>
   );
 }
-
-export const Route = createFileRoute("/_stub")({
-  component: () => null,
-});
