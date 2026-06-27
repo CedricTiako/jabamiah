@@ -20,6 +20,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-therapies.index'
 import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-therapies.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 
 const TemoignagesRoute = TemoignagesRouteImport.update({
@@ -78,6 +79,11 @@ const SoinsEtTherapiesSlugRoute = SoinsEtTherapiesSlugRouteImport.update({
   path: '/soins-et-therapies/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   id: '/api/public/contact',
   path: '/api/public/contact',
@@ -87,13 +93,14 @@ const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -101,13 +108,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/soins-et-therapies': typeof SoinsEtTherapiesIndexRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -116,13 +124,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/politique-de-confidentialite'
     | '/sitemap.xml'
     | '/temoignages'
+    | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/soins-et-therapies/'
     | '/api/public/contact'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/politique-de-confidentialite'
     | '/sitemap.xml'
     | '/temoignages'
+    | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/soins-et-therapies'
     | '/api/public/contact'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/politique-de-confidentialite'
     | '/sitemap.xml'
     | '/temoignages'
+    | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/soins-et-therapies/'
     | '/api/public/contact'
@@ -175,7 +187,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   ContactRoute: typeof ContactRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PlantesEtRemedesRoute: typeof PlantesEtRemedesRoute
@@ -266,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoinsEtTherapiesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/api/public/contact': {
       id: '/api/public/contact'
       path: '/api/public/contact'
@@ -276,10 +295,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   ContactRoute: ContactRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   PlantesEtRemedesRoute: PlantesEtRemedesRoute,
