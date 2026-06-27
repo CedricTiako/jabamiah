@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemoignagesRouteImport } from './routes/temoignages'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politique-de-confidentialite'
 import { Route as PlantesEtRemedesRouteImport } from './routes/plantes-et-remedes'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
@@ -23,6 +24,11 @@ import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-ther
 const TemoignagesRoute = TemoignagesRouteImport.update({
   id: '/temoignages',
   path: '/temoignages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PolitiqueDeConfidentialiteRoute =
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/soins-et-therapies': typeof SoinsEtTherapiesIndexRoute
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
+    | '/sitemap.xml'
     | '/temoignages'
     | '/soins-et-therapies/$slug'
     | '/soins-et-therapies/'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
+    | '/sitemap.xml'
     | '/temoignages'
     | '/soins-et-therapies/$slug'
     | '/soins-et-therapies'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
+    | '/sitemap.xml'
     | '/temoignages'
     | '/soins-et-therapies/$slug'
     | '/soins-et-therapies/'
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PlantesEtRemedesRoute: typeof PlantesEtRemedesRoute
   PolitiqueDeConfidentialiteRoute: typeof PolitiqueDeConfidentialiteRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemoignagesRoute: typeof TemoignagesRoute
   SoinsEtTherapiesSlugRoute: typeof SoinsEtTherapiesSlugRoute
   SoinsEtTherapiesIndexRoute: typeof SoinsEtTherapiesIndexRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/temoignages'
       fullPath: '/temoignages'
       preLoaderRoute: typeof TemoignagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politique-de-confidentialite': {
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   PlantesEtRemedesRoute: PlantesEtRemedesRoute,
   PolitiqueDeConfidentialiteRoute: PolitiqueDeConfidentialiteRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemoignagesRoute: TemoignagesRoute,
   SoinsEtTherapiesSlugRoute: SoinsEtTherapiesSlugRoute,
   SoinsEtTherapiesIndexRoute: SoinsEtTherapiesIndexRoute,

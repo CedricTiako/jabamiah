@@ -13,13 +13,11 @@ export function absoluteUrl(path: string): string {
  * Since the app keeps the same URL across languages (no /en/, /de/ prefix),
  * we still emit hreflang tags so search engines know the page is multilingual.
  */
-export function buildHreflangLinks(path: string) {
+export function buildHreflangLinks(path: string): Array<{ rel: string; hrefLang: string; href: string }> {
   const href = absoluteUrl(path);
-  const links = SUPPORTED_LANGUAGES.map((lang) => ({
-    rel: "alternate",
-    hrefLang: lang.code,
-    href,
-  }));
+  const links: Array<{ rel: string; hrefLang: string; href: string }> = SUPPORTED_LANGUAGES.map(
+    (lang) => ({ rel: "alternate", hrefLang: lang.code, href }),
+  );
   links.push({ rel: "alternate", hrefLang: "x-default", href });
   return links;
 }
