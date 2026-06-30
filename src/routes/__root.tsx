@@ -16,6 +16,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBanner } from "../components/site/top-banner";
 import { SiteNav } from "../components/site/site-nav";
 import { SiteFooter } from "../components/site/site-footer";
+import { MobileBottomNav } from "../components/site/mobile-bottom-nav";
+
 
 function NotFoundComponent() {
   return (
