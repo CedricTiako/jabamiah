@@ -53,8 +53,8 @@ export const adminGetSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<Record<string, string>> => {
     await assertAdmin(context);
-    const { data } = await context.supabase.from("site_settings").select("key, value");
-    return parseSettings(data);
+    const { data } = await context.supabase.from("site_settings" as never).select("key, value");
+    return parseSettings(data as unknown as Array<{ key: string; value: string | null }> | null);
   });
 
 export const adminUpdateSetting = createServerFn({ method: "POST" })
@@ -62,11 +62,12 @@ export const adminUpdateSetting = createServerFn({ method: "POST" })
   .inputValidator((data: { key: string; value: string }) => data)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const { error } = await context.supabase.from("site_settings").upsert({
+    const { error } = await context.supabase.from("site_settings" as never).upsert({
       key: data.key,
       value: data.value,
       updated_at: new Date().toISOString(),
-    });
+    } as never);
     if (error) throw error;
     return { success: true };
   });
+
