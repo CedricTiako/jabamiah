@@ -43,8 +43,8 @@ if (!i18n.isInitialized) {
       lookupLocalStorage: "i18nextLng",
     },
     react: { useSuspense: false },
-    initImmediate: false,
   });
+
 }
 
 
