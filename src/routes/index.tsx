@@ -224,12 +224,12 @@ function ApproachesSection() {
           <LeafDivider className="mt-6" />
         </div>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+        <div className="mt-10 -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:mt-14 sm:grid sm:snap-none sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:px-0 sm:pb-0 md:grid-cols-3 xl:grid-cols-5">
           {approaches.map((item, idx) => {
             const Icon = APPROACH_ICONS[idx] ?? Sparkles;
             const image = APPROACH_IMAGES[idx] ?? approachEnergy;
             return (
-              <article key={item.title} className="group flex flex-col overflow-hidden rounded-lg bg-card ring-1 ring-gold/20 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-forest/10">
+              <article key={item.title} className="group flex w-[78vw] shrink-0 snap-center flex-col overflow-hidden rounded-3xl bg-card ring-1 ring-gold/20 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-forest/10 sm:w-auto sm:rounded-lg">
                 <div className="relative aspect-square overflow-hidden">
                   <img src={image} alt={item.title} width={800} height={800} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-x-0 -bottom-7 flex justify-center">
@@ -246,6 +246,7 @@ function ApproachesSection() {
             );
           })}
         </div>
+
       </div>
     </section>
   );
