@@ -70,7 +70,7 @@ function HeroSection() {
       <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-12 lg:py-28">
         <div className="lg:col-span-7">
           <span className="eyebrow text-gold">{t("home.heroEyebrow")}</span>
-          <h1 className="mt-6 font-serif text-5xl leading-[1.05] text-cream md:text-6xl lg:text-7xl">
+          <h1 className="mt-6 font-serif text-[2.5rem] leading-[1.05] text-cream sm:text-5xl md:text-6xl lg:text-7xl">
             {t("home.heroTitle1")}
             <br /> {t("home.heroTitle2")}
             <br /> <em className="not-italic italic text-gold">{t("home.heroTitle3")}</em>
