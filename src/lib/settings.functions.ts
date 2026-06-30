@@ -34,8 +34,9 @@ function parseSettings(rows: Array<{ key: string; value: string | null }> | null
 export const getPublicSettings = createServerFn({ method: "GET" }).handler(
   async (): Promise<PublicSettings> => {
     const sb = getPublicClient();
-    const { data } = await sb.from("site_settings").select("key, value");
-    const map = parseSettings(data);
+    const { data } = await sb.from("site_settings" as never).select("key, value");
+    const map = parseSettings(data as unknown as Array<{ key: string; value: string | null }> | null);
+
     let amounts: number[] = [5, 10, 20, 50];
     try {
       const parsed = JSON.parse(map.donation_amounts ?? "[5,10,20,50]");
