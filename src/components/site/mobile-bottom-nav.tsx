@@ -10,12 +10,13 @@ import { CALENDLY_URL } from "../../lib/config";
 export function MobileBottomNav() {
   const { t } = useTranslation();
 
-  const tabs = [
+  const tabs: ReadonlyArray<{ to: string; label: string; Icon: typeof Home; exact?: boolean }> = [
     { to: "/", label: t("nav.home"), Icon: Home, exact: true },
     { to: "/soins-et-therapies", label: t("nav.approches"), Icon: Sparkles },
     { to: "/blog", label: t("nav.blog"), Icon: BookOpen },
     { to: "/don", label: t("nav.donate"), Icon: Heart },
-  ] as const;
+  ];
+
 
   return (
     <>
