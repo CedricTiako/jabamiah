@@ -61,12 +61,19 @@ function HomePage() {
 
 function MobileQuickActions() {
   const { t } = useTranslation();
-  const actions = [
+  const actions: ReadonlyArray<{
+    href: string;
+    Icon: typeof Calendar;
+    label: string;
+    primary?: boolean;
+    external?: boolean;
+  }> = [
     { href: CALENDLY_URL, Icon: Calendar, label: t("cta.bookNow"), primary: true, external: true },
     { href: `tel:${PHONE_HREF.replace("tel:", "")}`, Icon: Phone, label: t("contact.phone") },
     { href: WHATSAPP_HREF, Icon: MessageCircle, label: t("contact.whatsapp"), external: true },
     { href: `mailto:${EMAIL}`, Icon: Mail, label: t("contact.email") },
-  ] as const;
+  ];
+
 
   return (
     <section className="bg-cream px-4 pt-6 pb-2 lg:hidden">
