@@ -162,7 +162,7 @@ function DonatePage() {
               {/* Amount selector */}
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-forest">{t("donate.amountTitle")}</p>
               <div className="mt-4 grid grid-cols-4 gap-3">
-                {amounts.map((amount) => (
+                {amounts.map((amount: number) => (
                   <button
                     key={amount}
                     type="button"
