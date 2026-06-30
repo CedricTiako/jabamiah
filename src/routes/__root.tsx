@@ -82,6 +82,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // SSR lang attribute — runs before React hydration so crawlers see the right lang
       { children: `document.documentElement.lang=${JSON.stringify(locale)};` },
       {
+        children:
+          "if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}",
+      },
+      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
