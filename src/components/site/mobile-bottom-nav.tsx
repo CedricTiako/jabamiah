@@ -78,11 +78,12 @@ function TabLink({
 }) {
   return (
     <Link
-      to={to}
+      to={to as "/"}
       activeOptions={{ exact }}
       className="flex flex-col items-center gap-1 py-2 text-[0.62rem] font-medium uppercase tracking-[0.08em] text-earth/70 transition-colors"
       activeProps={{ className: "text-forest" }}
     >
+
       {({ isActive }) => (
         <>
           <span
