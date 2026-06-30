@@ -238,7 +238,9 @@ function RootComponent() {
           <Outlet />
         </main>
         <SiteFooter />
+        <MobileBottomNav />
       </div>
     </QueryClientProvider>
+
   );
 }
