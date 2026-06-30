@@ -50,6 +50,7 @@ function HomePage() {
   return (
     <>
       <HeroSection />
+      <MobileQuickActions />
       <ValuesStrip />
       <ApproachesSection />
       <GagnoteSection />
@@ -57,6 +58,40 @@ function HomePage() {
     </>
   );
 }
+
+function MobileQuickActions() {
+  const { t } = useTranslation();
+  const actions = [
+    { href: CALENDLY_URL, Icon: Calendar, label: t("cta.bookNow"), primary: true, external: true },
+    { href: `tel:${PHONE_HREF.replace("tel:", "")}`, Icon: Phone, label: t("contact.phone") },
+    { href: WHATSAPP_HREF, Icon: MessageCircle, label: t("contact.whatsapp"), external: true },
+    { href: `mailto:${EMAIL}`, Icon: Mail, label: t("contact.email") },
+  ] as const;
+
+  return (
+    <section className="bg-cream px-4 pt-6 pb-2 lg:hidden">
+      <div className="mx-auto grid max-w-md grid-cols-4 gap-3">
+        {actions.map(({ href, Icon, label, primary, external }) => (
+          <a
+            key={label}
+            href={href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            className={`flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3 text-center transition-all active:scale-95 ${
+              primary
+                ? "bg-forest text-cream shadow-md shadow-forest/20"
+                : "bg-cream-warm text-forest ring-1 ring-gold/20"
+            }`}
+          >
+            <Icon className={`size-5 ${primary ? "text-gold" : "text-forest"}`} aria-hidden="true" />
+            <span className="text-[0.62rem] font-medium leading-tight">{label}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 
 function HeroSection() {
   const { t } = useTranslation();
