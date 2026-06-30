@@ -175,10 +175,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.json" },
       { rel: "icon", type: "image/svg+xml", href: "/jabamiah-icon.svg" },
       { rel: "icon", type: "image/svg+xml", media: "(prefers-color-scheme: dark)", href: "/jabamiah-icon-dark.svg" },
       { rel: "alternate icon", href: "/favicon.ico" },
-      { rel: "apple-touch-icon", href: "/jabamiah-icon.svg" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "mask-icon", href: "/jabamiah-icon.svg", color: "#1E3A2B" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
