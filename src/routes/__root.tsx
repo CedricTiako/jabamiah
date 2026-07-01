@@ -219,6 +219,9 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { i18n } = useTranslation();
+  const router = useRouter();
+  const pathname = router.state.location.pathname;
+  const isAdmin = pathname.startsWith("/admin");
 
   useEffect(() => {
     const lang = (i18n.resolvedLanguage ?? i18n.language ?? "fr").slice(0, 2);
@@ -226,6 +229,14 @@ function RootComponent() {
       document.documentElement.lang = lang;
     }
   }, [i18n.resolvedLanguage, i18n.language]);
+
+  if (isAdmin) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
