@@ -24,8 +24,11 @@ import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-the
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-therapies.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminClientsRouteImport } from './routes/admin.clients'
+import { Route as AdminAgendaRouteImport } from './routes/admin.agenda'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as AdminPostsIdRouteImport } from './routes/admin.posts.$id'
+import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
 
 const TemoignagesRoute = TemoignagesRouteImport.update({
   id: '/temoignages',
@@ -103,6 +106,16 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AdminClientsRoute = AdminClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAgendaRoute = AdminAgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   id: '/api/public/contact',
   path: '/api/public/contact',
@@ -112,6 +125,11 @@ const AdminPostsIdRoute = AdminPostsIdRouteImport.update({
   id: '/posts/$id',
   path: '/posts/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientsIdRoute = AdminClientsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminClientsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -126,10 +144,13 @@ export interface FileRoutesByFullPath {
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
+  '/admin/agenda': typeof AdminAgendaRoute
+  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
@@ -144,10 +165,13 @@ export interface FileRoutesByTo {
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
+  '/admin/agenda': typeof AdminAgendaRoute
+  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin': typeof AdminIndexRoute
   '/soins-et-therapies': typeof SoinsEtTherapiesIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
@@ -164,10 +188,13 @@ export interface FileRoutesById {
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
+  '/admin/agenda': typeof AdminAgendaRoute
+  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
@@ -185,10 +212,13 @@ export interface FileRouteTypes {
     | '/politique-de-confidentialite'
     | '/sitemap.xml'
     | '/temoignages'
+    | '/admin/agenda'
+    | '/admin/clients'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin/'
     | '/soins-et-therapies/'
+    | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
   fileRoutesByTo: FileRoutesByTo
@@ -203,10 +233,13 @@ export interface FileRouteTypes {
     | '/politique-de-confidentialite'
     | '/sitemap.xml'
     | '/temoignages'
+    | '/admin/agenda'
+    | '/admin/clients'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin'
     | '/soins-et-therapies'
+    | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
   id:
@@ -222,10 +255,13 @@ export interface FileRouteTypes {
     | '/politique-de-confidentialite'
     | '/sitemap.xml'
     | '/temoignages'
+    | '/admin/agenda'
+    | '/admin/clients'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin/'
     | '/soins-et-therapies/'
+    | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
   fileRoutesById: FileRoutesById
@@ -354,6 +390,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/admin/clients': {
+      id: '/admin/clients'
+      path: '/clients'
+      fullPath: '/admin/clients'
+      preLoaderRoute: typeof AdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agenda': {
+      id: '/admin/agenda'
+      path: '/agenda'
+      fullPath: '/admin/agenda'
+      preLoaderRoute: typeof AdminAgendaRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/contact': {
       id: '/api/public/contact'
       path: '/api/public/contact'
@@ -368,15 +418,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPostsIdRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/clients/$id': {
+      id: '/admin/clients/$id'
+      path: '/$id'
+      fullPath: '/admin/clients/$id'
+      preLoaderRoute: typeof AdminClientsIdRouteImport
+      parentRoute: typeof AdminClientsRoute
+    }
   }
 }
 
+interface AdminClientsRouteChildren {
+  AdminClientsIdRoute: typeof AdminClientsIdRoute
+}
+
+const AdminClientsRouteChildren: AdminClientsRouteChildren = {
+  AdminClientsIdRoute: AdminClientsIdRoute,
+}
+
+const AdminClientsRouteWithChildren = AdminClientsRoute._addFileChildren(
+  AdminClientsRouteChildren,
+)
+
 interface AdminRouteChildren {
+  AdminAgendaRoute: typeof AdminAgendaRoute
+  AdminClientsRoute: typeof AdminClientsRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
   AdminPostsIdRoute: typeof AdminPostsIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAgendaRoute: AdminAgendaRoute,
+  AdminClientsRoute: AdminClientsRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
   AdminPostsIdRoute: AdminPostsIdRoute,
 }
