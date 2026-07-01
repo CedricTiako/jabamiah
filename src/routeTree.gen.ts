@@ -17,6 +17,7 @@ import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as DonRouteImport } from './routes/don'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-therapies.index'
@@ -67,6 +68,11 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -83,9 +89,9 @@ const SoinsEtTherapiesIndexRoute = SoinsEtTherapiesIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const SoinsEtTherapiesSlugRoute = SoinsEtTherapiesSlugRouteImport.update({
   id: '/soins-et-therapies/$slug',
@@ -103,14 +109,15 @@ const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPostsIdRoute = AdminPostsIdRouteImport.update({
-  id: '/admin/posts/$id',
-  path: '/admin/posts/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/posts/$id',
+  path: '/posts/$id',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/don': typeof DonRoute
@@ -148,6 +155,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/don': typeof DonRoute
@@ -168,6 +176,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/blog'
     | '/contact'
     | '/don'
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/blog'
     | '/contact'
     | '/don'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   ContactRoute: typeof ContactRoute
   DonRoute: typeof DonRoute
@@ -232,9 +243,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemoignagesRoute: typeof TemoignagesRoute
   SoinsEtTherapiesSlugRoute: typeof SoinsEtTherapiesSlugRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   SoinsEtTherapiesIndexRoute: typeof SoinsEtTherapiesIndexRoute
-  AdminPostsIdRoute: typeof AdminPostsIdRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
 }
 
@@ -296,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -319,10 +335,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/soins-et-therapies/$slug': {
       id: '/soins-et-therapies/$slug'
@@ -347,13 +363,25 @@ declare module '@tanstack/react-router' {
     }
     '/admin/posts/$id': {
       id: '/admin/posts/$id'
-      path: '/admin/posts/$id'
+      path: '/posts/$id'
       fullPath: '/admin/posts/$id'
       preLoaderRoute: typeof AdminPostsIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
+
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminPostsIdRoute: typeof AdminPostsIdRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminPostsIdRoute: AdminPostsIdRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -368,6 +396,7 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   ContactRoute: ContactRoute,
   DonRoute: DonRoute,
@@ -377,9 +406,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemoignagesRoute: TemoignagesRoute,
   SoinsEtTherapiesSlugRoute: SoinsEtTherapiesSlugRoute,
-  AdminIndexRoute: AdminIndexRoute,
   SoinsEtTherapiesIndexRoute: SoinsEtTherapiesIndexRoute,
-  AdminPostsIdRoute: AdminPostsIdRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
 }
 export const routeTree = rootRouteImport
