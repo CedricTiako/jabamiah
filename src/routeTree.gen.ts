@@ -24,7 +24,18 @@ import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-the
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-therapies.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminSuiviRouteImport } from './routes/admin.suivi'
+import { Route as AdminStatistiquesRouteImport } from './routes/admin.statistiques'
+import { Route as AdminProtocolesRouteImport } from './routes/admin.protocoles'
+import { Route as AdminParametresRouteImport } from './routes/admin.parametres'
+import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
+import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
+import { Route as AdminDocumentsRouteImport } from './routes/admin.documents'
+import { Route as AdminContenuRouteImport } from './routes/admin.contenu'
+import { Route as AdminConsultationsRouteImport } from './routes/admin.consultations'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
+import { Route as AdminBilanRouteImport } from './routes/admin.bilan'
+import { Route as AdminAideRouteImport } from './routes/admin.aide'
 import { Route as AdminAgendaRouteImport } from './routes/admin.agenda'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as AdminPostsIdRouteImport } from './routes/admin.posts.$id'
@@ -106,9 +117,64 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AdminSuiviRoute = AdminSuiviRouteImport.update({
+  id: '/suivi',
+  path: '/suivi',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStatistiquesRoute = AdminStatistiquesRouteImport.update({
+  id: '/statistiques',
+  path: '/statistiques',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProtocolesRoute = AdminProtocolesRouteImport.update({
+  id: '/protocoles',
+  path: '/protocoles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminParametresRoute = AdminParametresRouteImport.update({
+  id: '/parametres',
+  path: '/parametres',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
+  id: '/paiements',
+  path: '/paiements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMessagesRoute = AdminMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContenuRoute = AdminContenuRouteImport.update({
+  id: '/contenu',
+  path: '/contenu',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConsultationsRoute = AdminConsultationsRouteImport.update({
+  id: '/consultations',
+  path: '/consultations',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminClientsRoute = AdminClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBilanRoute = AdminBilanRouteImport.update({
+  id: '/bilan',
+  path: '/bilan',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAideRoute = AdminAideRouteImport.update({
+  id: '/aide',
+  path: '/aide',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAgendaRoute = AdminAgendaRouteImport.update({
@@ -145,7 +211,18 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
+  '/admin/aide': typeof AdminAideRoute
+  '/admin/bilan': typeof AdminBilanRoute
   '/admin/clients': typeof AdminClientsRouteWithChildren
+  '/admin/consultations': typeof AdminConsultationsRoute
+  '/admin/contenu': typeof AdminContenuRoute
+  '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/messages': typeof AdminMessagesRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
+  '/admin/parametres': typeof AdminParametresRoute
+  '/admin/protocoles': typeof AdminProtocolesRoute
+  '/admin/statistiques': typeof AdminStatistiquesRoute
+  '/admin/suivi': typeof AdminSuiviRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -166,7 +243,18 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
+  '/admin/aide': typeof AdminAideRoute
+  '/admin/bilan': typeof AdminBilanRoute
   '/admin/clients': typeof AdminClientsRouteWithChildren
+  '/admin/consultations': typeof AdminConsultationsRoute
+  '/admin/contenu': typeof AdminContenuRoute
+  '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/messages': typeof AdminMessagesRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
+  '/admin/parametres': typeof AdminParametresRoute
+  '/admin/protocoles': typeof AdminProtocolesRoute
+  '/admin/statistiques': typeof AdminStatistiquesRoute
+  '/admin/suivi': typeof AdminSuiviRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -189,7 +277,18 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
+  '/admin/aide': typeof AdminAideRoute
+  '/admin/bilan': typeof AdminBilanRoute
   '/admin/clients': typeof AdminClientsRouteWithChildren
+  '/admin/consultations': typeof AdminConsultationsRoute
+  '/admin/contenu': typeof AdminContenuRoute
+  '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/messages': typeof AdminMessagesRoute
+  '/admin/paiements': typeof AdminPaiementsRoute
+  '/admin/parametres': typeof AdminParametresRoute
+  '/admin/protocoles': typeof AdminProtocolesRoute
+  '/admin/statistiques': typeof AdminStatistiquesRoute
+  '/admin/suivi': typeof AdminSuiviRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -213,7 +312,18 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/temoignages'
     | '/admin/agenda'
+    | '/admin/aide'
+    | '/admin/bilan'
     | '/admin/clients'
+    | '/admin/consultations'
+    | '/admin/contenu'
+    | '/admin/documents'
+    | '/admin/messages'
+    | '/admin/paiements'
+    | '/admin/parametres'
+    | '/admin/protocoles'
+    | '/admin/statistiques'
+    | '/admin/suivi'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin/'
@@ -234,7 +344,18 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/temoignages'
     | '/admin/agenda'
+    | '/admin/aide'
+    | '/admin/bilan'
     | '/admin/clients'
+    | '/admin/consultations'
+    | '/admin/contenu'
+    | '/admin/documents'
+    | '/admin/messages'
+    | '/admin/paiements'
+    | '/admin/parametres'
+    | '/admin/protocoles'
+    | '/admin/statistiques'
+    | '/admin/suivi'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin'
@@ -256,7 +377,18 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/temoignages'
     | '/admin/agenda'
+    | '/admin/aide'
+    | '/admin/bilan'
     | '/admin/clients'
+    | '/admin/consultations'
+    | '/admin/contenu'
+    | '/admin/documents'
+    | '/admin/messages'
+    | '/admin/paiements'
+    | '/admin/parametres'
+    | '/admin/protocoles'
+    | '/admin/statistiques'
+    | '/admin/suivi'
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin/'
@@ -390,11 +522,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/admin/suivi': {
+      id: '/admin/suivi'
+      path: '/suivi'
+      fullPath: '/admin/suivi'
+      preLoaderRoute: typeof AdminSuiviRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/statistiques': {
+      id: '/admin/statistiques'
+      path: '/statistiques'
+      fullPath: '/admin/statistiques'
+      preLoaderRoute: typeof AdminStatistiquesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/protocoles': {
+      id: '/admin/protocoles'
+      path: '/protocoles'
+      fullPath: '/admin/protocoles'
+      preLoaderRoute: typeof AdminProtocolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/parametres': {
+      id: '/admin/parametres'
+      path: '/parametres'
+      fullPath: '/admin/parametres'
+      preLoaderRoute: typeof AdminParametresRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/paiements': {
+      id: '/admin/paiements'
+      path: '/paiements'
+      fullPath: '/admin/paiements'
+      preLoaderRoute: typeof AdminPaiementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/messages': {
+      id: '/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/documents': {
+      id: '/admin/documents'
+      path: '/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AdminDocumentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contenu': {
+      id: '/admin/contenu'
+      path: '/contenu'
+      fullPath: '/admin/contenu'
+      preLoaderRoute: typeof AdminContenuRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/consultations': {
+      id: '/admin/consultations'
+      path: '/consultations'
+      fullPath: '/admin/consultations'
+      preLoaderRoute: typeof AdminConsultationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/clients': {
       id: '/admin/clients'
       path: '/clients'
       fullPath: '/admin/clients'
       preLoaderRoute: typeof AdminClientsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/bilan': {
+      id: '/admin/bilan'
+      path: '/bilan'
+      fullPath: '/admin/bilan'
+      preLoaderRoute: typeof AdminBilanRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/aide': {
+      id: '/admin/aide'
+      path: '/aide'
+      fullPath: '/admin/aide'
+      preLoaderRoute: typeof AdminAideRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/agenda': {
@@ -442,14 +651,36 @@ const AdminClientsRouteWithChildren = AdminClientsRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAgendaRoute: typeof AdminAgendaRoute
+  AdminAideRoute: typeof AdminAideRoute
+  AdminBilanRoute: typeof AdminBilanRoute
   AdminClientsRoute: typeof AdminClientsRouteWithChildren
+  AdminConsultationsRoute: typeof AdminConsultationsRoute
+  AdminContenuRoute: typeof AdminContenuRoute
+  AdminDocumentsRoute: typeof AdminDocumentsRoute
+  AdminMessagesRoute: typeof AdminMessagesRoute
+  AdminPaiementsRoute: typeof AdminPaiementsRoute
+  AdminParametresRoute: typeof AdminParametresRoute
+  AdminProtocolesRoute: typeof AdminProtocolesRoute
+  AdminStatistiquesRoute: typeof AdminStatistiquesRoute
+  AdminSuiviRoute: typeof AdminSuiviRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminPostsIdRoute: typeof AdminPostsIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAgendaRoute: AdminAgendaRoute,
+  AdminAideRoute: AdminAideRoute,
+  AdminBilanRoute: AdminBilanRoute,
   AdminClientsRoute: AdminClientsRouteWithChildren,
+  AdminConsultationsRoute: AdminConsultationsRoute,
+  AdminContenuRoute: AdminContenuRoute,
+  AdminDocumentsRoute: AdminDocumentsRoute,
+  AdminMessagesRoute: AdminMessagesRoute,
+  AdminPaiementsRoute: AdminPaiementsRoute,
+  AdminParametresRoute: AdminParametresRoute,
+  AdminProtocolesRoute: AdminProtocolesRoute,
+  AdminStatistiquesRoute: AdminStatistiquesRoute,
+  AdminSuiviRoute: AdminSuiviRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminPostsIdRoute: AdminPostsIdRoute,
 }

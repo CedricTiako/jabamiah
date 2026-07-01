@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "../integrations/supabase/client";
 import { checkIsAdmin } from "../lib/posts.functions";
@@ -39,7 +39,7 @@ function AdminLayout() {
     }
   }, [authState, check]);
 
-  async function handleSignIn(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSignIn(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setAuthError(null);
     const form = new FormData(e.currentTarget);
