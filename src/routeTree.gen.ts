@@ -16,7 +16,9 @@ import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politiq
 import { Route as PlantesEtRemedesRouteImport } from './routes/plantes-et-remedes'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as DonRouteImport } from './routes/don'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CguRouteImport } from './routes/cgu'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
@@ -78,9 +80,19 @@ const DonRoute = DonRouteImport.update({
   path: '/don',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CguRoute = CguRouteImport.update({
+  id: '/cgu',
+  path: '/cgu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -209,7 +221,9 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/cgu': typeof CguRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/don': typeof DonRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
@@ -242,7 +256,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cgu': typeof CguRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/don': typeof DonRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
@@ -277,7 +293,9 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
+  '/cgu': typeof CguRoute
   '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/don': typeof DonRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
@@ -313,7 +331,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/blog'
+    | '/cgu'
     | '/contact'
+    | '/cookies'
     | '/don'
     | '/mentions-legales'
     | '/plantes-et-remedes'
@@ -346,7 +366,9 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/blog'
+    | '/cgu'
     | '/contact'
+    | '/cookies'
     | '/don'
     | '/mentions-legales'
     | '/plantes-et-remedes'
@@ -380,7 +402,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/blog'
+    | '/cgu'
     | '/contact'
+    | '/cookies'
     | '/don'
     | '/mentions-legales'
     | '/plantes-et-remedes'
@@ -415,7 +439,9 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
+  CguRoute: typeof CguRoute
   ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
   DonRoute: typeof DonRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PlantesEtRemedesRoute: typeof PlantesEtRemedesRoute
@@ -479,11 +505,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgu': {
+      id: '/cgu'
+      path: '/cgu'
+      fullPath: '/cgu'
+      preLoaderRoute: typeof CguRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -722,7 +762,9 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
+  CguRoute: CguRoute,
   ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
   DonRoute: DonRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   PlantesEtRemedesRoute: PlantesEtRemedesRoute,

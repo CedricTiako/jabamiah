@@ -81,6 +81,8 @@ export function SiteFooter() {
           <div className="flex flex-wrap items-center justify-center gap-6">
             <Link to="/mentions-legales" className="hover:text-gold">{t("footer.legal")}</Link>
             <Link to="/politique-de-confidentialite" className="hover:text-gold">{t("footer.privacy")}</Link>
+            <Link to="/cgu" className="hover:text-gold">CGU</Link>
+            <Link to="/cookies" className="hover:text-gold">Cookies</Link>
           </div>
         </div>
       </div>

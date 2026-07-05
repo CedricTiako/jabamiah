@@ -18,6 +18,7 @@ import { TopBanner } from "../components/site/top-banner";
 import { SiteNav } from "../components/site/site-nav";
 import { SiteFooter } from "../components/site/site-footer";
 import { MobileBottomNav } from "../components/site/mobile-bottom-nav";
+import { CookieConsent } from "../components/site/cookie-consent";
 
 
 function NotFoundComponent() {
@@ -86,12 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children:
           "if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}",
       },
-      // Google Analytics (gtag.js)
-      { src: "https://www.googletagmanager.com/gtag/js?id=G-2SXQ3YJG2G", async: true },
-      {
-        children:
-          "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2SXQ3YJG2G');",
-      },
+      // Google Analytics : chargé uniquement après consentement (voir src/lib/analytics.ts + CookieConsent).
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -263,6 +259,7 @@ function RootComponent() {
         </main>
         <SiteFooter />
         <MobileBottomNav />
+        <CookieConsent />
       </div>
     </QueryClientProvider>
 
