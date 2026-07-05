@@ -13,7 +13,15 @@ import forestPath from "../assets/forest-path.jpg";
 export const Route = createFileRoute("/don")({
   loader: async () => {
     const locale = await getServerLocale();
-    let settings: PublicSettings = { paypal_client_id: "", donation_amounts: [5, 10, 20, 50] };
+    let settings: PublicSettings = {
+      paypal_client_id: "",
+      donation_amounts: [5, 10, 20, 50],
+      legal_editor_name: "",
+      legal_editor_status: "",
+      legal_editor_siret: "",
+      legal_editor_address: "",
+      legal_publication_director: "",
+    };
     try {
       settings = await getPublicSettings();
     } catch {}
