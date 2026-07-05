@@ -86,6 +86,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children:
           "if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}",
       },
+      // Google Analytics (gtag.js)
+      { src: "https://www.googletagmanager.com/gtag/js?id=G-2SXQ3YJG2G", async: true },
+      {
+        children:
+          "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2SXQ3YJG2G');",
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
