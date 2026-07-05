@@ -158,6 +158,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Consultations 100% gratuites à Forges-les-Eaux (Normandie) ou à distance.",
       },
       { name: "author", content: "Jabamiah" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+      { property: "og:url", content: SITE_URL },
       { property: "og:site_name", content: "Jabamiah" },
       { property: "og:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
       {

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemoignagesRouteImport } from './routes/temoignages'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politique-de-confidentialite'
 import { Route as PlantesEtRemedesRouteImport } from './routes/plantes-et-remedes'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
@@ -49,6 +50,11 @@ const TemoignagesRoute = TemoignagesRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PolitiqueDeConfidentialiteRoute =
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
@@ -240,6 +247,7 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/plantes-et-remedes': typeof PlantesEtRemedesRoute
   '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/temoignages'
     | '/admin/agenda'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/temoignages'
     | '/admin/agenda'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/plantes-et-remedes'
     | '/politique-de-confidentialite'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/temoignages'
     | '/admin/agenda'
@@ -408,6 +420,7 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PlantesEtRemedesRoute: typeof PlantesEtRemedesRoute
   PolitiqueDeConfidentialiteRoute: typeof PolitiqueDeConfidentialiteRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemoignagesRoute: typeof TemoignagesRoute
   SoinsEtTherapiesSlugRoute: typeof SoinsEtTherapiesSlugRoute
@@ -429,6 +442,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politique-de-confidentialite': {
@@ -707,6 +727,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   PlantesEtRemedesRoute: PlantesEtRemedesRoute,
   PolitiqueDeConfidentialiteRoute: PolitiqueDeConfidentialiteRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemoignagesRoute: TemoignagesRoute,
   SoinsEtTherapiesSlugRoute: SoinsEtTherapiesSlugRoute,
@@ -716,13 +737,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

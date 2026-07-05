@@ -83,8 +83,9 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         return new Response(xml, {
           headers: {
-            "Content-Type": "application/xml",
-            "Cache-Control": "public, max-age=3600",
+            "Content-Type": "application/xml; charset=utf-8",
+            // No cache so a domain change (SITE_URL) propagates immediately.
+            "Cache-Control": "public, max-age=0, must-revalidate",
           },
         });
       },
