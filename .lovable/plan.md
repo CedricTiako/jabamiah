@@ -1,88 +1,67 @@
+## Problème
+
+Actuellement, l'URL du site est **codée en dur** à plusieurs endroits du code source :
+
+- `src/routes/sitemap[.]xml.ts` → `BASE_URL = "https://jabamiah.smartsolution-it.com"`
+- `src/lib/seo.ts` → `SITE_URL = "https://jabamiah.smartsolution-it.com"`
+- `public/robots.txt` → `Sitemap: https://jabamiah.smartsolution-it.com/sitemap.xml`
+- `public/sitemap.xml` (fichier statique legacy qui traîne)
+- `src/routes/__root.tsx` → plusieurs `og:image`, JSON-LD, `og:url` en dur
+
+Quand le client déploie sur `https://jabamiah.eu/`, tout continue de pointer vers `smartsolution-it.com` → mauvais SEO, mauvaises previews sociales, sitemap invalide.
+
 ## Objectif
 
-Finaliser la refonte de jabamiah.smartsolution-it.com avec : i18n complet sur les pages principales, SEO multilingue (sitemap + hreflang + og:image), blog dynamique avec back-office admin, et formulaire de contact opérationnel via Resend.
+Rendre l'URL du site **configurable via une seule variable d'environnement**, avec `https://jabamiah.eu` comme valeur par défaut de production, pour que le client puisse déployer sans toucher au code.
 
----
+## Plan
 
-## 1. Internationalisation des pages restantes
+### 1. Centraliser l'URL dans une seule constante
 
-Extraire tout le texte visible de `index.tsx` (Accueil), `about.tsx` (À propos) et `contact.tsx` (Contact) vers les fichiers de traduction i18next, dans les 8 langues (FR, EN, ES, DE, IT, NL, PL, PT).
+Créer/adapter `src/lib/config.ts` (déjà présent) pour exposer :
 
-- Découper les contenus en namespaces : `home`, `about`, `contact`
-- Réutiliser les clés communes (CTA, labels formulaire) depuis `common`
-- Traductions FR rédigées, puis adaptées pour les 7 autres langues (ton spirituel/wellness préservé)
-- Vérifier les `<title>` et `<meta>` par route (voir section SEO)
+```ts
+export const SITE_URL =
+  process.env.SITE_URL              // serveur (sitemap, SSR head)
+  ?? import.meta.env.VITE_SITE_URL  // client
+  ?? "https://jabamiah.eu";         // défaut production
+```
 
-## 2. SEO multilingue complet
+Toutes les autres constantes (`BASE_URL` dans sitemap, `SITE_URL` dans seo.ts, URLs en dur dans `__root.tsx`) importent depuis là.
 
-**Sitemap dynamique** (`src/routes/sitemap[.]xml.ts`) :
-- Une entrée par route × par langue (8 versions)
-- Inclut routes statiques + routes dynamiques (soins, plantes, articles blog)
-- `<xhtml:link rel="alternate" hreflang="...">` pour chaque variante + `x-default` (FR)
+### 2. Ajouter la variable d'environnement
 
-**Hreflang par route** :
-- Helper `buildHreflangLinks(path)` qui génère les `<link rel="alternate">` pour les 8 langues
-- Intégré dans le `head()` de chaque `createFileRoute`
-- Canonical auto-pointé sur la version de la langue active
+- Ajouter `SITE_URL=https://jabamiah.eu` et `VITE_SITE_URL=https://jabamiah.eu` dans `.env` (defaults de prod).
+- Documenter dans un `README.md` (ou section deploy) : « pour changer de domaine, modifier `SITE_URL` / `VITE_SITE_URL` dans `.env` avant `bun run build` ».
 
-**og:image par route** :
-- Image hero existante réutilisée comme og:image pour Accueil, À propos, Soins, Plantes, Témoignages, Contact
-- Pour les articles de blog : image de couverture de l'article
-- `og:title`, `og:description`, `twitter:card` par route, traduits via i18n côté serveur (loader)
+### 3. Remplacer les URLs en dur
 
-**robots.txt** mis à jour avec la directive `Sitemap:`.
+- `src/routes/sitemap[.]xml.ts` → utiliser `SITE_URL` depuis `config.ts`
+- `src/lib/seo.ts` → utiliser `SITE_URL` depuis `config.ts` (au lieu de la constante locale)
+- `src/routes/__root.tsx` → remplacer les `https://jabamiah.smartsolution-it.com/...` codés en dur (og:image, JSON-LD, `SITE`) par `${SITE_URL}/...`
+- `public/robots.txt` → remplacer par `Sitemap: https://jabamiah.eu/sitemap.xml` (statique, mais avec la bonne valeur par défaut)
 
-## 3. Blog dynamique avec back-office admin
+### 4. Supprimer le sitemap statique legacy
 
-**Schéma base (Lovable Cloud)** :
-- `posts` : id, slug, status (draft/published), cover_image_url, author_id, published_at, created_at, updated_at
-- `post_translations` : id, post_id, locale, title, excerpt, body (markdown/HTML), meta_description
-- `app_role` enum + `user_roles` + fonction `has_role()` (pattern sécurisé)
-- RLS : lecture publique des `published`, écriture réservée aux `admin`
-- GRANTs explicites pour `anon` (SELECT published) / `authenticated` / `service_role`
+`public/sitemap.xml` est un vestige qui ne se met plus à jour. Le vrai sitemap dynamique est `src/routes/sitemap[.]xml.ts`. À supprimer pour éviter la confusion.
 
-**Routes publiques** :
-- `/blog` : liste paginée des articles publiés (filtrée par locale active, fallback FR)
-- `/blog/$slug` : article détail avec SEO complet (og:image = cover, JSON-LD Article, hreflang vers les autres locales)
+### 5. Vérification
 
-**Back-office admin** (sous `_authenticated/admin/`) :
-- Garde de route via `has_role('admin')`
-- `/admin/posts` : liste avec statut, recherche, création
-- `/admin/posts/$id` : éditeur multilingue avec onglets par langue, upload de cover image (Supabase Storage), preview, toggle publish/unpublish
-- Éditeur de contenu : zone markdown simple (textarea + preview) — pas de WYSIWYG complexe
+- `curl http://localhost:8080/sitemap.xml` en local doit afficher des `<loc>https://jabamiah.eu/...</loc>` (si `.env` a la bonne valeur).
+- Les balises `<link rel="canonical">`, `og:url`, `og:image` doivent toutes utiliser `jabamiah.eu`.
 
-**Server functions** (`src/lib/posts.functions.ts`) :
-- `listPublishedPosts({ locale })`, `getPostBySlug({ slug, locale })` — publics, via client publishable
-- `adminListPosts`, `adminUpsertPost`, `adminPublishPost`, `adminDeletePost` — protégés par `requireSupabaseAuth` + check `has_role('admin')`
+## Instructions pour le client (à documenter)
 
-## 4. Formulaire de contact opérationnel (Resend)
+Pour déployer sur un autre domaine, il suffit de modifier **deux lignes** dans `.env` :
 
-**Connecteur Resend** :
-- Vérifier les connexions existantes ; sinon brancher via le connecteur standard Resend
-- Sender : domaine `jabamiah.smartsolution-it.com` (à vérifier côté Resend) ou `onboarding@resend.dev` en fallback
+```
+SITE_URL=https://jabamiah.eu
+VITE_SITE_URL=https://jabamiah.eu
+```
 
-**Server route publique** (`src/routes/api/public/contact.ts`) :
-- POST : validation Zod (nom, email, sujet, message, honeypot anti-bot, rate-limit léger par IP en mémoire)
-- Envoi via gateway Resend → 1 email à l'adresse de Jabamiah + 1 accusé réception au visiteur
-- Templates HTML inline, aux couleurs de la marque (vert forêt / or / crème)
-- Réponses i18n côté client (succès / erreur)
+puis `bun run build`. Aucun autre fichier à toucher.
 
-**Côté client** :
-- `contact.tsx` : passage en `react-hook-form` + `zodResolver`, états loading/success/error traduits
-- Stockage optionnel du message en base (`contact_messages`) pour traçabilité admin
+## Hors périmètre
 
----
-
-## Détails techniques
-
-- **i18n SSR** : charger la locale active au niveau du `__root.tsx` loader pour que les `head()` aient accès aux traductions côté serveur (sinon les meta tags ne sont pas traduits dans le HTML initial → mauvais pour SEO)
-- **Routes localisées** : on garde les mêmes chemins (`/blog`, `/soins-et-therapies`) avec contenu traduit selon `?lang=` ou cookie ; pas de préfixe `/en/`, `/de/` (plus simple, hreflang gère l'indexation)
-- **Storage** : bucket `blog-covers` public pour les images d'articles
-- **Sécurité** : roles dans table dédiée (jamais sur profile), fonction `has_role` en SECURITY DEFINER, validation Zod sur toutes les server functions
-
-## Hors périmètre (à confirmer si besoin)
-
-- Système de commentaires sur le blog
-- Newsletter / abonnement email
-- Analytics (Plausible/GA)
-- Préfixes d'URL par langue (`/fr/`, `/en/`) — pourrait être ajouté plus tard si besoin SEO renforcé
+- Configuration DNS / hébergement chez le client (dépend de son provider).
+- Mise en place de redirections 301 depuis l'ancien domaine (à faire côté serveur du client).
