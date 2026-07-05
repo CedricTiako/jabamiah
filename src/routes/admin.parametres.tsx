@@ -181,3 +181,81 @@ function PaymentsSettings() {
     </div>
   );
 }
+
+const LEGAL_FIELDS: { key: string; label: string; placeholder: string; multiline?: boolean }[] = [
+  { key: "legal_editor_name", label: "Raison sociale / nom de l'éditeur", placeholder: "Ex. Loïc Omont" },
+  { key: "legal_editor_status", label: "Statut juridique", placeholder: "EI / EIRL / auto-entrepreneur / SASU…" },
+  { key: "legal_editor_siret", label: "SIRET", placeholder: "14 chiffres" },
+  { key: "legal_editor_address", label: "Adresse postale", placeholder: "N°, rue, code postal, ville", multiline: true },
+  { key: "legal_publication_director", label: "Directeur / directrice de la publication", placeholder: "Nom et prénom" },
+];
+
+function LegalSettings() {
+  const getSettings = useServerFn(adminGetSettings);
+  const updateSetting = useServerFn(adminUpdateSetting);
+  const { data: settings, refetch } = useQuery({ queryKey: ["admin-settings"], queryFn: () => getSettings() });
+
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  useEffect(() => {
+    if (!settings) return;
+    const next: Record<string, string> = {};
+    for (const f of LEGAL_FIELDS) next[f.key] = settings[f.key] ?? "";
+    setValues(next);
+  }, [settings]);
+
+  async function handleSave() {
+    setSaveStatus("saving");
+    try {
+      for (const f of LEGAL_FIELDS) {
+        await updateSetting({ data: { key: f.key, value: (values[f.key] ?? "").trim() } });
+      }
+      await refetch();
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2500);
+    } catch {
+      setSaveStatus("error");
+    }
+  }
+
+  return (
+    <div className="mt-4 grid gap-4 md:grid-cols-2">
+      {LEGAL_FIELDS.map((f) => (
+        <label key={f.key} className={`block ${f.multiline ? "md:col-span-2" : ""}`}>
+          <span className="text-xs uppercase tracking-[0.15em] text-forest">{f.label}</span>
+          {f.multiline ? (
+            <textarea
+              value={values[f.key] ?? ""}
+              onChange={(e) => setValues((v) => ({ ...v, [f.key]: e.target.value }))}
+              placeholder={f.placeholder}
+              rows={2}
+              className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm text-forest focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          ) : (
+            <input
+              type="text"
+              value={values[f.key] ?? ""}
+              onChange={(e) => setValues((v) => ({ ...v, [f.key]: e.target.value }))}
+              placeholder={f.placeholder}
+              className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm text-forest focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          )}
+        </label>
+      ))}
+      <div className="md:col-span-2 flex items-center gap-4">
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={saveStatus === "saving"}
+          className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.18em] text-cream hover:bg-forest-soft disabled:opacity-60"
+        >
+          {saveStatus === "saving" ? "Enregistrement…" : "Enregistrer"}
+        </button>
+        {saveStatus === "saved" && <p className="text-xs text-forest">Informations légales enregistrées ✓</p>}
+        {saveStatus === "error" && <p className="text-xs text-red-700">Erreur d'enregistrement.</p>}
+      </div>
+    </div>
+  );
+}
+
