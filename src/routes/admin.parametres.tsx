@@ -73,6 +73,19 @@ function ParametresPage() {
           <p className="mt-1 text-sm text-earth/70">Client ID PayPal et montants de dons suggérés pour la page /don.</p>
           <PaymentsSettings />
         </div>
+
+        {/* Legal / RGPD settings */}
+        <div className="flex flex-col rounded-xl bg-card p-6 ring-1 ring-gold/15 sm:col-span-2 lg:col-span-3 xl:col-span-4">
+          <div className="grid h-12 w-12 place-items-center rounded-full bg-[color:var(--gold-soft)]/50 text-forest">
+            <FileText className="h-5 w-5" />
+          </div>
+          <h3 className="mt-4 font-serif text-lg text-forest">Informations légales (Mentions légales / RGPD)</h3>
+          <p className="mt-1 text-sm text-earth/70">
+            Ces champs alimentent les pages <em>Mentions légales</em>, <em>Politique de confidentialité</em> et <em>CGU</em>.
+          </p>
+          <LegalSettings />
+        </div>
+
       </div>
 
       {/* Sidebar summary */}
