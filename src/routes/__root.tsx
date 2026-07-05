@@ -259,6 +259,7 @@ function RootComponent() {
         </main>
         <SiteFooter />
         <MobileBottomNav />
+        <CookieConsent />
       </div>
     </QueryClientProvider>
 
