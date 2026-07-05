@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { SUPPORTED_LANGUAGES } from "../i18n";
+import { SITE_URL } from "../lib/config";
 
-const BASE_URL = "https://jabamiah.smartsolution-it.com";
+const BASE_URL = SITE_URL;
 
 const STATIC_PATHS = [
   { path: "/", priority: "1.0", changefreq: "weekly" as const },
