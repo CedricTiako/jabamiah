@@ -18,6 +18,7 @@ import { TopBanner } from "../components/site/top-banner";
 import { SiteNav } from "../components/site/site-nav";
 import { SiteFooter } from "../components/site/site-footer";
 import { MobileBottomNav } from "../components/site/mobile-bottom-nav";
+import { CookieConsent } from "../components/site/cookie-consent";
 
 
 function NotFoundComponent() {
