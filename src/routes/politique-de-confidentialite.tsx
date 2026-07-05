@@ -1,8 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LegalPage, TBD } from "../components/site/legal-page";
 import { SITE_URL, EMAIL } from "../lib/config";
+import { getPublicSettings, type PublicSettings } from "../lib/settings.functions";
 
 export const Route = createFileRoute("/politique-de-confidentialite")({
+  loader: async () => {
+    let settings: PublicSettings = {
+      paypal_client_id: "",
+      donation_amounts: [],
+      legal_editor_name: "",
+      legal_editor_status: "",
+      legal_editor_siret: "",
+      legal_editor_address: "",
+      legal_publication_director: "",
+    };
+    try {
+      settings = await getPublicSettings();
+    } catch {}
+    return { settings };
+  },
   head: () => ({
     meta: [
       { title: "Politique de confidentialité — Jabamiah" },
@@ -21,6 +37,14 @@ export const Route = createFileRoute("/politique-de-confidentialite")({
 });
 
 function Privacy() {
+  const { settings } = Route.useLoaderData();
+  const editor = settings.legal_editor_name.trim()
+    ? <>{settings.legal_editor_name}</>
+    : <TBD>raison sociale de l'éditeur</TBD>;
+  const address = settings.legal_editor_address.trim()
+    ? <>{settings.legal_editor_address}</>
+    : <TBD>adresse</TBD>;
+
   return (
     <LegalPage
       eyebrow="RGPD"
@@ -35,9 +59,10 @@ function Privacy() {
 
       <h2>1. Responsable de traitement</h2>
       <p>
-        Le responsable de traitement est <TBD>raison sociale de l'éditeur</TBD>,{" "}
-        <TBD>adresse</TBD>, contact : <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+        Le responsable de traitement est {editor}, {address}, contact :{" "}
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
       </p>
+
 
       <h2>2. Données collectées et finalités</h2>
 
