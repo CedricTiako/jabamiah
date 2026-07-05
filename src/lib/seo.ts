@@ -1,6 +1,7 @@
 import { SUPPORTED_LANGUAGES } from "../i18n";
+import { SITE_URL } from "./config";
 
-export const SITE_URL = "https://jabamiah.smartsolution-it.com";
+export { SITE_URL };
 export const DEFAULT_LOCALE = "fr" as const;
 
 export function absoluteUrl(path: string): string {

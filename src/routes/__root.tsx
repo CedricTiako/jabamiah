@@ -12,6 +12,7 @@ import { getServerLocale, LOCALE_TO_OG } from "../lib/locale-server";
 import { useTranslation } from "react-i18next";
 
 import appCss from "../styles.css?url";
+import { SITE_URL } from "../lib/config";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBanner } from "../components/site/top-banner";
 import { SiteNav } from "../components/site/site-nav";
@@ -76,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: ({ loaderData }) => {
     const locale = loaderData?.locale ?? "fr";
     const ogLocale = LOCALE_TO_OG[locale as keyof typeof LOCALE_TO_OG] ?? "fr_FR";
-    const SITE = "https://jabamiah.smartsolution-it.com";
+    const SITE = SITE_URL;
     return {
     scripts: [
       // SSR lang attribute — runs before React hydration so crawlers see the right lang
@@ -166,7 +167,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: ogLocale },
-      { property: "og:image", content: "https://jabamiah.smartsolution-it.com/og-default.jpg" },
+      { property: "og:image", content: `${SITE_URL}/og-default.jpg` },
       { property: "og:image:width", content: "1216" },
       { property: "og:image:height", content: "640" },
       { property: "og:image:alt", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
@@ -177,7 +178,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
       },
-      { name: "twitter:image", content: "https://jabamiah.smartsolution-it.com/og-default.jpg" },
+      { name: "twitter:image", content: `${SITE_URL}/og-default.jpg` },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
