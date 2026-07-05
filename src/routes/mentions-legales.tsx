@@ -1,8 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalPage, TBD } from "../components/site/legal-page";
 import { SITE_URL, EMAIL, PHONE_DISPLAY } from "../lib/config";
+import { getPublicSettings, type PublicSettings } from "../lib/settings.functions";
 
 export const Route = createFileRoute("/mentions-legales")({
+  loader: async () => {
+    let settings: PublicSettings = {
+      paypal_client_id: "",
+      donation_amounts: [],
+      legal_editor_name: "",
+      legal_editor_status: "",
+      legal_editor_siret: "",
+      legal_editor_address: "",
+      legal_publication_director: "",
+    };
+    try {
+      settings = await getPublicSettings();
+    } catch {}
+    return { settings };
+  },
   head: () => ({
     meta: [
       { title: "Mentions légales — Jabamiah" },
@@ -20,7 +36,13 @@ export const Route = createFileRoute("/mentions-legales")({
   component: MentionsLegales,
 });
 
+function orTBD(value: string, placeholder: string) {
+  return value.trim() ? <>{value}</> : <TBD>{placeholder}</TBD>;
+}
+
 function MentionsLegales() {
+  const { settings } = Route.useLoaderData();
+
   return (
     <LegalPage eyebrow="Informations légales" title="Mentions légales" lastUpdated="5 juillet 2026">
       <h2>1. Éditeur du site</h2>
@@ -29,16 +51,20 @@ function MentionsLegales() {
       </p>
       <ul>
         <li>
-          <strong>Raison sociale / nom :</strong> <TBD>raison sociale ou nom de l'éditeur</TBD>
+          <strong>Raison sociale / nom :</strong>{" "}
+          {orTBD(settings.legal_editor_name, "raison sociale ou nom de l'éditeur")}
         </li>
         <li>
-          <strong>Statut juridique :</strong> <TBD>EI / EIRL / auto-entrepreneur / SASU…</TBD>
+          <strong>Statut juridique :</strong>{" "}
+          {orTBD(settings.legal_editor_status, "EI / EIRL / auto-entrepreneur / SASU…")}
         </li>
         <li>
-          <strong>SIRET :</strong> <TBD>numéro SIRET à 14 chiffres</TBD>
+          <strong>SIRET :</strong>{" "}
+          {orTBD(settings.legal_editor_siret, "numéro SIRET à 14 chiffres")}
         </li>
         <li>
-          <strong>Adresse :</strong> <TBD>adresse postale complète</TBD>
+          <strong>Adresse :</strong>{" "}
+          {orTBD(settings.legal_editor_address, "adresse postale complète")}
         </li>
         <li>
           <strong>Téléphone :</strong> {PHONE_DISPLAY}
@@ -50,7 +76,11 @@ function MentionsLegales() {
 
       <h2>2. Directeur de la publication</h2>
       <p>
-        <TBD>Nom et prénom du directeur ou de la directrice de la publication</TBD>.
+        {orTBD(
+          settings.legal_publication_director,
+          "Nom et prénom du directeur ou de la directrice de la publication",
+        )}
+        .
       </p>
 
       <h2>3. Hébergement</h2>

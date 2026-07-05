@@ -21,6 +21,11 @@ async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; 
 export interface PublicSettings {
   paypal_client_id: string;
   donation_amounts: number[];
+  legal_editor_name: string;
+  legal_editor_status: string;
+  legal_editor_siret: string;
+  legal_editor_address: string;
+  legal_publication_director: string;
 }
 
 function parseSettings(rows: Array<{ key: string; value: string | null }> | null): Record<string, string> {
@@ -45,9 +50,15 @@ export const getPublicSettings = createServerFn({ method: "GET" }).handler(
     return {
       paypal_client_id: map.paypal_client_id ?? "",
       donation_amounts: amounts,
+      legal_editor_name: map.legal_editor_name ?? "",
+      legal_editor_status: map.legal_editor_status ?? "",
+      legal_editor_siret: map.legal_editor_siret ?? "",
+      legal_editor_address: map.legal_editor_address ?? "",
+      legal_publication_director: map.legal_publication_director ?? "",
     };
   },
 );
+
 
 export const adminGetSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
