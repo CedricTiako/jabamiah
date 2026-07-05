@@ -17,6 +17,8 @@ const STATIC_PATHS = [
   { path: "/don", priority: "0.7", changefreq: "monthly" as const },
   { path: "/mentions-legales", priority: "0.3", changefreq: "yearly" as const },
   { path: "/politique-de-confidentialite", priority: "0.3", changefreq: "yearly" as const },
+  { path: "/cgu", priority: "0.3", changefreq: "yearly" as const },
+  { path: "/cookies", priority: "0.3", changefreq: "yearly" as const },
 ];
 
 const THERAPY_SLUGS = ["energetique", "pensee", "plantes", "harmonisation", "spirituel"];
