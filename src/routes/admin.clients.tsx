@@ -9,9 +9,6 @@ export const Route = createFileRoute("/admin/clients")({
   head: () => ({ meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
   component: ClientsPage,
 });
-  head: () => ({ meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
-  component: ClientsPage,
-});
 
 export type Client = {
   id: string;
