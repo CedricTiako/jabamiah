@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewClientDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
 import { Search, Plus, Phone, Mail, Filter } from "lucide-react";
 import { useState } from "react";
@@ -50,9 +51,16 @@ function ClientsPage() {
       subtitle={`${CLIENTS.length} fiches clients`}
       onSignOut={signOut}
       actions={
-        <button className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft">
-          <Plus className="h-3.5 w-3.5" /> Nouveau client
-        </button>
+        <NewClientDrawer>
+          {(open) => (
+            <button
+              onClick={open}
+              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            >
+              <Plus className="h-3.5 w-3.5" /> Nouveau client
+            </button>
+          )}
+        </NewClientDrawer>
       }
     >
       <div className="mb-4 flex flex-wrap items-center gap-3">

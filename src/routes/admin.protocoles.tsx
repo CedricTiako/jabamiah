@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewProtocolDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
 import { Plus, Layers } from "lucide-react";
 
@@ -25,9 +26,16 @@ function ProtocolesPage() {
       subtitle="Bibliothèque de protocoles thérapeutiques"
       onSignOut={signOut}
       actions={
-        <button className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft">
-          <Plus className="h-3.5 w-3.5" /> Nouveau protocole
-        </button>
+        <NewProtocolDrawer>
+          {(open) => (
+            <button
+              onClick={open}
+              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            >
+              <Plus className="h-3.5 w-3.5" /> Nouveau protocole
+            </button>
+          )}
+        </NewProtocolDrawer>
       }
     >
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

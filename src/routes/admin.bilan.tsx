@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewBilanDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
+import { Plus } from "lucide-react";
 
 export const Route = createFileRoute("/admin/bilan")({
   head: () => ({ meta: [{ title: "Bilan énergétique — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -21,7 +23,23 @@ const axes = [
 function BilanPage() {
   const { signOut } = useAdmin();
   return (
-    <AdminShell title="Bilan énergétique" subtitle="Analyse détaillée par axe" onSignOut={signOut}>
+    <AdminShell
+      title="Bilan énergétique"
+      subtitle="Analyse détaillée par axe"
+      onSignOut={signOut}
+      actions={
+        <NewBilanDrawer>
+          {(open) => (
+            <button
+              onClick={open}
+              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            >
+              <Plus className="h-3.5 w-3.5" /> Nouveau bilan
+            </button>
+          )}
+        </NewBilanDrawer>
+      }
+    >
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
           <h3 className="font-serif text-xl text-forest">Roue de l'équilibre</h3>

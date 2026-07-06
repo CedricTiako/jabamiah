@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewPaymentDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
-import { Heart, TrendingUp } from "lucide-react";
+import { Heart, TrendingUp, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/admin/paiements")({
   head: () => ({ meta: [{ title: "Paiements & Dons — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -20,7 +21,23 @@ function PaiementsPage() {
   const { signOut } = useAdmin();
   const total = rows.reduce((s, r) => s + r.amount, 0);
   return (
-    <AdminShell title="Paiements & Dons" subtitle="Gagnote solidaire · Suivi des contributions" onSignOut={signOut}>
+    <AdminShell
+      title="Paiements & Dons"
+      subtitle="Gagnote solidaire · Suivi des contributions"
+      onSignOut={signOut}
+      actions={
+        <NewPaymentDrawer>
+          {(open) => (
+            <button
+              onClick={open}
+              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            >
+              <Plus className="h-3.5 w-3.5" /> Enregistrer un don
+            </button>
+          )}
+        </NewPaymentDrawer>
+      }
+    >
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl bg-gradient-to-br from-[color:var(--rose-soft)] to-cream p-6 ring-1 ring-gold/15">
           <Heart className="h-5 w-5 text-[color:var(--rose-text)]" />
