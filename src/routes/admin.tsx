@@ -3,6 +3,7 @@ import { useEffect, useState, createContext, useContext, type FormEvent } from "
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "../integrations/supabase/client";
 import { checkIsAdmin } from "../lib/posts.functions";
+import { Toaster } from "../components/ui/sonner";
 
 type AdminCtx = { userId: string; signOut: () => Promise<void> };
 const AdminContext = createContext<AdminCtx | null>(null);
