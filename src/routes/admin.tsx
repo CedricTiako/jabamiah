@@ -103,6 +103,7 @@ function AdminLayout() {
   return (
     <AdminContext.Provider value={{ userId: adminCheck.userId, signOut: handleSignOut }}>
       <Outlet />
+      <Toaster position="bottom-right" richColors />
     </AdminContext.Provider>
   );
 }
