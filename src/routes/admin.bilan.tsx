@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewBilanDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
+import { Plus } from "lucide-react";
 
 export const Route = createFileRoute("/admin/bilan")({
   head: () => ({ meta: [{ title: "Bilan énergétique — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
