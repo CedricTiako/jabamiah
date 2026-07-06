@@ -2,44 +2,54 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "../components/admin/admin-shell";
+import { KpiCard, SectionCard, Pill } from "../components/admin/ui";
 import { useAdmin } from "./admin";
 import { adminListPosts, adminListContactMessages } from "../lib/posts.functions";
 import {
   Users,
   CalendarDays,
   Sparkles,
-  FolderClosed,
+  MessageSquare,
   TrendingUp,
   Heart,
   Clock,
-  Star,
+  Plus,
+  Feather,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
-  head: () => ({ meta: [{ title: "Tableau de bord — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Tableau de bord — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: AdminDashboard,
 });
 
-const stats = [
-  { label: "Clients actifs", value: "28", delta: "+3 ce mois", icon: Users, tint: "bg-forest/10 text-forest" },
-  { label: "Consultations", value: "152", delta: "12 cette semaine", icon: Sparkles, tint: "bg-gold/15 text-[color:var(--earth)]" },
-  { label: "Documents", value: "36", delta: "8 en attente", icon: FolderClosed, tint: "bg-forest/10 text-forest" },
-  { label: "Satisfaction", value: "4.9/5", delta: "24 avis", icon: Star, tint: "bg-gold/15 text-[color:var(--earth)]" },
-];
-
 const upcoming = [
-  { name: "Sophie Martin", time: "Demain · 14h00", type: "Consultation énergétique", state: "Confirmé" },
-  { name: "Julien Dupont", time: "Ven. 04/07 · 10h30", type: "Suivi harmonisation", state: "Confirmé" },
-  { name: "Marie Leroy", time: "Ven. 04/07 · 16h00", type: "Première consultation", state: "À valider" },
-  { name: "Antoine Bernard", time: "Sam. 05/07 · 09h30", type: "Bilan énergétique", state: "Confirmé" },
+  { name: "Sophie Martin", time: "Demain · 14h00", type: "Consultation énergétique", state: "Confirmé" as const },
+  { name: "Julien Dupont", time: "Ven. 04/07 · 10h30", type: "Suivi harmonisation", state: "Confirmé" as const },
+  { name: "Marie Leroy", time: "Ven. 04/07 · 16h00", type: "Première consultation", state: "À valider" as const },
+  { name: "Antoine Bernard", time: "Sam. 05/07 · 09h30", type: "Bilan énergétique", state: "Confirmé" as const },
 ];
 
 const activity = [
-  { text: "Nouveau message de Sophie Martin", when: "Il y a 12 min", tone: "message" },
-  { text: "Consultation Julien Dupont clôturée (compte-rendu ajouté)", when: "Il y a 2 h", tone: "consult" },
-  { text: "Don reçu — 25 €", when: "Il y a 5 h", tone: "don" },
-  { text: "Nouvel avis 5★ publié", when: "Hier", tone: "avis" },
+  { text: "Nouveau message de Sophie Martin", when: "Il y a 12 min" },
+  { text: "Consultation Julien Dupont clôturée (compte-rendu ajouté)", when: "Il y a 2 h" },
+  { text: "Don reçu — 25 €", when: "Il y a 5 h" },
+  { text: "Nouvel avis 5★ publié", when: "Hier" },
 ];
+
+function today() {
+  const d = new Date();
+  return d.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 function AdminDashboard() {
   const { signOut } = useAdmin();
@@ -54,150 +64,161 @@ function AdminDashboard() {
   const messagesCount = messages?.length ?? 0;
 
   return (
-    <AdminShell
-      title="Tableau de bord"
-      subtitle="Vue d'ensemble de votre activité"
-      onSignOut={signOut}
-    >
-      {/* Welcome hero */}
-      <div className="mb-8 flex flex-wrap items-start justify-between gap-4 rounded-2xl bg-gradient-to-br from-forest to-forest-soft p-6 text-cream md:p-8">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-cream/70">Bienvenue, Loïc</p>
-          <h2 className="mt-2 font-serif text-3xl md:text-4xl">Prendre soin de l'autre,<br />commence par s'organiser.</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to="/admin/agenda"
-            className="rounded-md bg-cream px-5 py-2.5 text-xs uppercase tracking-[0.18em] text-forest hover:bg-cream-warm"
-          >
-            Voir l'agenda
-          </Link>
-          <Link
-            to="/admin/clients"
-            className="rounded-md border border-cream/40 px-5 py-2.5 text-xs uppercase tracking-[0.18em] text-cream hover:bg-cream/10"
-          >
-            Nouveau client
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        {stats.map((s) => {
-          const Icon = s.icon;
-          return (
-            <div key={s.label} className="rounded-xl bg-card p-5 ring-1 ring-gold/15">
-              <div className={`inline-flex h-10 w-10 items-center justify-center rounded-full ${s.tint}`}>
-                <Icon className="h-5 w-5" />
-              </div>
-              <p className="mt-4 text-xs uppercase tracking-[0.15em] text-earth/60">{s.label}</p>
-              <p className="mt-1 font-serif text-3xl text-forest">{s.value}</p>
-              <p className="mt-1 text-xs text-earth/60">{s.delta}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Two columns */}
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        {/* Upcoming */}
-        <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15 lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h3 className="font-serif text-xl text-forest">Prochains rendez-vous</h3>
-            <Link to="/admin/agenda" className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
-              Tout voir →
+    <AdminShell title="Tableau de bord" subtitle={today()} onSignOut={signOut}>
+      {/* Hero — editorial welcome */}
+      <section className="relative mb-10 overflow-hidden rounded-3xl bg-gradient-to-br from-forest via-forest to-forest-soft p-8 text-cream md:p-12">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-gold/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-cream/5 blur-3xl" />
+        <div className="relative grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-cream/60">Bienvenue, Loïc</p>
+            <h2 className="mt-4 max-w-2xl font-serif text-3xl leading-[1.1] md:text-5xl">
+              Prendre soin de l'autre,
+              <br />
+              <span className="text-gold">commence par s'organiser.</span>
+            </h2>
+            <p className="mt-4 max-w-xl text-sm text-cream/75">
+              Vous avez <span className="text-cream">4 rendez-vous</span> cette semaine et{" "}
+              <span className="text-cream">{messagesCount} message{messagesCount > 1 ? "s" : ""}</span> en attente.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              to="/admin/agenda"
+              className="inline-flex items-center gap-2 rounded-full bg-cream px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] text-forest hover:bg-cream-warm"
+            >
+              <CalendarDays className="h-3.5 w-3.5" /> Agenda
+            </Link>
+            <Link
+              to="/admin/clients"
+              className="inline-flex items-center gap-2 rounded-full border border-cream/30 px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] text-cream hover:bg-cream/10"
+            >
+              <Plus className="h-3.5 w-3.5" /> Nouveau client
             </Link>
           </div>
-          <ul className="mt-5 divide-y divide-gold/10">
-            {upcoming.map((r) => (
-              <li key={r.name + r.time} className="flex items-center justify-between gap-4 py-3">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-forest/10 text-forest">
-                    <CalendarDays className="h-4 w-4" />
+        </div>
+      </section>
+
+      {/* KPIs */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        <KpiCard label="Clients actifs" value="28" delta="+3 ce mois" trend="up" icon={Users} />
+        <KpiCard label="Consultations" value="152" delta="12 cette semaine" trend="up" icon={Sparkles} />
+        <KpiCard label="Messages" value={String(messagesCount)} delta="via formulaire" icon={MessageSquare} />
+        <KpiCard label="Satisfaction" value="4.9" delta="24 avis · 5 étoiles" trend="up" icon={TrendingUp} />
+      </div>
+
+      {/* Main grid */}
+      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+        {/* Upcoming appointments */}
+        <SectionCard
+          className="lg:col-span-2"
+          eyebrow="À venir"
+          title="Prochains rendez-vous"
+          action={{ to: "/admin/agenda", label: "Tout voir" }}
+        >
+          <ul className="divide-y divide-gold/10">
+            {upcoming.map((r, i) => (
+              <li key={r.name + r.time} className="flex items-center justify-between gap-4 py-3.5">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-forest/8 font-serif text-sm text-forest ring-1 ring-forest/10">
+                    {r.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-forest">{r.name}</p>
-                    <p className="text-xs text-earth/60">{r.type} · {r.time}</p>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-forest">{r.name}</p>
+                    <p className="mt-0.5 flex items-center gap-1.5 text-xs text-earth/60">
+                      <Clock className="h-3 w-3" />
+                      <span className="truncate">
+                        {r.type} · {r.time}
+                      </span>
+                    </p>
                   </div>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-widest ${
-                  r.state === "Confirmé" ? "bg-forest/10 text-forest" : "bg-[color:var(--gold-soft)]/50 text-[color:var(--earth)]"
-                }`}>{r.state}</span>
+                <Pill tone={r.state === "Confirmé" ? "green" : "gold"}>{r.state}</Pill>
+                {i === -1 && null}
               </li>
             ))}
           </ul>
-        </div>
+        </SectionCard>
 
         {/* Activity feed */}
-        <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
-          <h3 className="font-serif text-xl text-forest">Activité récente</h3>
-          <ul className="mt-5 space-y-4">
+        <SectionCard eyebrow="Journal" title="Activité récente">
+          <ol className="relative space-y-4 border-l border-gold/20 pl-5">
             {activity.map((a) => (
-              <li key={a.text} className="flex gap-3">
-                <div className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-gold" />
-                <div>
-                  <p className="text-sm text-earth/90">{a.text}</p>
-                  <p className="mt-0.5 text-xs text-earth/50 flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> {a.when}
-                  </p>
-                </div>
+              <li key={a.text} className="relative">
+                <span className="absolute -left-[26px] top-1 h-2.5 w-2.5 rounded-full bg-gold ring-4 ring-cream" />
+                <p className="text-sm leading-snug text-earth/90">{a.text}</p>
+                <p className="mt-0.5 flex items-center gap-1 text-xs text-earth/50">
+                  <Clock className="h-3 w-3" /> {a.when}
+                </p>
               </li>
             ))}
-          </ul>
-        </div>
+          </ol>
+        </SectionCard>
       </div>
 
-      {/* Second row: content + KPI */}
+      {/* Second row */}
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
-          <div className="flex items-center justify-between">
-            <h3 className="font-serif text-xl text-forest">Contenu (Blog)</h3>
-            <Link to="/admin/contenu" className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
-              Gérer →
-            </Link>
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="rounded-lg bg-cream-warm p-4">
-              <p className="text-xs uppercase tracking-[0.15em] text-earth/60">Publiés</p>
-              <p className="mt-1 font-serif text-2xl text-forest">{publishedCount}</p>
+        {/* Content */}
+        <SectionCard
+          eyebrow="Publication"
+          title="Contenu du blog"
+          action={{ to: "/admin/contenu", label: "Gérer" }}
+        >
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-cream-warm/70 p-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-earth/55">Publiés</p>
+              <p className="mt-2 font-serif text-3xl text-forest">{publishedCount}</p>
             </div>
-            <div className="rounded-lg bg-cream-warm p-4">
-              <p className="text-xs uppercase tracking-[0.15em] text-earth/60">Brouillons</p>
-              <p className="mt-1 font-serif text-2xl text-forest">{draftCount}</p>
+            <div className="rounded-xl bg-cream-warm/70 p-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-earth/55">Brouillons</p>
+              <p className="mt-2 font-serif text-3xl text-forest">{draftCount}</p>
             </div>
           </div>
           <Link
             to="/admin/posts/$id"
             params={{ id: "new" }}
-            className="mt-5 inline-flex w-full items-center justify-center rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest px-4 py-2.5 text-[11px] uppercase tracking-[0.2em] text-cream hover:bg-forest-soft"
           >
-            + Nouvel article
+            <Feather className="h-3.5 w-3.5" /> Nouvel article
           </Link>
-        </div>
+        </SectionCard>
 
-        <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
-          <div className="flex items-center justify-between">
-            <h3 className="font-serif text-xl text-forest">Messages reçus</h3>
-            <Link to="/admin/messages" className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
-              Ouvrir →
-            </Link>
+        {/* Messages */}
+        <SectionCard
+          eyebrow="Boîte de réception"
+          title="Messages reçus"
+          action={{ to: "/admin/messages", label: "Ouvrir" }}
+        >
+          <div className="flex items-end justify-between">
+            <p className="font-serif text-5xl leading-none text-forest">{messagesCount}</p>
+            <MessageSquare className="h-6 w-6 text-gold" />
           </div>
-          <p className="mt-6 font-serif text-4xl text-forest">{messagesCount}</p>
-          <p className="text-xs text-earth/60">via le formulaire de contact</p>
-        </div>
+          <p className="mt-3 text-xs text-earth/60">
+            {messagesCount === 0
+              ? "Aucun nouveau message."
+              : "Depuis le formulaire de contact du site."}
+          </p>
+        </SectionCard>
 
-        <div className="rounded-xl bg-gradient-to-br from-[color:var(--rose-soft)] to-cream p-6 ring-1 ring-gold/15">
-          <div className="flex items-center gap-2">
+        {/* Solidarity */}
+        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[color:var(--rose-soft)] via-cream-warm to-cream p-6 ring-1 ring-gold/15">
+          <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[color:var(--rose-text)]/10 blur-2xl" />
+          <div className="relative flex items-center gap-2">
             <Heart className="h-4 w-4 text-[color:var(--rose-text)]" />
-            <h3 className="font-serif text-xl text-[color:var(--rose-text)]">Gagnote solidaire</h3>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-[color:var(--rose-text)]">
+              Cagnotte solidaire
+            </p>
           </div>
-          <p className="mt-5 font-serif text-3xl text-[color:var(--rose-text)]">1 245 €</p>
-          <p className="text-xs text-earth/70">collectés ce mois-ci</p>
-          <div className="mt-4 flex items-center gap-2 text-xs text-earth/70">
-            <TrendingUp className="h-3.5 w-3.5" />
+          <p className="relative mt-4 font-serif text-4xl text-[color:var(--rose-text)]">1 245 €</p>
+          <p className="relative mt-1 text-xs text-earth/70">collectés ce mois-ci</p>
+          <div className="relative mt-4 h-1.5 w-full overflow-hidden rounded-full bg-cream">
+            <div className="h-full w-[62%] rounded-full bg-[color:var(--rose-text)]" />
+          </div>
+          <div className="relative mt-3 flex items-center gap-2 text-xs text-earth/70">
+            <TrendingUp className="h-3.5 w-3.5 text-[color:var(--rose-text)]" />
             <span>+18% vs mois dernier</span>
           </div>
-        </div>
+        </section>
       </div>
     </AdminShell>
   );
