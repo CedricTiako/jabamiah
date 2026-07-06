@@ -37,9 +37,16 @@ function AgendaPage() {
       subtitle="Semaine du 30 juin au 6 juillet 2026"
       onSignOut={signOut}
       actions={
-        <button className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft">
-          <Plus className="h-3.5 w-3.5" /> Nouveau RDV
-        </button>
+        <NewAppointmentDrawer>
+          {(open) => (
+            <button
+              onClick={open}
+              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            >
+              <Plus className="h-3.5 w-3.5" /> Nouveau RDV
+            </button>
+          )}
+        </NewAppointmentDrawer>
       }
     >
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
