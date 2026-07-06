@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewProtocolDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
 import { Plus, Layers } from "lucide-react";
 
