@@ -1,10 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewClientDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
 import { Search, Plus, Phone, Mail, Filter } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/admin/clients")({
+  head: () => ({ meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  component: ClientsPage,
+});
   head: () => ({ meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
   component: ClientsPage,
 });
