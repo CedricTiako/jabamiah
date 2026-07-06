@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewPaymentDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
-import { Heart, TrendingUp } from "lucide-react";
+import { Heart, TrendingUp, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/admin/paiements")({
   head: () => ({ meta: [{ title: "Paiements & Dons — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
