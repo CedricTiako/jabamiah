@@ -61,8 +61,8 @@ export function SectionCard({ title, eyebrow, action, children, className = "" }
         </div>
         {action ? (
           <Link
-            to={action.to}
-            params={action.params as never}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            to={action.to as any}
             className="inline-flex shrink-0 items-center gap-1 text-[11px] uppercase tracking-[0.18em] text-gold hover:text-forest"
           >
             {action.label}
