@@ -26,9 +26,16 @@ function DocumentsPage() {
       subtitle={`${docs.length} documents · Modèles & comptes-rendus`}
       onSignOut={signOut}
       actions={
-        <button className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft">
-          <Upload className="h-3.5 w-3.5" /> Importer
-        </button>
+        <UploadDocumentDrawer>
+          {(open) => (
+            <button
+              onClick={open}
+              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+            >
+              <Upload className="h-3.5 w-3.5" /> Importer
+            </button>
+          )}
+        </UploadDocumentDrawer>
       }
     >
       <div className="mb-4 flex items-center gap-3">
