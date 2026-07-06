@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
+import { NewConsultationDrawer } from "../components/admin/forms";
 import { useAdmin } from "./admin";
 import { Plus } from "lucide-react";
 
