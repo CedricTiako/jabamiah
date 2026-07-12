@@ -1,12 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { useAdmin } from "./admin";
-import { Phone, Mail, MapPin, User, Edit3, Printer, Plus, TrendingUp } from "lucide-react";
+import { Phone, Mail, MapPin, User, Edit3, Printer, Plus, TrendingUp, FileText, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { adminGetClient, adminUpdateClientNotes } from "../lib/clients.functions";
 import { adminListConsultationsByClient } from "../lib/consultations.functions";
+import { adminDeleteDocument, adminGetDocumentSignedUrl, adminListDocumentsByClient } from "../lib/documents.functions";
+import { UploadDocumentDrawer } from "../components/admin/upload-document-drawer";
 
 export const Route = createFileRoute("/admin/clients/$id")({
   head: () => ({ meta: [{ title: "Fiche client — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -133,9 +135,7 @@ function ClientDetailPage() {
       {tab === "Suivi & Évolution" && (
         <ComingSoonTab title="Suivi & Évolution" hint="Vue agrégée à venir : dernière séance, prochain RDV, évolution du ressenti." />
       )}
-      {tab === "Documents" && (
-        <ComingSoonTab title="Documents" hint="L'espace documents (upload, aperçu, téléchargement) sera bientôt disponible." />
-      )}
+      {tab === "Documents" && <DocumentsTab clientId={client.id} />}
       {tab === "Paiements" && (
         <ComingSoonTab title="Paiements" hint="L'historique des paiements et dons de ce client sera bientôt disponible." />
       )}
@@ -207,6 +207,80 @@ function ConsultationsTab({ clientId }: { clientId: string }) {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function formatSize(bytes: number | null) {
+  if (!bytes) return "—";
+  if (bytes < 1024) return `${bytes} o`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} Ko`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
+}
+
+function DocumentsTab({ clientId }: { clientId: string }) {
+  const queryClient = useQueryClient();
+  const listByClient = useServerFn(adminListDocumentsByClient);
+  const { data: documents, isLoading } = useQuery({
+    queryKey: ["admin-documents-by-client", clientId],
+    queryFn: () => listByClient({ data: { client_id: clientId } }),
+  });
+
+  const getSignedUrl = useServerFn(adminGetDocumentSignedUrl);
+  const openMutation = useMutation({
+    mutationFn: (storagePath: string) => getSignedUrl({ data: { storage_path: storagePath } }),
+    onSuccess: ({ url }) => window.open(url, "_blank", "noopener,noreferrer"),
+  });
+
+  const deleteDocument = useServerFn(adminDeleteDocument);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteDocument({ data: { id } }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-documents-by-client", clientId] }),
+  });
+
+  const rows = documents ?? [];
+
+  return (
+    <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
+      {!isLoading && rows.length === 0 && (
+        <p className="text-sm text-earth/60 lg:col-span-3">Aucun document pour ce client.</p>
+      )}
+      {rows.map((d) => (
+        <div key={d.id} className="rounded-xl bg-card p-5 ring-1 ring-gold/15">
+          <div className="grid h-12 w-12 place-items-center rounded-lg bg-[color:var(--rose-soft)] text-[color:var(--rose-text)]">
+            <FileText className="h-6 w-6" />
+          </div>
+          <p className="mt-4 text-sm font-medium text-forest">{d.title}</p>
+          <p className="text-xs text-earth/60">{d.doc_type ?? "Document"} · {formatSize(d.file_size)}</p>
+          <div className="mt-4 flex gap-2">
+            <button
+              onClick={() => openMutation.mutate(d.storage_path)}
+              disabled={openMutation.isPending}
+              className="flex-1 rounded-md border border-gold/30 px-3 py-2 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm"
+            >
+              Ouvrir
+            </button>
+            <button
+              onClick={() => deleteMutation.mutate(d.id)}
+              disabled={deleteMutation.isPending}
+              className="rounded-md border border-gold/30 px-3 py-2 text-xs text-earth/60 hover:bg-cream-warm hover:text-[color:var(--rose-text)]"
+              aria-label="Supprimer"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      ))}
+      <UploadDrawerButton clientId={clientId} />
+    </div>
+  );
+}
+
+function UploadDrawerButton({ clientId }: { clientId: string }) {
+  return (
+    <div className="rounded-xl border-2 border-dashed border-gold/30 p-5">
+      <UploadDocumentDrawer defaultClientId={clientId} />
     </div>
   );
 }
