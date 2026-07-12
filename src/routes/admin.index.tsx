@@ -5,6 +5,7 @@ import { AdminShell } from "../components/admin/admin-shell";
 import { KpiCard, SectionCard, Pill } from "../components/admin/ui";
 import { useAdmin } from "./admin";
 import { adminListPosts, adminListContactMessages } from "../lib/posts.functions";
+import { adminListPayments } from "../lib/payments.functions";
 import {
   Users,
   CalendarDays,
@@ -55,13 +56,31 @@ function AdminDashboard() {
   const { signOut } = useAdmin();
   const listPosts = useServerFn(adminListPosts);
   const listMessages = useServerFn(adminListContactMessages);
+  const listPayments = useServerFn(adminListPayments);
 
   const { data: posts } = useQuery({ queryKey: ["admin-posts"], queryFn: () => listPosts() });
   const { data: messages } = useQuery({ queryKey: ["admin-messages"], queryFn: () => listMessages() });
+  const { data: payments } = useQuery({ queryKey: ["admin-payments"], queryFn: () => listPayments() });
 
   const draftCount = (posts ?? []).filter((p) => p.status === "draft").length;
   const publishedCount = (posts ?? []).filter((p) => p.status === "published").length;
   const messagesCount = messages?.length ?? 0;
+
+  const now = new Date();
+  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const monthTotal = (payments ?? [])
+    .filter((p) => {
+      const d = new Date(p.payment_date);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    })
+    .reduce((s, p) => s + p.amount, 0);
+  const lastMonthTotal = (payments ?? [])
+    .filter((p) => {
+      const d = new Date(p.payment_date);
+      return d.getFullYear() === lastMonth.getFullYear() && d.getMonth() === lastMonth.getMonth();
+    })
+    .reduce((s, p) => s + p.amount, 0);
+  const monthDeltaPct = lastMonthTotal > 0 ? Math.round(((monthTotal - lastMonthTotal) / lastMonthTotal) * 100) : null;
 
   return (
     <AdminShell title="Tableau de bord" subtitle={today()} onSignOut={signOut}>
@@ -209,15 +228,14 @@ function AdminDashboard() {
               Cagnotte solidaire
             </p>
           </div>
-          <p className="relative mt-4 font-serif text-4xl text-[color:var(--rose-text)]">1 245 €</p>
+          <p className="relative mt-4 font-serif text-4xl text-[color:var(--rose-text)]">{monthTotal.toFixed(0)} €</p>
           <p className="relative mt-1 text-xs text-earth/70">collectés ce mois-ci</p>
-          <div className="relative mt-4 h-1.5 w-full overflow-hidden rounded-full bg-cream">
-            <div className="h-full w-[62%] rounded-full bg-[color:var(--rose-text)]" />
-          </div>
-          <div className="relative mt-3 flex items-center gap-2 text-xs text-earth/70">
-            <TrendingUp className="h-3.5 w-3.5 text-[color:var(--rose-text)]" />
-            <span>+18% vs mois dernier</span>
-          </div>
+          {monthDeltaPct !== null && (
+            <div className="relative mt-3 flex items-center gap-2 text-xs text-earth/70">
+              <TrendingUp className="h-3.5 w-3.5 text-[color:var(--rose-text)]" />
+              <span>{monthDeltaPct >= 0 ? "+" : ""}{monthDeltaPct}% vs mois dernier</span>
+            </div>
+          )}
         </section>
       </div>
     </AdminShell>
