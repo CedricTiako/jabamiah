@@ -1,94 +1,157 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewAppointmentDrawer } from "../components/admin/forms";
+import { NewAppointmentDrawer } from "../components/admin/new-appointment-drawer";
 import { useAdmin } from "./admin";
-import { CalendarDays, Plus, Clock, MapPin } from "lucide-react";
+import { CalendarDays, Clock, MapPin } from "lucide-react";
+import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { adminListAppointments, adminUpdateAppointmentStatus } from "../lib/appointments.functions";
 
 export const Route = createFileRoute("/admin/agenda")({
   head: () => ({ meta: [{ title: "Agenda — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
   component: AgendaPage,
 });
 
-const days = ["Lun 30", "Mar 01", "Mer 02", "Jeu 03", "Ven 04", "Sam 05", "Dim 06"];
-const hours = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00", "17:00"];
+type AppointmentStatus = "Planifié" | "Confirmé" | "Annulé" | "Honoré" | "No-show";
 
-const events: Record<string, { title: string; who: string; tone: "green" | "gold" | "rose" }> = {
-  "Mar 01-10:00": { title: "Consultation", who: "Sophie Martin", tone: "green" },
-  "Mar 01-15:00": { title: "Bilan", who: "Julien Dupont", tone: "gold" },
-  "Mer 02-11:00": { title: "Harmonisation", who: "Marie Leroy", tone: "green" },
-  "Jeu 03-14:00": { title: "Suivi", who: "Antoine B.", tone: "green" },
-  "Jeu 03-16:00": { title: "Première consult.", who: "Nora K.", tone: "rose" },
-  "Ven 04-10:00": { title: "Consultation", who: "Julien Dupont", tone: "green" },
-  "Ven 04-16:00": { title: "Première consult.", who: "Marie Leroy", tone: "rose" },
-  "Sam 05-09:00": { title: "Bilan", who: "Antoine B.", tone: "gold" },
+const STATUSES: AppointmentStatus[] = ["Planifié", "Confirmé", "Annulé", "Honoré", "No-show"];
+
+const statusTone: Record<AppointmentStatus, string> = {
+  Planifié: "bg-earth/10 text-earth/70",
+  Confirmé: "bg-forest/10 text-forest",
+  Annulé: "bg-[color:var(--rose-soft)] text-[color:var(--rose-text)]",
+  Honoré: "bg-[color:var(--gold-soft)]/60 text-[color:var(--earth)]",
+  "No-show": "bg-[color:var(--rose-soft)] text-[color:var(--rose-text)]",
 };
 
-const toneClass: Record<"green" | "gold" | "rose", string> = {
-  green: "bg-forest text-cream",
-  gold: "bg-[color:var(--gold)] text-[color:var(--earth)]",
-  rose: "bg-[color:var(--rose-soft)] text-[color:var(--rose-text)]",
+const SESSION_TYPE_LABELS: Record<string, string> = {
+  premiere: "Première consultation",
+  suivi: "Suivi énergétique",
+  bilan: "Bilan énergétique",
+  harmonisation: "Harmonisation",
+  guidance: "Guidance spirituelle",
 };
+
+const LOCATION_LABELS: Record<string, string> = {
+  cabinet: "Cabinet — Rouen",
+  distance: "À distance (visio)",
+  domicile: "Au domicile du client",
+};
+
+function formatDayHeading(date: Date) {
+  return date.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+}
+
+function formatTime(date: Date) {
+  return date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+}
 
 function AgendaPage() {
   const { signOut } = useAdmin();
+  const queryClient = useQueryClient();
+
+  const listAppointments = useServerFn(adminListAppointments);
+  const { data: appointments, isLoading } = useQuery({
+    queryKey: ["admin-appointments"],
+    queryFn: () => listAppointments(),
+  });
+
+  const updateStatus = useServerFn(adminUpdateAppointmentStatus);
+  const statusMutation = useMutation({
+    mutationFn: (vars: { id: string; status: AppointmentStatus }) => updateStatus({ data: vars }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-appointments"] }),
+  });
+
+  const rows = appointments ?? [];
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, typeof rows>();
+    for (const a of rows) {
+      const day = new Date(a.starts_at).toDateString();
+      map.set(day, [...(map.get(day) ?? []), a]);
+    }
+    return [...map.entries()].sort(
+      ([a], [b]) => new Date(a).getTime() - new Date(b).getTime(),
+    );
+  }, [rows]);
+
+  const stats = useMemo(() => {
+    const now = Date.now();
+    const upcoming = rows.filter((a) => new Date(a.starts_at).getTime() >= now && a.status !== "Annulé");
+    const hours = upcoming.reduce((sum, a) => sum + a.duration_minutes, 0) / 60;
+    return {
+      upcoming: upcoming.length,
+      hours: hours.toFixed(1).replace(/\.0$/, ""),
+      cabinet: upcoming.filter((a) => a.location === "cabinet").length,
+      distance: upcoming.filter((a) => a.location === "distance").length,
+    };
+  }, [rows]);
+
   return (
     <AdminShell
       title="Agenda"
-      subtitle="Semaine du 30 juin au 6 juillet 2026"
+      subtitle="Rendez-vous à venir et passés"
       onSignOut={signOut}
-      actions={
-        <NewAppointmentDrawer>
-          {(open) => (
-            <button
-              onClick={open}
-              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
-            >
-              <Plus className="h-3.5 w-3.5" /> Nouveau RDV
-            </button>
-          )}
-        </NewAppointmentDrawer>
-      }
+      actions={<NewAppointmentDrawer />}
     >
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatBadge label="Cette semaine" value="12" icon={CalendarDays} />
-        <StatBadge label="Heures planifiées" value="14h" icon={Clock} />
-        <StatBadge label="En cabinet" value="8" icon={MapPin} />
-        <StatBadge label="À distance" value="4" icon={CalendarDays} />
+        <StatBadge label="RDV à venir" value={String(stats.upcoming)} icon={CalendarDays} />
+        <StatBadge label="Heures planifiées" value={`${stats.hours}h`} icon={Clock} />
+        <StatBadge label="En cabinet" value={String(stats.cabinet)} icon={MapPin} />
+        <StatBadge label="À distance" value={String(stats.distance)} icon={CalendarDays} />
       </div>
 
-      <div className="overflow-x-auto rounded-xl bg-card ring-1 ring-gold/15">
-        <table className="w-full min-w-[720px] border-collapse">
-          <thead>
-            <tr className="border-b border-gold/15 bg-cream-warm/60 text-xs uppercase tracking-[0.15em] text-forest">
-              <th className="w-20 px-3 py-3 text-left">Heure</th>
-              {days.map((d) => (
-                <th key={d} className="px-3 py-3 text-left">{d}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {hours.map((h) => (
-              <tr key={h} className="border-b border-gold/10 last:border-0">
-                <td className="px-3 py-3 text-xs text-earth/70">{h}</td>
-                {days.map((d) => {
-                  const ev = events[`${d}-${h}`];
-                  return (
-                    <td key={d + h} className="align-top px-2 py-2">
-                      {ev ? (
-                        <div className={`rounded-md px-2 py-2 text-[11px] ${toneClass[ev.tone]}`}>
-                          <p className="font-medium">{ev.title}</p>
-                          <p className="opacity-90">{ev.who}</p>
-                        </div>
-                      ) : (
-                        <div className="h-12 rounded-md border border-dashed border-gold/20" />
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="space-y-6">
+        {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
+        {!isLoading && grouped.length === 0 && (
+          <p className="rounded-xl bg-card p-6 text-center text-sm text-earth/60 ring-1 ring-gold/15">
+            Aucun rendez-vous pour le moment.
+          </p>
+        )}
+        {grouped.map(([day, dayAppointments]) => (
+          <div key={day} className="rounded-xl bg-card ring-1 ring-gold/15">
+            <div className="border-b border-gold/15 bg-cream-warm/60 px-4 py-2.5 text-xs font-medium uppercase tracking-[0.15em] text-forest">
+              {formatDayHeading(new Date(day))}
+            </div>
+            <ul className="divide-y divide-gold/10">
+              {dayAppointments.map((a) => {
+                const status = (a.status as AppointmentStatus) ?? "Planifié";
+                const clientName = (a.clients as { full_name: string } | null)?.full_name ?? "Client";
+                return (
+                  <li key={a.id} className="flex flex-wrap items-center gap-4 p-4">
+                    <div className="w-16 flex-shrink-0 text-sm font-medium text-forest">
+                      {formatTime(new Date(a.starts_at))}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-forest">{clientName}</p>
+                      <p className="text-xs text-earth/60">
+                        {a.session_type ? SESSION_TYPE_LABELS[a.session_type] ?? a.session_type : "—"}
+                        {" · "}
+                        {a.duration_minutes} min
+                        {" · "}
+                        {a.location ? LOCATION_LABELS[a.location] ?? a.location : "—"}
+                      </p>
+                    </div>
+                    <span className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}>
+                      {status}
+                    </span>
+                    <select
+                      value={status}
+                      onChange={(e) => statusMutation.mutate({ id: a.id, status: e.target.value as AppointmentStatus })}
+                      disabled={statusMutation.isPending}
+                      className="rounded-md border border-gold/30 bg-card px-2 py-1.5 text-xs text-forest focus:outline-none focus:ring-2 focus:ring-gold"
+                    >
+                      {STATUSES.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </div>
     </AdminShell>
   );
