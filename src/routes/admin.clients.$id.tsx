@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { adminGetClient, adminUpdateClientNotes } from "../lib/clients.functions";
+import { adminListConsultationsByClient } from "../lib/consultations.functions";
 
 export const Route = createFileRoute("/admin/clients/$id")({
   head: () => ({ meta: [{ title: "Fiche client — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -128,9 +129,7 @@ function ClientDetailPage() {
       </div>
 
       {tab === "Résumé" && <ResumeTab reason={client.reason} />}
-      {tab === "Consultations" && (
-        <ComingSoonTab title="Consultations" hint="Cette section sera alimentée une fois le module Consultations connecté." />
-      )}
+      {tab === "Consultations" && <ConsultationsTab clientId={client.id} />}
       {tab === "Suivi & Évolution" && (
         <ComingSoonTab title="Suivi & Évolution" hint="Vue agrégée à venir : dernière séance, prochain RDV, évolution du ressenti." />
       )}
@@ -173,6 +172,41 @@ function ResumeTab({ reason }: { reason: string | null }) {
       <div className="space-y-6">
         <ComingSoonTab title="État émotionnel" hint="Sera calculé depuis les bilans énergétiques." />
       </div>
+    </div>
+  );
+}
+
+function ConsultationsTab({ clientId }: { clientId: string }) {
+  const listByClient = useServerFn(adminListConsultationsByClient);
+  const { data: consultations, isLoading } = useQuery({
+    queryKey: ["admin-consultations-by-client", clientId],
+    queryFn: () => listByClient({ data: { client_id: clientId } }),
+  });
+
+  const rows = consultations ?? [];
+
+  return (
+    <div className="mt-8 overflow-hidden rounded-xl bg-card ring-1 ring-gold/15">
+      {isLoading && <p className="p-5 text-sm text-earth/60">Chargement…</p>}
+      {!isLoading && rows.length === 0 && (
+        <p className="p-5 text-sm text-earth/60">Aucune consultation enregistrée pour ce client.</p>
+      )}
+      <ul className="divide-y divide-gold/10">
+        {rows.map((r) => (
+          <li key={r.id} className="flex flex-wrap items-start gap-4 p-5">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="text-sm font-medium text-forest">{formatDate(r.consultation_date)}</p>
+                <p className="text-xs text-earth/60">
+                  {r.duration_minutes} min{r.mood ? ` · Ressenti ${r.mood}/10` : ""}
+                </p>
+              </div>
+              <p className="mt-1 text-sm text-earth/80">{r.report}</p>
+              {r.advice && <p className="mt-1 text-xs text-earth/60">Recommandations : {r.advice}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

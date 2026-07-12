@@ -64,6 +64,131 @@ export type Database = {
           },
         ]
       }
+      consultations: {
+        Row: {
+          advice: string | null
+          appointment_id: string | null
+          client_id: string
+          consultation_date: string
+          created_at: string
+          created_by: string | null
+          duration_minutes: number
+          id: string
+          mood: number | null
+          objectives: string | null
+          report: string
+          techniques: string | null
+          updated_at: string
+        }
+        Insert: {
+          advice?: string | null
+          appointment_id?: string | null
+          client_id: string
+          consultation_date: string
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number
+          id?: string
+          mood?: number | null
+          objectives?: string | null
+          report: string
+          techniques?: string | null
+          updated_at?: string
+        }
+        Update: {
+          advice?: string | null
+          appointment_id?: string | null
+          client_id?: string
+          consultation_date?: string
+          created_at?: string
+          created_by?: string | null
+          duration_minutes?: number
+          id?: string
+          mood?: number | null
+          objectives?: string | null
+          report?: string
+          techniques?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultations_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consultations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      energy_assessments: {
+        Row: {
+          assessment_date: string
+          axis_concentration: number
+          axis_confiance: number
+          axis_douleurs: number
+          axis_emotions: number
+          axis_energie: number
+          axis_fatigue: number
+          axis_motivation: number
+          axis_stress: number
+          client_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          observations: string | null
+          updated_at: string
+        }
+        Insert: {
+          assessment_date?: string
+          axis_concentration?: number
+          axis_confiance?: number
+          axis_douleurs?: number
+          axis_emotions?: number
+          axis_energie?: number
+          axis_fatigue?: number
+          axis_motivation?: number
+          axis_stress?: number
+          client_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          observations?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assessment_date?: string
+          axis_concentration?: number
+          axis_confiance?: number
+          axis_douleurs?: number
+          axis_emotions?: number
+          axis_energie?: number
+          axis_fatigue?: number
+          axis_motivation?: number
+          axis_stress?: number
+          client_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          observations?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "energy_assessments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           birth_date: string | null

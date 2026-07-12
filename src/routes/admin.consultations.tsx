@@ -1,46 +1,55 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewConsultationDrawer } from "../components/admin/forms";
+import { NewConsultationDrawer } from "../components/admin/new-consultation-drawer";
 import { useAdmin } from "./admin";
-import { Plus } from "lucide-react";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { adminListConsultations } from "../lib/consultations.functions";
 
 export const Route = createFileRoute("/admin/consultations")({
   head: () => ({ meta: [{ title: "Consultations — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
   component: ConsultationsPage,
 });
 
-const rows = [
-  { date: "18/05/2024 · 14h00", client: "Sophie Martin", type: "Suivi énergétique", duration: "1h00", mood: "Bien 7/10", state: "Terminée" },
-  { date: "18/05/2024 · 16h30", client: "Julien Dupont", type: "Bilan énergétique", duration: "1h30", mood: "Bien 6/10", state: "Terminée" },
-  { date: "17/05/2024 · 10h00", client: "Marie Leroy", type: "Première consultation", duration: "1h30", mood: "Moyen 5/10", state: "Terminée" },
-  { date: "16/05/2024 · 15h00", client: "Antoine Bernard", type: "Suivi énergétique", duration: "1h00", mood: "Bien 7/10", state: "Terminée" },
-  { date: "Demain · 14h00", client: "Sophie Martin", type: "Suivi énergétique", duration: "1h00", mood: "—", state: "Planifiée" },
-  { date: "04/07/2024 · 10h30", client: "Julien Dupont", type: "Consultation", duration: "1h00", mood: "—", state: "Planifiée" },
-];
+function formatDateTime(iso: string) {
+  return new Date(iso).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
 
 function ConsultationsPage() {
   const { signOut } = useAdmin();
+
+  const listConsultations = useServerFn(adminListConsultations);
+  const { data: consultations, isLoading } = useQuery({
+    queryKey: ["admin-consultations"],
+    queryFn: () => listConsultations(),
+  });
+
+  const rows = consultations ?? [];
+
+  const stats = useMemo(() => {
+    const now = new Date();
+    const thisMonth = rows.filter((r) => {
+      const d = new Date(r.consultation_date);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    });
+    const thisYear = rows.filter((r) => new Date(r.consultation_date).getFullYear() === now.getFullYear());
+    const uniqueClients = new Set(rows.map((r) => r.client_id)).size;
+    return { thisMonth: thisMonth.length, thisYear: thisYear.length, uniqueClients };
+  }, [rows]);
+
   return (
     <AdminShell
       title="Consultations"
-      subtitle="Toutes vos séances passées et à venir"
+      subtitle="Tous vos comptes-rendus de séance"
       onSignOut={signOut}
-      actions={
-        <NewConsultationDrawer>
-          {(open) => (
-            <button
-              onClick={open}
-              className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
-            >
-              <Plus className="h-3.5 w-3.5" /> Nouvelle consultation
-            </button>
-          )}
-        </NewConsultationDrawer>
-      }
+      actions={<NewConsultationDrawer />}
     >
-      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
         {[
-          ["Ce mois", "24"], ["Cette année", "152"], ["Nouveaux clients", "6"], ["Taux de retour", "78%"],
+          ["Ce mois", String(stats.thisMonth)],
+          ["Cette année", String(stats.thisYear)],
+          ["Clients suivis", String(stats.uniqueClients)],
         ].map(([k, v]) => (
           <div key={k} className="rounded-xl bg-card p-4 ring-1 ring-gold/15">
             <p className="text-xs uppercase tracking-[0.15em] text-earth/60">{k}</p>
@@ -55,23 +64,25 @@ function ConsultationsPage() {
             <tr>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Client</th>
-              <th className="px-4 py-3">Type</th>
               <th className="px-4 py-3">Durée</th>
               <th className="px-4 py-3">Ressenti</th>
-              <th className="px-4 py-3">État</th>
+              <th className="px-4 py-3">Compte-rendu</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gold/10">
-            {rows.map((r, i) => (
-              <tr key={i} className="hover:bg-cream-warm/30">
-                <td className="px-4 py-3 text-earth/80">{r.date}</td>
-                <td className="px-4 py-3 font-medium text-forest">{r.client}</td>
-                <td className="px-4 py-3 text-earth/80">{r.type}</td>
-                <td className="px-4 py-3 text-earth/70">{r.duration}</td>
-                <td className="px-4 py-3 text-earth/70">{r.mood}</td>
-                <td className="px-4 py-3">
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs ${r.state === "Terminée" ? "bg-forest/10 text-forest" : "bg-[color:var(--gold-soft)]/60 text-[color:var(--earth)]"}`}>{r.state}</span>
-                </td>
+            {isLoading && (
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
+            )}
+            {!isLoading && rows.length === 0 && (
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-earth/60">Aucune consultation pour le moment.</td></tr>
+            )}
+            {rows.map((r) => (
+              <tr key={r.id} className="hover:bg-cream-warm/30">
+                <td className="px-4 py-3 text-earth/80">{formatDateTime(r.consultation_date)}</td>
+                <td className="px-4 py-3 font-medium text-forest">{(r.clients as { full_name: string } | null)?.full_name ?? "Client"}</td>
+                <td className="px-4 py-3 text-earth/70">{r.duration_minutes} min</td>
+                <td className="px-4 py-3 text-earth/70">{r.mood ? `${r.mood} / 10` : "—"}</td>
+                <td className="px-4 py-3 max-w-xs truncate text-earth/70">{r.report}</td>
               </tr>
             ))}
           </tbody>
