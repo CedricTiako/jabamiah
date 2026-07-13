@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { HelpCircle, Mail, MessageSquare, BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/admin/aide")({

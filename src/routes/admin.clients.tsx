@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { NewClientDrawer } from "../components/admin/new-client-drawer";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { Search, Phone, Mail, Filter } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";

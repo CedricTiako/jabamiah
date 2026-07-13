@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "../components/admin/admin-shell";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { adminDeletePost, adminListPosts } from "../lib/posts.functions";
 import { Plus, FileText } from "lucide-react";
 

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { UploadDocumentDrawer } from "../components/admin/upload-document-drawer";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { FileText, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

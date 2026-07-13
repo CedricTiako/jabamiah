@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { Phone, Mail, MapPin, User, Edit3, Printer, Plus, TrendingUp, FileText, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

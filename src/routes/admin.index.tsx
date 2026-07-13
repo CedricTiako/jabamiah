@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "../components/admin/admin-shell";
 import { KpiCard, SectionCard, Pill } from "../components/admin/ui";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { adminListPosts, adminListContactMessages } from "../lib/posts.functions";
 import { adminListPayments } from "../lib/payments.functions";
 import {

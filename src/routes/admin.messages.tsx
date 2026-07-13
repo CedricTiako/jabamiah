@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "../components/admin/admin-shell";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { adminListContactMessages } from "../lib/posts.functions";
 import { Mail } from "lucide-react";
 

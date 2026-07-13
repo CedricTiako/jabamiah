@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { NewAppointmentDrawer } from "../components/admin/new-appointment-drawer";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { CalendarDays, Clock, MapPin } from "lucide-react";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

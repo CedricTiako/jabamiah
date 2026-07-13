@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { NewPaymentDrawer } from "../components/admin/new-payment-drawer";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { Heart } from "lucide-react";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";

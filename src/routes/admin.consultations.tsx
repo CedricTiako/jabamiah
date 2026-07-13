@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { NewConsultationDrawer } from "../components/admin/new-consultation-drawer";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";

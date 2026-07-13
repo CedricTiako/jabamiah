@@ -1,17 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useEffect, useState, createContext, useContext, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "../integrations/supabase/client";
 import { checkIsAdmin } from "../lib/posts.functions";
 import { Toaster } from "../components/ui/sonner";
-
-type AdminCtx = { userId: string; signOut: () => Promise<void> };
-const AdminContext = createContext<AdminCtx | null>(null);
-export function useAdmin() {
-  const ctx = useContext(AdminContext);
-  if (!ctx) throw new Error("useAdmin outside AdminContext");
-  return ctx;
-}
+import { AdminContext } from "../lib/admin-context";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Jabamiah" }, { name: "robots", content: "noindex,nofollow" }] }),

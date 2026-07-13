@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 
 export const Route = createFileRoute("/admin/statistiques")({
   head: () => ({ meta: [{ title: "Statistiques — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),

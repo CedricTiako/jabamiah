@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "../components/admin/admin-shell";
-import { useAdmin } from "./admin";
+import { useAdmin } from "../lib/admin-context";
 import { adminGetSettings, adminUpdateSetting } from "../lib/settings.functions";
 import { User, Bell, Palette, CalendarCog, Shield, CreditCard, FileText, Users, LifeBuoy, Info, Settings as SettingsIcon } from "lucide-react";
 
