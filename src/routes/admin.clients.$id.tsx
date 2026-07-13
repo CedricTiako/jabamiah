@@ -7,8 +7,22 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { adminGetClient, adminUpdateClientNotes } from "../lib/clients.functions";
 import { adminListConsultationsByClient } from "../lib/consultations.functions";
+import { adminListEnergyAssessmentsByClient } from "../lib/energy-assessments.functions";
+import { adminListPaymentsByClient } from "../lib/payments.functions";
 import { adminDeleteDocument, adminGetDocumentSignedUrl, adminListDocumentsByClient } from "../lib/documents.functions";
 import { UploadDocumentDrawer } from "../components/admin/upload-document-drawer";
+import { NewClientDrawer } from "../components/admin/new-client-drawer";
+import { NewPaymentDrawer } from "../components/admin/new-payment-drawer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/clients/$id")({
   head: () => ({ meta: [{ title: "Fiche client — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -43,6 +57,7 @@ function ClientDetailPage() {
   const { id } = Route.useParams();
   const { signOut } = useAdmin();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Résumé");
+  const [editOpen, setEditOpen] = useState(false);
 
   const getClient = useServerFn(adminGetClient);
   const { data: client, isLoading } = useQuery({
@@ -66,10 +81,16 @@ function ClientDetailPage() {
       backTo={{ to: "/admin/clients", label: "Retour aux clients" }}
       actions={
         <div className="hidden gap-2 md:flex">
-          <button className="inline-flex items-center gap-2 rounded-md border border-gold/30 bg-card px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm">
+          <button
+            onClick={() => setEditOpen(true)}
+            className="inline-flex items-center gap-2 rounded-md border border-gold/30 bg-card px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm"
+          >
             <Edit3 className="h-3.5 w-3.5" /> Modifier
           </button>
-          <button className="inline-flex items-center gap-2 rounded-md border border-gold/30 bg-card px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm">
+          <button
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-2 rounded-md border border-gold/30 bg-card px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm"
+          >
             <Printer className="h-3.5 w-3.5" /> Imprimer
           </button>
           <Link
@@ -81,6 +102,7 @@ function ClientDetailPage() {
         </div>
       }
     >
+      <NewClientDrawer client={client} open={editOpen} onOpenChange={setEditOpen} />
       {/* Identity card */}
       <div className="rounded-2xl bg-card p-6 ring-1 ring-gold/15 md:p-8">
         <div className="flex flex-wrap items-start gap-6">
@@ -132,13 +154,9 @@ function ClientDetailPage() {
 
       {tab === "Résumé" && <ResumeTab reason={client.reason} />}
       {tab === "Consultations" && <ConsultationsTab clientId={client.id} />}
-      {tab === "Suivi & Évolution" && (
-        <ComingSoonTab title="Suivi & Évolution" hint="Vue agrégée à venir : dernière séance, prochain RDV, évolution du ressenti." />
-      )}
+      {tab === "Suivi & Évolution" && <SuiviTab clientId={client.id} />}
       {tab === "Documents" && <DocumentsTab clientId={client.id} />}
-      {tab === "Paiements" && (
-        <ComingSoonTab title="Paiements" hint="L'historique des paiements et dons de ce client sera bientôt disponible." />
-      )}
+      {tab === "Paiements" && <PaiementsTab clientId={client.id} />}
       {tab === "Notes privées" && <NotesTab clientId={client.id} initialNotes={client.private_notes} />}
     </AdminShell>
   );
@@ -211,6 +229,111 @@ function ConsultationsTab({ clientId }: { clientId: string }) {
   );
 }
 
+const AXIS_LABELS: Record<string, string> = {
+  axis_energie: "Énergie",
+  axis_stress: "Stress",
+  axis_emotions: "Émotions",
+  axis_motivation: "Motivation",
+  axis_confiance: "Confiance",
+  axis_fatigue: "Fatigue",
+  axis_douleurs: "Douleurs",
+  axis_concentration: "Concentration",
+};
+
+function SuiviTab({ clientId }: { clientId: string }) {
+  const listAssessments = useServerFn(adminListEnergyAssessmentsByClient);
+  const listConsultations = useServerFn(adminListConsultationsByClient);
+
+  const { data: assessments, isLoading: loadingAssessments } = useQuery({
+    queryKey: ["admin-energy-assessments-by-client", clientId],
+    queryFn: () => listAssessments({ data: { client_id: clientId } }),
+  });
+  const { data: consultations, isLoading: loadingConsultations } = useQuery({
+    queryKey: ["admin-consultations-by-client", clientId],
+    queryFn: () => listConsultations({ data: { client_id: clientId } }),
+  });
+
+  const isLoading = loadingAssessments || loadingConsultations;
+  const latest = assessments?.[0];
+
+  return (
+    <div className="mt-8 grid gap-6 lg:grid-cols-3">
+      <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15 lg:col-span-2">
+        <h3 className="font-serif text-xl text-forest">Dernier bilan énergétique</h3>
+        {isLoading && <p className="mt-3 text-sm text-earth/60">Chargement…</p>}
+        {!isLoading && !latest && (
+          <p className="mt-3 text-sm text-earth/60">Aucun bilan énergétique enregistré pour ce client.</p>
+        )}
+        {latest && (
+          <>
+            <p className="mt-1 text-xs text-earth/60">{formatDate(latest.assessment_date)}</p>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {Object.entries(AXIS_LABELS).map(([key, label]) => (
+                <div key={key} className="flex items-center justify-between gap-2 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm">
+                  <span className="text-earth/80">{label}</span>
+                  <span className="font-medium text-forest">{(latest as unknown as Record<string, number>)[key]}/10</span>
+                </div>
+              ))}
+            </div>
+            {latest.observations && (
+              <p className="mt-4 text-sm text-earth/80">{latest.observations}</p>
+            )}
+          </>
+        )}
+      </div>
+      <div className="space-y-4">
+        <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
+          <p className="text-xs uppercase tracking-[0.15em] text-earth/60">Séances suivies</p>
+          <p className="mt-2 font-serif text-3xl text-forest">{consultations?.length ?? 0}</p>
+        </div>
+        <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
+          <p className="text-xs uppercase tracking-[0.15em] text-earth/60">Bilans énergétiques</p>
+          <p className="mt-2 font-serif text-3xl text-forest">{assessments?.length ?? 0}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PaiementsTab({ clientId }: { clientId: string }) {
+  const listByClient = useServerFn(adminListPaymentsByClient);
+  const { data: payments, isLoading } = useQuery({
+    queryKey: ["admin-payments-by-client", clientId],
+    queryFn: () => listByClient({ data: { client_id: clientId } }),
+  });
+
+  const rows = payments ?? [];
+  const total = rows.reduce((s, p) => s + p.amount, 0);
+
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-earth/70">
+          {rows.length} paiement{rows.length > 1 ? "s" : ""} · {total.toFixed(2)} € au total
+        </p>
+        <NewPaymentDrawer defaultClientId={clientId} />
+      </div>
+      <div className="overflow-hidden rounded-xl bg-card ring-1 ring-gold/15">
+        {isLoading && <p className="p-5 text-sm text-earth/60">Chargement…</p>}
+        {!isLoading && rows.length === 0 && (
+          <p className="p-5 text-sm text-earth/60">Aucun paiement enregistré pour ce client.</p>
+        )}
+        <ul className="divide-y divide-gold/10">
+          {rows.map((p) => (
+            <li key={p.id} className="flex items-center justify-between gap-4 p-5">
+              <div>
+                <p className="text-sm font-medium text-forest">{formatDate(p.payment_date)}</p>
+                <p className="text-xs text-earth/60">{p.method ?? "—"}{p.reference ? ` · ${p.reference}` : ""}</p>
+              </div>
+              <p className="font-serif text-lg text-forest">{p.amount.toFixed(2)} €</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 function formatSize(bytes: number | null) {
   if (!bytes) return "—";
   if (bytes < 1024) return `${bytes} o`;
@@ -232,10 +355,14 @@ function DocumentsTab({ clientId }: { clientId: string }) {
     onSuccess: ({ url }) => window.open(url, "_blank", "noopener,noreferrer"),
   });
 
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; title: string } | null>(null);
   const deleteDocument = useServerFn(adminDeleteDocument);
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteDocument({ data: { id } }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-documents-by-client", clientId] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-documents-by-client", clientId] });
+      setPendingDelete(null);
+    },
   });
 
   const rows = documents ?? [];
@@ -262,7 +389,7 @@ function DocumentsTab({ clientId }: { clientId: string }) {
               Ouvrir
             </button>
             <button
-              onClick={() => deleteMutation.mutate(d.id)}
+              onClick={() => setPendingDelete({ id: d.id, title: d.title })}
               disabled={deleteMutation.isPending}
               className="rounded-md border border-gold/30 px-3 py-2 text-xs text-earth/60 hover:bg-cream-warm hover:text-[color:var(--rose-text)]"
               aria-label="Supprimer"
@@ -273,6 +400,26 @@ function DocumentsTab({ clientId }: { clientId: string }) {
         </div>
       ))}
       <UploadDrawerButton clientId={clientId} />
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce document ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              « {pendingDelete?.title} » sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && deleteMutation.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

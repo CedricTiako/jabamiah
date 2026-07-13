@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -18,17 +18,61 @@ const EMPTY = {
   private_notes: "",
 };
 
-export function NewClientDrawer({ onCreated }: { onCreated?: (id: string) => void }) {
-  const [open, setOpen] = useState(false);
+export type ClientRecord = {
+  id: string;
+  full_name: string;
+  phone: string | null;
+  email: string | null;
+  city: string | null;
+  birth_date: string | null;
+  reason: string | null;
+  status: string | null;
+  private_notes?: string | null;
+};
+
+export function NewClientDrawer({
+  client,
+  onCreated,
+  open,
+  onOpenChange,
+}: {
+  client?: ClientRecord | null;
+  onCreated?: (id: string) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setOpen = (v: boolean) => (isControlled ? onOpenChange?.(v) : setInternalOpen(v));
+
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    if (!isOpen) return;
+    if (client) {
+      setForm({
+        full_name: client.full_name,
+        phone: client.phone ?? "",
+        email: client.email ?? "",
+        city: client.city ?? "",
+        birth_date: client.birth_date ?? "",
+        reason: client.reason ?? "",
+        status: (client.status as (typeof STATUSES)[number]) ?? "Nouveau",
+        private_notes: client.private_notes ?? "",
+      });
+    } else {
+      setForm(EMPTY);
+    }
+  }, [isOpen, client]);
+
   const upsert = useServerFn(adminUpsertClient);
-  const createMutation = useMutation({
+  const saveMutation = useMutation({
     mutationFn: () =>
       upsert({
         data: {
-          id: null,
+          id: client?.id ?? null,
           full_name: form.full_name,
           phone: form.phone || null,
           email: form.email || null,
@@ -41,6 +85,7 @@ export function NewClientDrawer({ onCreated }: { onCreated?: (id: string) => voi
       }),
     onSuccess: ({ id }) => {
       queryClient.invalidateQueries({ queryKey: ["admin-clients"] });
+      if (client) queryClient.invalidateQueries({ queryKey: ["admin-client", client.id] });
       setForm(EMPTY);
       setOpen(false);
       onCreated?.(id);
@@ -50,18 +95,22 @@ export function NewClientDrawer({ onCreated }: { onCreated?: (id: string) => voi
   const field = (key: keyof typeof form, value: string) => setForm((s) => ({ ...s, [key]: value }));
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
-      >
-        <Plus className="h-3.5 w-3.5" /> Nouveau client
-      </button>
+    <Drawer open={isOpen} onOpenChange={setOpen}>
+      {!isControlled && (
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+        >
+          <Plus className="h-3.5 w-3.5" /> Nouveau client
+        </button>
+      )}
       <DrawerContent className="bg-cream">
         <div className="mx-auto w-full max-w-2xl">
           <DrawerHeader>
-            <DrawerTitle className="font-serif text-2xl text-forest">Nouveau client</DrawerTitle>
-            <DrawerDescription>Créez une fiche client. Vous pourrez compléter les informations plus tard.</DrawerDescription>
+            <DrawerTitle className="font-serif text-2xl text-forest">{client ? "Modifier le client" : "Nouveau client"}</DrawerTitle>
+            <DrawerDescription>
+              {client ? "Mettez à jour les informations de ce client." : "Créez une fiche client. Vous pourrez compléter les informations plus tard."}
+            </DrawerDescription>
           </DrawerHeader>
 
           <div className="grid gap-4 px-4 pb-4 sm:grid-cols-2">
@@ -146,11 +195,11 @@ export function NewClientDrawer({ onCreated }: { onCreated?: (id: string) => voi
 
           <div className="flex items-center gap-4 border-t border-gold/15 px-4 py-4">
             <button
-              onClick={() => createMutation.mutate()}
-              disabled={createMutation.isPending || !form.full_name.trim()}
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending || !form.full_name.trim()}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {createMutation.isPending ? "Création…" : "Créer le client"}
+              {saveMutation.isPending ? "Enregistrement…" : client ? "Enregistrer" : "Créer le client"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -158,7 +207,7 @@ export function NewClientDrawer({ onCreated }: { onCreated?: (id: string) => voi
             >
               Annuler
             </button>
-            {createMutation.isError && <span className="text-sm text-red-700">Erreur lors de la création.</span>}
+            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
           </div>
         </div>
       </DrawerContent>

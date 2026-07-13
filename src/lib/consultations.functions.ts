@@ -25,7 +25,7 @@ export const adminListConsultations = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data, error } = await context.supabase
       .from("consultations")
-      .select("id, client_id, consultation_date, duration_minutes, mood, objectives, techniques, report, advice, clients(full_name)")
+      .select("id, client_id, consultation_date, duration_minutes, mood, objectives, techniques, report, advice, clients(full_name), appointments(session_type)")
       .order("consultation_date", { ascending: false });
     if (error) throw error;
     return data ?? [];
@@ -86,4 +86,14 @@ export const adminUpsertConsultation = createServerFn({ method: "POST" })
       .single();
     if (error) throw error;
     return { id: created.id };
+  });
+
+export const adminDeleteConsultation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { error } = await context.supabase.from("consultations").delete().eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
   });

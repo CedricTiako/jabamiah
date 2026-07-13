@@ -1,12 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewAppointmentDrawer } from "../components/admin/new-appointment-drawer";
+import { NewAppointmentDrawer, type AppointmentRecord } from "../components/admin/new-appointment-drawer";
 import { useAdmin } from "../lib/admin-context";
-import { CalendarDays, Clock, MapPin } from "lucide-react";
-import { useMemo } from "react";
+import { CalendarDays, Clock, MapPin, Edit3, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminListAppointments, adminUpdateAppointmentStatus } from "../lib/appointments.functions";
+import { adminDeleteAppointment, adminListAppointments, adminUpdateAppointmentStatus } from "../lib/appointments.functions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/agenda")({
   head: () => ({ meta: [{ title: "Agenda — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -50,6 +60,8 @@ function formatTime(date: Date) {
 function AgendaPage() {
   const { signOut } = useAdmin();
   const queryClient = useQueryClient();
+  const [editing, setEditing] = useState<AppointmentRecord | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const listAppointments = useServerFn(adminListAppointments);
   const { data: appointments, isLoading } = useQuery({
@@ -61,6 +73,15 @@ function AgendaPage() {
   const statusMutation = useMutation({
     mutationFn: (vars: { id: string; status: AppointmentStatus }) => updateStatus({ data: vars }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-appointments"] }),
+  });
+
+  const del = useServerFn(adminDeleteAppointment);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => del({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-appointments"] });
+      setPendingDelete(null);
+    },
   });
 
   const rows = appointments ?? [];
@@ -95,6 +116,7 @@ function AgendaPage() {
       onSignOut={signOut}
       actions={<NewAppointmentDrawer />}
     >
+      <NewAppointmentDrawer appointment={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatBadge label="RDV à venir" value={String(stats.upcoming)} icon={CalendarDays} />
         <StatBadge label="Heures planifiées" value={`${stats.hours}h`} icon={Clock} />
@@ -146,6 +168,20 @@ function AgendaPage() {
                         <option key={s} value={s}>{s}</option>
                       ))}
                     </select>
+                    <button
+                      onClick={() => setEditing(a as unknown as AppointmentRecord)}
+                      className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-forest"
+                      aria-label="Modifier"
+                    >
+                      <Edit3 className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setPendingDelete({ id: a.id, name: clientName })}
+                      className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-red-700"
+                      aria-label="Supprimer"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
                   </li>
                 );
               })}
@@ -153,6 +189,26 @@ function AgendaPage() {
           </div>
         ))}
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce rendez-vous ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Le rendez-vous avec « {pendingDelete?.name} » sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && deleteMutation.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminShell>
   );
 }

@@ -1,12 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewPaymentDrawer } from "../components/admin/new-payment-drawer";
+import { NewPaymentDrawer, type PaymentRecord } from "../components/admin/new-payment-drawer";
 import { useAdmin } from "../lib/admin-context";
-import { Heart } from "lucide-react";
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { Heart, Edit3, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminListPayments } from "../lib/payments.functions";
+import { adminDeletePayment, adminListPayments } from "../lib/payments.functions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/paiements")({
   head: () => ({ meta: [{ title: "Paiements & Dons — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -27,11 +37,23 @@ const METHOD_LABELS: Record<string, string> = {
 
 function PaiementsPage() {
   const { signOut } = useAdmin();
+  const queryClient = useQueryClient();
+  const [editing, setEditing] = useState<PaymentRecord | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const listPayments = useServerFn(adminListPayments);
   const { data: payments, isLoading } = useQuery({
     queryKey: ["admin-payments"],
     queryFn: () => listPayments(),
+  });
+
+  const del = useServerFn(adminDeletePayment);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => del({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-payments"] });
+      setPendingDelete(null);
+    },
   });
 
   const rows = payments ?? [];
@@ -58,6 +80,7 @@ function PaiementsPage() {
       onSignOut={signOut}
       actions={<NewPaymentDrawer />}
     >
+      <NewPaymentDrawer payment={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl bg-gradient-to-br from-[color:var(--rose-soft)] to-cream p-6 ring-1 ring-gold/15">
           <Heart className="h-5 w-5 text-[color:var(--rose-text)]" />
@@ -85,14 +108,15 @@ function PaiementsPage() {
               <th className="px-4 py-3">Montant</th>
               <th className="px-4 py-3">Moyen</th>
               <th className="px-4 py-3">Référence</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-gold/10">
             {isLoading && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
             )}
             {!isLoading && rows.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-earth/60">Aucun don pour le moment.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Aucun don pour le moment.</td></tr>
             )}
             {rows.map((r) => (
               <tr key={r.id}>
@@ -101,11 +125,49 @@ function PaiementsPage() {
                 <td className="px-4 py-3 text-forest">{Number(r.amount).toFixed(2)} €</td>
                 <td className="px-4 py-3 text-earth/70">{r.method ? METHOD_LABELS[r.method] ?? r.method : "—"}</td>
                 <td className="px-4 py-3 font-mono text-xs text-earth/60">{r.reference ?? "—"}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => setEditing(r as unknown as PaymentRecord)}
+                      className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-forest"
+                      aria-label="Modifier"
+                    >
+                      <Edit3 className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setPendingDelete({ id: r.id, name: r.donor_name || "Anonyme" })}
+                      className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-red-700"
+                      aria-label="Supprimer"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce don ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Le don de « {pendingDelete?.name} » sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && deleteMutation.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminShell>
   );
 }

@@ -1,11 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewConsultationDrawer } from "../components/admin/new-consultation-drawer";
+import { NewConsultationDrawer, type ConsultationRecord } from "../components/admin/new-consultation-drawer";
 import { useAdmin } from "../lib/admin-context";
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { Edit3, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminListConsultations } from "../lib/consultations.functions";
+import { adminDeleteConsultation, adminListConsultations } from "../lib/consultations.functions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/consultations")({
   head: () => ({ meta: [{ title: "Consultations — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -18,11 +29,23 @@ function formatDateTime(iso: string) {
 
 function ConsultationsPage() {
   const { signOut } = useAdmin();
+  const queryClient = useQueryClient();
+  const [editing, setEditing] = useState<ConsultationRecord | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const listConsultations = useServerFn(adminListConsultations);
   const { data: consultations, isLoading } = useQuery({
     queryKey: ["admin-consultations"],
     queryFn: () => listConsultations(),
+  });
+
+  const del = useServerFn(adminDeleteConsultation);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => del({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-consultations"] });
+      setPendingDelete(null);
+    },
   });
 
   const rows = consultations ?? [];
@@ -45,6 +68,7 @@ function ConsultationsPage() {
       onSignOut={signOut}
       actions={<NewConsultationDrawer />}
     >
+      <NewConsultationDrawer consultation={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
         {[
           ["Ce mois", String(stats.thisMonth)],
@@ -67,27 +91,69 @@ function ConsultationsPage() {
               <th className="px-4 py-3">Durée</th>
               <th className="px-4 py-3">Ressenti</th>
               <th className="px-4 py-3">Compte-rendu</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-gold/10">
             {isLoading && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
             )}
             {!isLoading && rows.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-earth/60">Aucune consultation pour le moment.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Aucune consultation pour le moment.</td></tr>
             )}
-            {rows.map((r) => (
-              <tr key={r.id} className="hover:bg-cream-warm/30">
-                <td className="px-4 py-3 text-earth/80">{formatDateTime(r.consultation_date)}</td>
-                <td className="px-4 py-3 font-medium text-forest">{(r.clients as { full_name: string } | null)?.full_name ?? "Client"}</td>
-                <td className="px-4 py-3 text-earth/70">{r.duration_minutes} min</td>
-                <td className="px-4 py-3 text-earth/70">{r.mood ? `${r.mood} / 10` : "—"}</td>
-                <td className="px-4 py-3 max-w-xs truncate text-earth/70">{r.report}</td>
-              </tr>
-            ))}
+            {rows.map((r) => {
+              const clientName = (r.clients as { full_name: string } | null)?.full_name ?? "Client";
+              return (
+                <tr key={r.id} className="hover:bg-cream-warm/30">
+                  <td className="px-4 py-3 text-earth/80">{formatDateTime(r.consultation_date)}</td>
+                  <td className="px-4 py-3 font-medium text-forest">{clientName}</td>
+                  <td className="px-4 py-3 text-earth/70">{r.duration_minutes} min</td>
+                  <td className="px-4 py-3 text-earth/70">{r.mood ? `${r.mood} / 10` : "—"}</td>
+                  <td className="px-4 py-3 max-w-xs truncate text-earth/70">{r.report}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => setEditing(r as unknown as ConsultationRecord)}
+                        className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-forest"
+                        aria-label="Modifier"
+                      >
+                        <Edit3 className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setPendingDelete({ id: r.id, name: clientName })}
+                        className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-red-700"
+                        aria-label="Supprimer"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer cette consultation ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Le compte-rendu de « {pendingDelete?.name} » sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && deleteMutation.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminShell>
   );
 }

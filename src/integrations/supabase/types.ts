@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       appointments: {
@@ -64,97 +89,50 @@ export type Database = {
           },
         ]
       }
-      payments: {
+      clients: {
         Row: {
-          amount: number
+          birth_date: string | null
+          city: string | null
           created_at: string
           created_by: string | null
-          donor_name: string | null
+          email: string | null
+          full_name: string
           id: string
-          method: string | null
-          note: string | null
-          payment_date: string
-          reference: string | null
-          source: string
+          phone: string | null
+          private_notes: string | null
+          reason: string | null
+          status: string
           updated_at: string
         }
         Insert: {
-          amount: number
+          birth_date?: string | null
+          city?: string | null
           created_at?: string
           created_by?: string | null
-          donor_name?: string | null
+          email?: string | null
+          full_name: string
           id?: string
-          method?: string | null
-          note?: string | null
-          payment_date?: string
-          reference?: string | null
-          source?: string
+          phone?: string | null
+          private_notes?: string | null
+          reason?: string | null
+          status?: string
           updated_at?: string
         }
         Update: {
-          amount?: number
+          birth_date?: string | null
+          city?: string | null
           created_at?: string
           created_by?: string | null
-          donor_name?: string | null
+          email?: string | null
+          full_name?: string
           id?: string
-          method?: string | null
-          note?: string | null
-          payment_date?: string
-          reference?: string | null
-          source?: string
+          phone?: string | null
+          private_notes?: string | null
+          reason?: string | null
+          status?: string
           updated_at?: string
         }
         Relationships: []
-      }
-      documents: {
-        Row: {
-          client_id: string | null
-          created_at: string
-          created_by: string | null
-          description: string | null
-          doc_type: string | null
-          file_size: number | null
-          id: string
-          mime_type: string | null
-          storage_path: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          client_id?: string | null
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          doc_type?: string | null
-          file_size?: number | null
-          id?: string
-          mime_type?: string | null
-          storage_path: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          client_id?: string | null
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          doc_type?: string | null
-          file_size?: number | null
-          id?: string
-          mime_type?: string | null
-          storage_path?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "documents_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       consultations: {
         Row: {
@@ -212,6 +190,89 @@ export type Database = {
           },
           {
             foreignKeyName: "consultations_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          ip_address: string | null
+          locale: string | null
+          message: string
+          name: string
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          ip_address?: string | null
+          locale?: string | null
+          message: string
+          name: string
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          ip_address?: string | null
+          locale?: string | null
+          message?: string
+          name?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          doc_type: string | null
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          storage_path: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          doc_type?: string | null
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          storage_path: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          doc_type?: string | null
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          storage_path?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
@@ -281,83 +342,58 @@ export type Database = {
           },
         ]
       }
-      clients: {
+      payments: {
         Row: {
-          birth_date: string | null
-          city: string | null
+          amount: number
+          client_id: string | null
           created_at: string
           created_by: string | null
-          email: string | null
-          full_name: string
+          donor_name: string | null
           id: string
-          phone: string | null
-          private_notes: string | null
-          reason: string | null
-          status: string
+          method: string | null
+          note: string | null
+          payment_date: string
+          reference: string | null
+          source: string
           updated_at: string
         }
         Insert: {
-          birth_date?: string | null
-          city?: string | null
+          amount: number
+          client_id?: string | null
           created_at?: string
           created_by?: string | null
-          email?: string | null
-          full_name: string
+          donor_name?: string | null
           id?: string
-          phone?: string | null
-          private_notes?: string | null
-          reason?: string | null
-          status?: string
+          method?: string | null
+          note?: string | null
+          payment_date?: string
+          reference?: string | null
+          source?: string
           updated_at?: string
         }
         Update: {
-          birth_date?: string | null
-          city?: string | null
+          amount?: number
+          client_id?: string | null
           created_at?: string
           created_by?: string | null
-          email?: string | null
-          full_name?: string
+          donor_name?: string | null
           id?: string
-          phone?: string | null
-          private_notes?: string | null
-          reason?: string | null
-          status?: string
+          method?: string | null
+          note?: string | null
+          payment_date?: string
+          reference?: string | null
+          source?: string
           updated_at?: string
         }
-        Relationships: []
-      }
-      contact_messages: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          ip_address: string | null
-          locale: string | null
-          message: string
-          name: string
-          subject: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          ip_address?: string | null
-          locale?: string | null
-          message: string
-          name: string
-          subject?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          ip_address?: string | null
-          locale?: string | null
-          message?: string
-          name?: string
-          subject?: string | null
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "payments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       post_translations: {
         Row: {
@@ -433,6 +469,99 @@ export type Database = {
           slug?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          full_name: string | null
+          notification_prefs: Json
+          phone: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string | null
+          notification_prefs?: Json
+          phone?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string | null
+          notification_prefs?: Json
+          phone?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      protocols: {
+        Row: {
+          category: string | null
+          created_at: string
+          created_by: string | null
+          description: string
+          duration_minutes: number | null
+          id: string
+          name: string
+          steps: string | null
+          updated_at: string
+          warnings: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          description: string
+          duration_minutes?: number | null
+          id?: string
+          name: string
+          steps?: string | null
+          updated_at?: string
+          warnings?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          duration_minutes?: number | null
+          id?: string
+          name?: string
+          steps?: string | null
+          updated_at?: string
+          warnings?: string | null
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string
         }
         Relationships: []
       }
@@ -597,6 +726,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       app_role: ["admin", "user"],

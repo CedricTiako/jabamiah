@@ -1,12 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewClientDrawer } from "../components/admin/new-client-drawer";
+import { NewClientDrawer, type ClientRecord } from "../components/admin/new-client-drawer";
 import { useAdmin } from "../lib/admin-context";
-import { Search, Phone, Mail, Filter } from "lucide-react";
+import { Search, Phone, Mail, Filter, Edit3, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminListClients } from "../lib/clients.functions";
+import { adminDeleteClient, adminListClients } from "../lib/clients.functions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/clients")({
   head: () => ({ meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -35,12 +45,24 @@ function ageFromBirthDate(birthDate: string | null) {
 
 function ClientsPage() {
   const { signOut } = useAdmin();
+  const queryClient = useQueryClient();
   const [q, setQ] = useState("");
+  const [editing, setEditing] = useState<ClientRecord | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const listClients = useServerFn(adminListClients);
   const { data: clients, isLoading } = useQuery({
     queryKey: ["admin-clients"],
     queryFn: () => listClients(),
+  });
+
+  const del = useServerFn(adminDeleteClient);
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => del({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-clients"] });
+      setPendingDelete(null);
+    },
   });
 
   const rows = clients ?? [];
@@ -56,6 +78,7 @@ function ClientsPage() {
       onSignOut={signOut}
       actions={<NewClientDrawer />}
     >
+      <NewClientDrawer client={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[220px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-earth/50" />
@@ -117,10 +140,26 @@ function ClientsPage() {
                       {status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    <Link to="/admin/clients/$id" params={{ id: c.id }} className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
-                      Ouvrir →
-                    </Link>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-3">
+                      <Link to="/admin/clients/$id" params={{ id: c.id }} className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
+                        Ouvrir →
+                      </Link>
+                      <button
+                        onClick={() => setEditing(c as ClientRecord)}
+                        className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-forest"
+                        aria-label="Modifier"
+                      >
+                        <Edit3 className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setPendingDelete({ id: c.id, name: c.full_name })}
+                        className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-red-700"
+                        aria-label="Supprimer"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
@@ -128,6 +167,27 @@ function ClientsPage() {
           </tbody>
         </table>
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce client ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              « {pendingDelete?.name} » et toutes ses données associées (consultations, documents, bilans) seront
+              définitivement supprimés. Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && deleteMutation.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminShell>
   );
 }

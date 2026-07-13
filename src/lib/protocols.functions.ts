@@ -4,7 +4,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "../integrations/supabase/auth-middleware";
 import type { Database } from "../integrations/supabase/types";
 
-const APPOINTMENT_STATUSES = ["Planifié", "Confirmé", "Annulé", "Honoré", "No-show"] as const;
+const PROTOCOL_CATEGORIES = ["energetique", "meditation", "respiration", "harmonisation", "purification"] as const;
 
 function getPublicClient() {
   const url = process.env.SUPABASE_URL;
@@ -21,50 +21,50 @@ async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; 
   if (!data) throw new Error("Forbidden: admin role required");
 }
 
-export const adminListAppointments = createServerFn({ method: "GET" })
+export const adminListProtocols = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { data, error } = await context.supabase
-      .from("appointments")
-      .select("id, client_id, starts_at, duration_minutes, session_type, location, status, note, clients(full_name)")
-      .order("starts_at", { ascending: true });
+      .from("protocols")
+      .select("id, name, description, category, duration_minutes, steps, warnings, created_at")
+      .order("created_at", { ascending: false });
     if (error) throw error;
     return data ?? [];
   });
 
 const UpsertSchema = z.object({
   id: z.string().uuid().nullable().optional(),
-  client_id: z.string().uuid(),
-  starts_at: z.string().min(1),
-  duration_minutes: z.coerce.number().int().min(5).max(600),
-  session_type: z.string().max(60).nullable().optional(),
-  location: z.string().max(60).nullable().optional(),
-  note: z.string().max(2000).nullable().optional(),
+  name: z.string().min(1).max(200),
+  description: z.string().min(1).max(2000),
+  category: z.enum(PROTOCOL_CATEGORIES).nullable().optional(),
+  duration_minutes: z.number().int().min(0).max(600).nullable().optional(),
+  steps: z.string().max(5000).nullable().optional(),
+  warnings: z.string().max(2000).nullable().optional(),
 });
 
-export const adminUpsertAppointment = createServerFn({ method: "POST" })
+export const adminUpsertProtocol = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => UpsertSchema.parse(data))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const payload = {
-      client_id: data.client_id,
-      starts_at: data.starts_at,
-      duration_minutes: data.duration_minutes,
-      session_type: data.session_type || null,
-      location: data.location || null,
-      note: data.note || null,
+      name: data.name,
+      description: data.description,
+      category: data.category || null,
+      duration_minutes: data.duration_minutes ?? null,
+      steps: data.steps || null,
+      warnings: data.warnings || null,
     };
 
     if (data.id) {
-      const { error } = await context.supabase.from("appointments").update(payload).eq("id", data.id);
+      const { error } = await context.supabase.from("protocols").update(payload).eq("id", data.id);
       if (error) throw error;
       return { id: data.id };
     }
 
     const { data: created, error } = await context.supabase
-      .from("appointments")
+      .from("protocols")
       .insert({ ...payload, created_by: context.userId })
       .select("id")
       .single();
@@ -72,27 +72,12 @@ export const adminUpsertAppointment = createServerFn({ method: "POST" })
     return { id: created.id };
   });
 
-const StatusSchema = z.object({
-  id: z.string().uuid(),
-  status: z.enum(APPOINTMENT_STATUSES),
-});
-
-export const adminUpdateAppointmentStatus = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => StatusSchema.parse(data))
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { error } = await context.supabase.from("appointments").update({ status: data.status }).eq("id", data.id);
-    if (error) throw error;
-    return { ok: true };
-  });
-
-export const adminDeleteAppointment = createServerFn({ method: "POST" })
+export const adminDeleteProtocol = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const { error } = await context.supabase.from("appointments").delete().eq("id", data.id);
+    const { error } = await context.supabase.from("protocols").delete().eq("id", data.id);
     if (error) throw error;
     return { ok: true };
   });

@@ -6,6 +6,9 @@ import { KpiCard, SectionCard, Pill } from "../components/admin/ui";
 import { useAdmin } from "../lib/admin-context";
 import { adminListPosts, adminListContactMessages } from "../lib/posts.functions";
 import { adminListPayments } from "../lib/payments.functions";
+import { adminListClients } from "../lib/clients.functions";
+import { adminListAppointments } from "../lib/appointments.functions";
+import { adminListConsultations } from "../lib/consultations.functions";
 import {
   Users,
   CalendarDays,
@@ -28,20 +31,6 @@ export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,
 });
 
-const upcoming = [
-  { name: "Sophie Martin", time: "Demain · 14h00", type: "Consultation énergétique", state: "Confirmé" as const },
-  { name: "Julien Dupont", time: "Ven. 04/07 · 10h30", type: "Suivi harmonisation", state: "Confirmé" as const },
-  { name: "Marie Leroy", time: "Ven. 04/07 · 16h00", type: "Première consultation", state: "À valider" as const },
-  { name: "Antoine Bernard", time: "Sam. 05/07 · 09h30", type: "Bilan énergétique", state: "Confirmé" as const },
-];
-
-const activity = [
-  { text: "Nouveau message de Sophie Martin", when: "Il y a 12 min" },
-  { text: "Consultation Julien Dupont clôturée (compte-rendu ajouté)", when: "Il y a 2 h" },
-  { text: "Don reçu — 25 €", when: "Il y a 5 h" },
-  { text: "Nouvel avis 5★ publié", when: "Hier" },
-];
-
 function today() {
   const d = new Date();
   return d.toLocaleDateString("fr-FR", {
@@ -52,15 +41,29 @@ function today() {
   });
 }
 
+const STATUS_TONE: Record<string, "green" | "gold" | "rose" | "neutral"> = {
+  "Confirmé": "green",
+  "Planifié": "gold",
+  "Honoré": "green",
+  "Annulé": "rose",
+  "No-show": "rose",
+};
+
 function AdminDashboard() {
   const { signOut } = useAdmin();
   const listPosts = useServerFn(adminListPosts);
   const listMessages = useServerFn(adminListContactMessages);
   const listPayments = useServerFn(adminListPayments);
+  const listClients = useServerFn(adminListClients);
+  const listAppointments = useServerFn(adminListAppointments);
+  const listConsultations = useServerFn(adminListConsultations);
 
   const { data: posts } = useQuery({ queryKey: ["admin-posts"], queryFn: () => listPosts() });
   const { data: messages } = useQuery({ queryKey: ["admin-messages"], queryFn: () => listMessages() });
   const { data: payments } = useQuery({ queryKey: ["admin-payments"], queryFn: () => listPayments() });
+  const { data: clients } = useQuery({ queryKey: ["admin-clients"], queryFn: () => listClients() });
+  const { data: appointments } = useQuery({ queryKey: ["admin-appointments"], queryFn: () => listAppointments() });
+  const { data: consultations } = useQuery({ queryKey: ["admin-consultations"], queryFn: () => listConsultations() });
 
   const draftCount = (posts ?? []).filter((p) => p.status === "draft").length;
   const publishedCount = (posts ?? []).filter((p) => p.status === "published").length;
@@ -82,6 +85,46 @@ function AdminDashboard() {
     .reduce((s, p) => s + p.amount, 0);
   const monthDeltaPct = lastMonthTotal > 0 ? Math.round(((monthTotal - lastMonthTotal) / lastMonthTotal) * 100) : null;
 
+  const weekAhead = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const upcoming = (appointments ?? [])
+    .filter((a) => new Date(a.starts_at) >= now && a.status !== "Annulé")
+    .slice(0, 4);
+  const weekCount = (appointments ?? []).filter((a) => {
+    const d = new Date(a.starts_at);
+    return d >= now && d <= weekAhead && a.status !== "Annulé";
+  }).length;
+
+  const activeClientsCount = (clients ?? []).filter((c) => c.status === "Actif").length;
+  const newClientsThisMonth = (clients ?? []).filter((c) => {
+    const d = new Date(c.created_at);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  }).length;
+  const consultationsThisWeek = (consultations ?? []).filter((c) => {
+    const d = new Date(c.consultation_date);
+    return d >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) && d <= now;
+  }).length;
+
+  type ActivityItem = { text: string; when: string; date: Date };
+  const activity: ActivityItem[] = [
+    ...(messages ?? []).slice(0, 3).map((m) => ({
+      text: `Nouveau message de ${m.name}`,
+      when: new Date(m.created_at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+      date: new Date(m.created_at),
+    })),
+    ...(consultations ?? []).slice(0, 3).map((c) => ({
+      text: `Consultation ${c.clients?.full_name ?? ""} clôturée (compte-rendu ajouté)`.trim(),
+      when: new Date(c.consultation_date).toLocaleString("fr-FR", { day: "numeric", month: "short" }),
+      date: new Date(c.consultation_date),
+    })),
+    ...(payments ?? []).slice(0, 3).map((p) => ({
+      text: `Don reçu — ${p.amount} €`,
+      when: new Date(p.payment_date).toLocaleString("fr-FR", { day: "numeric", month: "short" }),
+      date: new Date(p.payment_date),
+    })),
+  ]
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .slice(0, 4);
+
   return (
     <AdminShell title="Tableau de bord" subtitle={today()} onSignOut={signOut}>
       {/* Hero — editorial welcome */}
@@ -97,7 +140,7 @@ function AdminDashboard() {
               <span className="text-gold">commence par s'organiser.</span>
             </h2>
             <p className="mt-4 max-w-xl text-sm text-cream/75">
-              Vous avez <span className="text-cream">4 rendez-vous</span> cette semaine et{" "}
+              Vous avez <span className="text-cream">{weekCount} rendez-vous</span> cette semaine et{" "}
               <span className="text-cream">{messagesCount} message{messagesCount > 1 ? "s" : ""}</span> en attente.
             </p>
           </div>
@@ -120,10 +163,10 @@ function AdminDashboard() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <KpiCard label="Clients actifs" value="28" delta="+3 ce mois" trend="up" icon={Users} />
-        <KpiCard label="Consultations" value="152" delta="12 cette semaine" trend="up" icon={Sparkles} />
+        <KpiCard label="Clients actifs" value={String(activeClientsCount)} delta={`+${newClientsThisMonth} ce mois`} trend="up" icon={Users} />
+        <KpiCard label="Consultations" value={String((consultations ?? []).length)} delta={`${consultationsThisWeek} cette semaine`} trend="up" icon={Sparkles} />
         <KpiCard label="Messages" value={String(messagesCount)} delta="via formulaire" icon={MessageSquare} />
-        <KpiCard label="Satisfaction" value="4.9" delta="24 avis · 5 étoiles" trend="up" icon={TrendingUp} />
+        <KpiCard label="Nouveaux clients" value={String(newClientsThisMonth)} delta="ce mois-ci" trend="up" icon={TrendingUp} />
       </div>
 
       {/* Main grid */}
@@ -135,35 +178,46 @@ function AdminDashboard() {
           title="Prochains rendez-vous"
           action={{ to: "/admin/agenda", label: "Tout voir" }}
         >
+          {upcoming.length === 0 && <p className="py-3.5 text-sm text-earth/60">Aucun rendez-vous à venir.</p>}
           <ul className="divide-y divide-gold/10">
-            {upcoming.map((r, i) => (
-              <li key={r.name + r.time} className="flex items-center justify-between gap-4 py-3.5">
-                <div className="flex min-w-0 items-center gap-4">
-                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-forest/8 font-serif text-sm text-forest ring-1 ring-forest/10">
-                    {r.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+            {upcoming.map((r) => {
+              const name = r.clients?.full_name ?? "Client";
+              const time = new Date(r.starts_at).toLocaleString("fr-FR", {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              return (
+                <li key={r.id} className="flex items-center justify-between gap-4 py-3.5">
+                  <div className="flex min-w-0 items-center gap-4">
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-forest/8 font-serif text-sm text-forest ring-1 ring-forest/10">
+                      {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-forest">{name}</p>
+                      <p className="mt-0.5 flex items-center gap-1.5 text-xs text-earth/60">
+                        <Clock className="h-3 w-3" />
+                        <span className="truncate">
+                          {r.session_type ?? "Séance"} · {time}
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-forest">{r.name}</p>
-                    <p className="mt-0.5 flex items-center gap-1.5 text-xs text-earth/60">
-                      <Clock className="h-3 w-3" />
-                      <span className="truncate">
-                        {r.type} · {r.time}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <Pill tone={r.state === "Confirmé" ? "green" : "gold"}>{r.state}</Pill>
-                {i === -1 && null}
-              </li>
-            ))}
+                  <Pill tone={STATUS_TONE[r.status] ?? "neutral"}>{r.status}</Pill>
+                </li>
+              );
+            })}
           </ul>
         </SectionCard>
 
         {/* Activity feed */}
         <SectionCard eyebrow="Journal" title="Activité récente">
+          {activity.length === 0 && <p className="text-sm text-earth/60">Aucune activité récente.</p>}
           <ol className="relative space-y-4 border-l border-gold/20 pl-5">
-            {activity.map((a) => (
-              <li key={a.text} className="relative">
+            {activity.map((a, i) => (
+              <li key={a.text + i} className="relative">
                 <span className="absolute -left-[26px] top-1 h-2.5 w-2.5 rounded-full bg-gold ring-4 ring-cream" />
                 <p className="text-sm leading-snug text-earth/90">{a.text}</p>
                 <p className="mt-0.5 flex items-center gap-1 text-xs text-earth/50">

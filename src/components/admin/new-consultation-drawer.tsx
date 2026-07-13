@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -20,8 +20,34 @@ const EMPTY = {
   advice: "",
 };
 
-export function NewConsultationDrawer({ onCreated }: { onCreated?: (id: string) => void }) {
-  const [open, setOpen] = useState(false);
+export type ConsultationRecord = {
+  id: string;
+  client_id: string;
+  consultation_date: string;
+  duration_minutes: number;
+  mood: number | null;
+  objectives: string | null;
+  techniques: string | null;
+  report: string;
+  advice: string | null;
+};
+
+export function NewConsultationDrawer({
+  consultation,
+  onCreated,
+  open,
+  onOpenChange,
+}: {
+  consultation?: ConsultationRecord | null;
+  onCreated?: (id: string) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setOpen = (v: boolean) => (isControlled ? onOpenChange?.(v) : setInternalOpen(v));
+
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
@@ -29,15 +55,35 @@ export function NewConsultationDrawer({ onCreated }: { onCreated?: (id: string) 
   const { data: clients } = useQuery({
     queryKey: ["admin-clients"],
     queryFn: () => listClients(),
-    enabled: open,
+    enabled: isOpen,
   });
 
+  useEffect(() => {
+    if (!isOpen) return;
+    if (consultation) {
+      const d = new Date(consultation.consultation_date);
+      setForm({
+        client_id: consultation.client_id,
+        date: d.toISOString().slice(0, 10),
+        time: d.toTimeString().slice(0, 5),
+        duration_minutes: consultation.duration_minutes,
+        mood: consultation.mood ?? 6,
+        objectives: consultation.objectives ?? "",
+        techniques: consultation.techniques ?? "",
+        report: consultation.report,
+        advice: consultation.advice ?? "",
+      });
+    } else {
+      setForm(EMPTY);
+    }
+  }, [isOpen, consultation]);
+
   const upsert = useServerFn(adminUpsertConsultation);
-  const createMutation = useMutation({
+  const saveMutation = useMutation({
     mutationFn: () =>
       upsert({
         data: {
-          id: null,
+          id: consultation?.id ?? null,
           client_id: form.client_id,
           consultation_date: new Date(`${form.date}T${form.time}`).toISOString(),
           duration_minutes: form.duration_minutes,
@@ -63,17 +109,21 @@ export function NewConsultationDrawer({ onCreated }: { onCreated?: (id: string) 
   const canSubmit = form.client_id && form.date && form.time && form.report.trim();
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
-      >
-        <Plus className="h-3.5 w-3.5" /> Nouvelle consultation
-      </button>
+    <Drawer open={isOpen} onOpenChange={setOpen}>
+      {!isControlled && (
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+        >
+          <Plus className="h-3.5 w-3.5" /> Nouvelle consultation
+        </button>
+      )}
       <DrawerContent className="bg-cream">
         <div className="mx-auto w-full max-w-2xl">
           <DrawerHeader>
-            <DrawerTitle className="font-serif text-2xl text-forest">Nouvelle consultation</DrawerTitle>
+            <DrawerTitle className="font-serif text-2xl text-forest">
+              {consultation ? "Modifier la consultation" : "Nouvelle consultation"}
+            </DrawerTitle>
             <DrawerDescription>Compte-rendu de séance.</DrawerDescription>
           </DrawerHeader>
 
@@ -174,11 +224,11 @@ export function NewConsultationDrawer({ onCreated }: { onCreated?: (id: string) 
 
           <div className="flex items-center gap-4 border-t border-gold/15 px-4 py-4">
             <button
-              onClick={() => createMutation.mutate()}
-              disabled={createMutation.isPending || !canSubmit}
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending || !canSubmit}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {createMutation.isPending ? "Création…" : "Créer la consultation"}
+              {saveMutation.isPending ? "Enregistrement…" : consultation ? "Enregistrer" : "Créer la consultation"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -186,7 +236,7 @@ export function NewConsultationDrawer({ onCreated }: { onCreated?: (id: string) 
             >
               Annuler
             </button>
-            {createMutation.isError && <span className="text-sm text-red-700">Erreur lors de la création.</span>}
+            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
           </div>
         </div>
       </DrawerContent>

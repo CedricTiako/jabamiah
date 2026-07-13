@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -31,8 +31,37 @@ const EMPTY = {
   observations: "",
 };
 
-export function NewBilanDrawer({ onCreated }: { onCreated?: (id: string) => void }) {
-  const [open, setOpen] = useState(false);
+export type BilanRecord = {
+  id: string;
+  client_id: string;
+  assessment_date: string;
+  axis_energie: number;
+  axis_stress: number;
+  axis_emotions: number;
+  axis_motivation: number;
+  axis_confiance: number;
+  axis_fatigue: number;
+  axis_douleurs: number;
+  axis_concentration: number;
+  observations: string | null;
+};
+
+export function NewBilanDrawer({
+  bilan,
+  onCreated,
+  open,
+  onOpenChange,
+}: {
+  bilan?: BilanRecord | null;
+  onCreated?: (id: string) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setOpen = (v: boolean) => (isControlled ? onOpenChange?.(v) : setInternalOpen(v));
+
   const [form, setForm] = useState(EMPTY);
   const queryClient = useQueryClient();
 
@@ -40,15 +69,36 @@ export function NewBilanDrawer({ onCreated }: { onCreated?: (id: string) => void
   const { data: clients } = useQuery({
     queryKey: ["admin-clients"],
     queryFn: () => listClients(),
-    enabled: open,
+    enabled: isOpen,
   });
 
+  useEffect(() => {
+    if (!isOpen) return;
+    if (bilan) {
+      setForm({
+        client_id: bilan.client_id,
+        date: bilan.assessment_date.slice(0, 10),
+        axis_energie: bilan.axis_energie,
+        axis_stress: bilan.axis_stress,
+        axis_emotions: bilan.axis_emotions,
+        axis_motivation: bilan.axis_motivation,
+        axis_confiance: bilan.axis_confiance,
+        axis_fatigue: bilan.axis_fatigue,
+        axis_douleurs: bilan.axis_douleurs,
+        axis_concentration: bilan.axis_concentration,
+        observations: bilan.observations ?? "",
+      });
+    } else {
+      setForm(EMPTY);
+    }
+  }, [isOpen, bilan]);
+
   const upsert = useServerFn(adminUpsertEnergyAssessment);
-  const createMutation = useMutation({
+  const saveMutation = useMutation({
     mutationFn: () =>
       upsert({
         data: {
-          id: null,
+          id: bilan?.id ?? null,
           client_id: form.client_id,
           assessment_date: new Date(form.date || Date.now()).toISOString(),
           axis_energie: form.axis_energie,
@@ -77,17 +127,21 @@ export function NewBilanDrawer({ onCreated }: { onCreated?: (id: string) => void
   const canSubmit = form.client_id && form.date;
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
-      >
-        <Plus className="h-3.5 w-3.5" /> Nouveau bilan
-      </button>
+    <Drawer open={isOpen} onOpenChange={setOpen}>
+      {!isControlled && (
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft"
+        >
+          <Plus className="h-3.5 w-3.5" /> Nouveau bilan
+        </button>
+      )}
       <DrawerContent className="bg-cream">
         <div className="mx-auto w-full max-w-2xl">
           <DrawerHeader>
-            <DrawerTitle className="font-serif text-2xl text-forest">Nouveau bilan énergétique</DrawerTitle>
+            <DrawerTitle className="font-serif text-2xl text-forest">
+              {bilan ? "Modifier le bilan énergétique" : "Nouveau bilan énergétique"}
+            </DrawerTitle>
             <DrawerDescription>Saisir les valeurs par axe.</DrawerDescription>
           </DrawerHeader>
 
@@ -150,11 +204,11 @@ export function NewBilanDrawer({ onCreated }: { onCreated?: (id: string) => void
 
           <div className="flex items-center gap-4 border-t border-gold/15 px-4 py-4">
             <button
-              onClick={() => createMutation.mutate()}
-              disabled={createMutation.isPending || !canSubmit}
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending || !canSubmit}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {createMutation.isPending ? "Création…" : "Créer le bilan"}
+              {saveMutation.isPending ? "Enregistrement…" : bilan ? "Enregistrer" : "Créer le bilan"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -162,7 +216,7 @@ export function NewBilanDrawer({ onCreated }: { onCreated?: (id: string) => void
             >
               Annuler
             </button>
-            {createMutation.isError && <span className="text-sm text-red-700">Erreur lors de la création.</span>}
+            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
           </div>
         </div>
       </DrawerContent>

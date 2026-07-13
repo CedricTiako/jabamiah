@@ -7,6 +7,16 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { adminDeleteDocument, adminGetDocumentSignedUrl, adminListDocuments } from "../lib/documents.functions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/documents")({
   head: () => ({ meta: [{ title: "Documents — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -50,10 +60,14 @@ function DocumentsPage() {
     onSuccess: ({ url }) => window.open(url, "_blank", "noopener,noreferrer"),
   });
 
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; title: string } | null>(null);
   const deleteDocument = useServerFn(adminDeleteDocument);
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteDocument({ data: { id } }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-documents"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
+      setPendingDelete(null);
+    },
   });
 
   return (
@@ -118,7 +132,7 @@ function DocumentsPage() {
                       Ouvrir
                     </button>
                     <button
-                      onClick={() => deleteMutation.mutate(d.id)}
+                      onClick={() => setPendingDelete({ id: d.id, title: d.title })}
                       disabled={deleteMutation.isPending}
                       className="text-earth/50 hover:text-[color:var(--rose-text)]"
                       aria-label="Supprimer"
@@ -132,6 +146,26 @@ function DocumentsPage() {
           </tbody>
         </table>
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce document ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              « {pendingDelete?.title} » sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && deleteMutation.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminShell>
   );
 }

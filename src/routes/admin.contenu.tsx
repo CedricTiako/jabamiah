@@ -1,10 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminShell } from "../components/admin/admin-shell";
 import { useAdmin } from "../lib/admin-context";
 import { adminDeletePost, adminListPosts } from "../lib/posts.functions";
 import { Plus, FileText } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/contenu")({
   head: () => ({ meta: [{ title: "Contenu — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -18,9 +29,13 @@ function ContenuPage() {
   const del = useServerFn(adminDeletePost);
 
   const { data: posts, isLoading } = useQuery({ queryKey: ["admin-posts"], queryFn: () => list() });
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; title: string } | null>(null);
   const delMut = useMutation({
     mutationFn: (id: string) => del({ data: { id } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-posts"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-posts"] });
+      setPendingDelete(null);
+    },
   });
 
   return (
@@ -73,7 +88,7 @@ function ContenuPage() {
                         Éditer
                       </Link>
                       <button
-                        onClick={() => { if (confirm("Supprimer cet article ?")) delMut.mutate(p.id); }}
+                        onClick={() => setPendingDelete({ id: p.id, title: fr?.title ?? p.slug })}
                         className="ml-4 text-xs uppercase tracking-[0.15em] text-red-700 hover:text-red-900"
                       >
                         Supprimer
@@ -86,6 +101,26 @@ function ContenuPage() {
           </table>
         )}
       </div>
+
+      <AlertDialog open={!!pendingDelete} onOpenChange={(v) => !v && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer cet article ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              « {pendingDelete?.title} » sera définitivement supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => pendingDelete && delMut.mutate(pendingDelete.id)}
+              className="bg-red-700 text-white hover:bg-red-800"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminShell>
   );
 }

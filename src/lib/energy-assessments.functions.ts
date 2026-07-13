@@ -96,3 +96,13 @@ export const adminUpsertEnergyAssessment = createServerFn({ method: "POST" })
     if (error) throw error;
     return { id: created.id };
   });
+
+export const adminDeleteEnergyAssessment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { error } = await context.supabase.from("energy_assessments").delete().eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
+  });
