@@ -5,6 +5,10 @@ import { Resend } from "resend";
 
 const FROM = "Jabamiah <contact@jabamiah.eu>";
 
+// Every client-facing notification also goes to the practice owner as a paper trail
+// (proof of send for disputes/cancellations, quick archive without opening the admin panel).
+const OWNER_CC = "eirl.omont@gmail.com";
+
 function getResend() {
   const key = process.env.RESEND_API_KEY;
   if (!key) return null;
@@ -19,7 +23,7 @@ export async function sendClientEmail({ to, subject, html }: { to: string; subje
     return;
   }
   try {
-    const { data, error } = await resend.emails.send({ from: FROM, to, subject, html });
+    const { data, error } = await resend.emails.send({ from: FROM, to, cc: OWNER_CC, subject, html });
     if (error) console.error("[email] Resend error:", error);
     else console.log("[email] sent:", data?.id, "to", to, "-", subject);
   } catch (err) {
