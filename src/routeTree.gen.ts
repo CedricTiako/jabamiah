@@ -24,6 +24,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SoinsEtTherapiesIndexRouteImport } from './routes/soins-et-therapies.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SoinsEtTherapiesSlugRouteImport } from './routes/soins-et-therapies.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -40,6 +41,7 @@ import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminBilanRouteImport } from './routes/admin.bilan'
 import { Route as AdminAideRouteImport } from './routes/admin.aide'
 import { Route as AdminAgendaRouteImport } from './routes/admin.agenda'
+import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as AdminPostsIdRouteImport } from './routes/admin.posts.$id'
 import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
@@ -119,6 +121,11 @@ const SoinsEtTherapiesIndexRoute = SoinsEtTherapiesIndexRouteImport.update({
   id: '/soins-et-therapies/',
   path: '/soins-et-therapies/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -200,6 +207,11 @@ const AdminAgendaRoute = AdminAgendaRouteImport.update({
   path: '/agenda',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminClientsIndexRoute = AdminClientsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminClientsRoute,
+} as any)
 const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   id: '/api/public/contact',
   path: '/api/public/contact',
@@ -247,15 +259,16 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
   '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
+  '/admin/clients/': typeof AdminClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
   '/cgu': typeof CguRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
@@ -269,7 +282,6 @@ export interface FileRoutesByTo {
   '/admin/agenda': typeof AdminAgendaRoute
   '/admin/aide': typeof AdminAideRoute
   '/admin/bilan': typeof AdminBilanRoute
-  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contenu': typeof AdminContenuRoute
   '/admin/documents': typeof AdminDocumentsRoute
@@ -282,10 +294,12 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/soins-et-therapies': typeof SoinsEtTherapiesIndexRoute
   '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
+  '/admin/clients': typeof AdminClientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -319,10 +333,12 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/soins-et-therapies/$slug': typeof SoinsEtTherapiesSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/soins-et-therapies/': typeof SoinsEtTherapiesIndexRoute
   '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
+  '/admin/clients/': typeof AdminClientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -357,15 +373,16 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin/'
+    | '/blog/'
     | '/soins-et-therapies/'
     | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
+    | '/admin/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/blog'
     | '/cgu'
     | '/contact'
     | '/cookies'
@@ -379,7 +396,6 @@ export interface FileRouteTypes {
     | '/admin/agenda'
     | '/admin/aide'
     | '/admin/bilan'
-    | '/admin/clients'
     | '/admin/consultations'
     | '/admin/contenu'
     | '/admin/documents'
@@ -392,10 +408,12 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin'
+    | '/blog'
     | '/soins-et-therapies'
     | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
+    | '/admin/clients'
   id:
     | '__root__'
     | '/'
@@ -428,10 +446,12 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/soins-et-therapies/$slug'
     | '/admin/'
+    | '/blog/'
     | '/soins-et-therapies/'
     | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
+    | '/admin/clients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -561,6 +581,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoinsEtTherapiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -673,6 +700,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAgendaRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/clients/': {
+      id: '/admin/clients/'
+      path: '/'
+      fullPath: '/admin/clients/'
+      preLoaderRoute: typeof AdminClientsIndexRouteImport
+      parentRoute: typeof AdminClientsRoute
+    }
     '/api/public/contact': {
       id: '/api/public/contact'
       path: '/api/public/contact'
@@ -699,10 +733,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminClientsRouteChildren {
   AdminClientsIdRoute: typeof AdminClientsIdRoute
+  AdminClientsIndexRoute: typeof AdminClientsIndexRoute
 }
 
 const AdminClientsRouteChildren: AdminClientsRouteChildren = {
   AdminClientsIdRoute: AdminClientsIdRoute,
+  AdminClientsIndexRoute: AdminClientsIndexRoute,
 }
 
 const AdminClientsRouteWithChildren = AdminClientsRoute._addFileChildren(
@@ -749,10 +785,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)

@@ -20,7 +20,11 @@ export function TeamPanel() {
   const invite = useServerFn(adminInviteTeamMember);
   const revoke = useServerFn(adminRevokeTeamMember);
 
-  const { data: members, isLoading } = useQuery({ queryKey: ["admin-team"], queryFn: () => listTeam() });
+  const { data: members, isLoading, isError } = useQuery({
+    queryKey: ["admin-team"],
+    queryFn: () => listTeam(),
+    retry: 1,
+  });
 
   const [email, setEmail] = useState("");
   const [pendingRevoke, setPendingRevoke] = useState<{ user_id: string; email: string } | null>(null);
@@ -44,6 +48,12 @@ export function TeamPanel() {
   return (
     <div className="mt-4">
       {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
+      {isError && (
+        <p className="text-sm text-red-700">
+          Impossible de charger l'équipe. Vérifiez que la variable d'environnement
+          SUPABASE_SERVICE_ROLE_KEY est configurée sur le serveur.
+        </p>
+      )}
       <ul className="divide-y divide-gold/10">
         {members?.map((m) => (
           <li key={m.user_id} className="flex items-center justify-between gap-4 py-3">
