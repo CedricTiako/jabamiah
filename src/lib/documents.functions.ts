@@ -108,11 +108,16 @@ export const adminDeleteDocument = createServerFn({ method: "POST" })
       .eq("id", data.id)
       .maybeSingle();
     if (getErr) throw getErr;
-    if (doc) {
-      await context.supabase.storage.from("client-documents").remove([doc.storage_path]);
-    }
-    const { error } = await context.supabase.from("documents").delete().eq("id", data.id);
+    if (!doc) throw new Error("Document introuvable (déjà supprimé ?).");
+
+    const { error: storageErr } = await context.supabase.storage.from("client-documents").remove([doc.storage_path]);
+    if (storageErr) throw storageErr;
+
+    // .delete() alone reports success even when RLS or a race silently matches zero rows —
+    // require the deleted row back to confirm it actually happened.
+    const { data: deleted, error } = await context.supabase.from("documents").delete().eq("id", data.id).select("id");
     if (error) throw error;
+    if (!deleted || deleted.length === 0) throw new Error("La suppression n'a affecté aucune ligne — veuillez réessayer.");
     return { ok: true };
   });
 
