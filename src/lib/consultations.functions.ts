@@ -85,6 +85,21 @@ export const adminUpsertConsultation = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
+
+    const { data: client } = await context.supabase
+      .from("clients")
+      .select("full_name, email")
+      .eq("id", data.client_id)
+      .maybeSingle();
+    if (client?.email) {
+      const { sendClientEmail, consultationReportEmail } = await import("./email.server");
+      await sendClientEmail({
+        to: client.email,
+        subject: "Votre compte-rendu de séance — Jabamiah",
+        html: consultationReportEmail(client.full_name, payload.consultation_date),
+      });
+    }
+
     return { id: created.id };
   });
 

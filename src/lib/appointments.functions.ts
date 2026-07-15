@@ -69,6 +69,21 @@ export const adminUpsertAppointment = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
+
+    const { data: client } = await context.supabase
+      .from("clients")
+      .select("full_name, email")
+      .eq("id", data.client_id)
+      .maybeSingle();
+    if (client?.email) {
+      const { sendClientEmail, appointmentConfirmedEmail } = await import("./email.server");
+      await sendClientEmail({
+        to: client.email,
+        subject: "Confirmation de votre rendez-vous — Jabamiah",
+        html: appointmentConfirmedEmail(client.full_name, payload.starts_at, payload.session_type),
+      });
+    }
+
     return { id: created.id };
   });
 
@@ -84,6 +99,22 @@ export const adminUpdateAppointmentStatus = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase.from("appointments").update({ status: data.status }).eq("id", data.id);
     if (error) throw error;
+
+    const { data: appointment } = await context.supabase
+      .from("appointments")
+      .select("starts_at, clients(full_name, email)")
+      .eq("id", data.id)
+      .maybeSingle();
+    const client = appointment?.clients as { full_name: string; email: string | null } | null;
+    if (appointment && client?.email) {
+      const { sendClientEmail, appointmentStatusEmail } = await import("./email.server");
+      await sendClientEmail({
+        to: client.email,
+        subject: "Mise à jour de votre rendez-vous — Jabamiah",
+        html: appointmentStatusEmail(client.full_name, appointment.starts_at, data.status),
+      });
+    }
+
     return { ok: true };
   });
 

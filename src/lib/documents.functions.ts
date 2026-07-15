@@ -77,6 +77,23 @@ export const adminCreateDocument = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
+
+    if (data.client_id) {
+      const { data: client } = await context.supabase
+        .from("clients")
+        .select("full_name, email")
+        .eq("id", data.client_id)
+        .maybeSingle();
+      if (client?.email) {
+        const { sendClientEmail, documentAddedEmail } = await import("./email.server");
+        await sendClientEmail({
+          to: client.email,
+          subject: "Nouveau document disponible — Jabamiah",
+          html: documentAddedEmail(client.full_name, data.title),
+        });
+      }
+    }
+
     return { id: created.id };
   });
 
