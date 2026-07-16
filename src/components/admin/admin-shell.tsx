@@ -19,6 +19,7 @@ import {
   LogOut,
   ChevronLeft,
   Search,
+  Star,
 } from "lucide-react";
 import { Logo } from "../site/logo";
 
@@ -59,6 +60,7 @@ const groups: Group[] = [
     label: "Publication",
     items: [
       { to: "/admin/contenu", label: "Contenu (Blog)", icon: FileText },
+      { to: "/admin/avis", label: "Avis clients", icon: Star },
       { to: "/admin/parametres", label: "Paramètres", icon: Settings },
     ],
   },

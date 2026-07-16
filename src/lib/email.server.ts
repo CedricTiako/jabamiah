@@ -31,6 +31,23 @@ export async function sendClientEmail({ to, subject, html }: { to: string; subje
   }
 }
 
+// For internal notifications to the owner (not client-facing) — no CC needed since
+// they're already the recipient.
+export async function sendOwnerNotification({ subject, html }: { subject: string; html: string }) {
+  const resend = getResend();
+  if (!resend) {
+    console.error("[email] RESEND_API_KEY missing, skipping send:", subject);
+    return;
+  }
+  try {
+    const { data, error } = await resend.emails.send({ from: FROM, to: OWNER_CC, subject, html });
+    if (error) console.error("[email] Resend error:", error);
+    else console.log("[email] sent:", data?.id, "to", OWNER_CC, "-", subject);
+  } catch (err) {
+    console.error("[email] send failed:", err);
+  }
+}
+
 function layout(bodyHtml: string) {
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -101,6 +118,17 @@ export function consultationReportEmail(clientName: string, consultationDate: st
     </p>
     <p style="font-size:15px;line-height:1.6;">N'hésitez pas à me contacter si vous souhaitez en discuter.</p>
     <p style="font-size:15px;line-height:1.6;">À bientôt,<br />Loïc</p>
+  `);
+}
+
+export function newReviewPendingEmail(authorName: string, rating: number, body: string) {
+  return layout(`
+    <h1 style="font-size:22px;color:#1e3a2b;margin:0 0 16px;">Nouvel avis à modérer</h1>
+    <p style="font-size:15px;line-height:1.6;">
+      <strong>${authorName}</strong> a laissé un avis ${"★".repeat(rating)}${"☆".repeat(5 - rating)}
+    </p>
+    <p style="font-size:15px;line-height:1.6;background-color:#f7f1e8;border-radius:8px;padding:14px 18px;white-space:pre-wrap;">${body}</p>
+    <p style="font-size:15px;line-height:1.6;">Rendez-vous dans l'admin → Avis clients pour l'approuver ou le refuser avant qu'il apparaisse sur le site.</p>
   `);
 }
 

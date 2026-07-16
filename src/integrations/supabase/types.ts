@@ -547,6 +547,45 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          author_email: string | null
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+          moderated_at: string | null
+          moderated_by: string | null
+          rating: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          author_email?: string | null
+          author_name: string
+          body: string
+          created_at?: string
+          id?: string
+          moderated_at?: string | null
+          moderated_by?: string | null
+          rating: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          author_email?: string | null
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+          moderated_at?: string | null
+          moderated_by?: string | null
+          rating?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           key: string

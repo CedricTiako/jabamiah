@@ -39,9 +39,11 @@ import { Route as AdminContenuRouteImport } from './routes/admin.contenu'
 import { Route as AdminConsultationsRouteImport } from './routes/admin.consultations'
 import { Route as AdminClientsRouteImport } from './routes/admin.clients'
 import { Route as AdminBilanRouteImport } from './routes/admin.bilan'
+import { Route as AdminAvisRouteImport } from './routes/admin.avis'
 import { Route as AdminAideRouteImport } from './routes/admin.aide'
 import { Route as AdminAgendaRouteImport } from './routes/admin.agenda'
 import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
+import { Route as ApiPublicReviewsRouteImport } from './routes/api/public/reviews'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as AdminPostsIdRouteImport } from './routes/admin.posts.$id'
 import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
@@ -197,6 +199,11 @@ const AdminBilanRoute = AdminBilanRouteImport.update({
   path: '/bilan',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAvisRoute = AdminAvisRouteImport.update({
+  id: '/avis',
+  path: '/avis',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAideRoute = AdminAideRouteImport.update({
   id: '/aide',
   path: '/aide',
@@ -211,6 +218,11 @@ const AdminClientsIndexRoute = AdminClientsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminClientsRoute,
+} as any)
+const ApiPublicReviewsRoute = ApiPublicReviewsRouteImport.update({
+  id: '/api/public/reviews',
+  path: '/api/public/reviews',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   id: '/api/public/contact',
@@ -245,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
   '/admin/aide': typeof AdminAideRoute
+  '/admin/avis': typeof AdminAvisRoute
   '/admin/bilan': typeof AdminBilanRoute
   '/admin/clients': typeof AdminClientsRouteWithChildren
   '/admin/consultations': typeof AdminConsultationsRoute
@@ -264,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
+  '/api/public/reviews': typeof ApiPublicReviewsRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -281,6 +295,7 @@ export interface FileRoutesByTo {
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
   '/admin/aide': typeof AdminAideRoute
+  '/admin/avis': typeof AdminAvisRoute
   '/admin/bilan': typeof AdminBilanRoute
   '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contenu': typeof AdminContenuRoute
@@ -299,6 +314,7 @@ export interface FileRoutesByTo {
   '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
+  '/api/public/reviews': typeof ApiPublicReviewsRoute
   '/admin/clients': typeof AdminClientsIndexRoute
 }
 export interface FileRoutesById {
@@ -319,6 +335,7 @@ export interface FileRoutesById {
   '/temoignages': typeof TemoignagesRoute
   '/admin/agenda': typeof AdminAgendaRoute
   '/admin/aide': typeof AdminAideRoute
+  '/admin/avis': typeof AdminAvisRoute
   '/admin/bilan': typeof AdminBilanRoute
   '/admin/clients': typeof AdminClientsRouteWithChildren
   '/admin/consultations': typeof AdminConsultationsRoute
@@ -338,6 +355,7 @@ export interface FileRoutesById {
   '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/posts/$id': typeof AdminPostsIdRoute
   '/api/public/contact': typeof ApiPublicContactRoute
+  '/api/public/reviews': typeof ApiPublicReviewsRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
 }
 export interface FileRouteTypes {
@@ -359,6 +377,7 @@ export interface FileRouteTypes {
     | '/temoignages'
     | '/admin/agenda'
     | '/admin/aide'
+    | '/admin/avis'
     | '/admin/bilan'
     | '/admin/clients'
     | '/admin/consultations'
@@ -378,6 +397,7 @@ export interface FileRouteTypes {
     | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
+    | '/api/public/reviews'
     | '/admin/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -395,6 +415,7 @@ export interface FileRouteTypes {
     | '/temoignages'
     | '/admin/agenda'
     | '/admin/aide'
+    | '/admin/avis'
     | '/admin/bilan'
     | '/admin/consultations'
     | '/admin/contenu'
@@ -413,6 +434,7 @@ export interface FileRouteTypes {
     | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
+    | '/api/public/reviews'
     | '/admin/clients'
   id:
     | '__root__'
@@ -432,6 +454,7 @@ export interface FileRouteTypes {
     | '/temoignages'
     | '/admin/agenda'
     | '/admin/aide'
+    | '/admin/avis'
     | '/admin/bilan'
     | '/admin/clients'
     | '/admin/consultations'
@@ -451,6 +474,7 @@ export interface FileRouteTypes {
     | '/admin/clients/$id'
     | '/admin/posts/$id'
     | '/api/public/contact'
+    | '/api/public/reviews'
     | '/admin/clients/'
   fileRoutesById: FileRoutesById
 }
@@ -472,6 +496,7 @@ export interface RootRouteChildren {
   SoinsEtTherapiesSlugRoute: typeof SoinsEtTherapiesSlugRoute
   SoinsEtTherapiesIndexRoute: typeof SoinsEtTherapiesIndexRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
+  ApiPublicReviewsRoute: typeof ApiPublicReviewsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -686,6 +711,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBilanRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/avis': {
+      id: '/admin/avis'
+      path: '/avis'
+      fullPath: '/admin/avis'
+      preLoaderRoute: typeof AdminAvisRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/aide': {
       id: '/admin/aide'
       path: '/aide'
@@ -706,6 +738,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/clients/'
       preLoaderRoute: typeof AdminClientsIndexRouteImport
       parentRoute: typeof AdminClientsRoute
+    }
+    '/api/public/reviews': {
+      id: '/api/public/reviews'
+      path: '/api/public/reviews'
+      fullPath: '/api/public/reviews'
+      preLoaderRoute: typeof ApiPublicReviewsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/contact': {
       id: '/api/public/contact'
@@ -748,6 +787,7 @@ const AdminClientsRouteWithChildren = AdminClientsRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAgendaRoute: typeof AdminAgendaRoute
   AdminAideRoute: typeof AdminAideRoute
+  AdminAvisRoute: typeof AdminAvisRoute
   AdminBilanRoute: typeof AdminBilanRoute
   AdminClientsRoute: typeof AdminClientsRouteWithChildren
   AdminConsultationsRoute: typeof AdminConsultationsRoute
@@ -766,6 +806,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAgendaRoute: AdminAgendaRoute,
   AdminAideRoute: AdminAideRoute,
+  AdminAvisRoute: AdminAvisRoute,
   AdminBilanRoute: AdminBilanRoute,
   AdminClientsRoute: AdminClientsRouteWithChildren,
   AdminConsultationsRoute: AdminConsultationsRoute,
@@ -813,6 +854,7 @@ const rootRouteChildren: RootRouteChildren = {
   SoinsEtTherapiesSlugRoute: SoinsEtTherapiesSlugRoute,
   SoinsEtTherapiesIndexRoute: SoinsEtTherapiesIndexRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
+  ApiPublicReviewsRoute: ApiPublicReviewsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
