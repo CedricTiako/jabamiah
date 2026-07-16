@@ -9,6 +9,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+Dashboard Design
 node_modules
 dist
 dist-ssr
@@ -35,3 +36,5 @@ supabase/.temp/
 *.njsproj
 *.sln
 *.sw?
+
+
