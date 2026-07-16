@@ -212,7 +212,7 @@ export const adminListContactMessages = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data, error } = await context.supabase
       .from("contact_messages")
-      .select("id, name, email, subject, message, locale, created_at")
+      .select("id, name, email, subject, message, locale, created_at, read_at")
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) throw error;

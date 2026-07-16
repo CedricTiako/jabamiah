@@ -12,10 +12,6 @@ const ContactSchema = z.object({
   website: z.string().max(0).optional().nullable(),
 });
 
-function esc(s: string) {
-  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
-}
-
 export const Route = createFileRoute("/api/public/contact")({
   server: {
     handlers: {
@@ -47,81 +43,40 @@ export const Route = createFileRoute("/api/public/contact")({
 
         const { name, email, subject, message, locale, website } = parsed.data;
 
-        // Honeypot: if filled, silently accept
+        // Honeypot: if filled, silently accept without doing anything
         if (website && website.length > 0) {
           return new Response(JSON.stringify({ ok: true }), { status: 200, headers: corsHeaders });
         }
 
-        const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-        const RESEND_API_KEY = process.env.RESEND_API_KEY;
-        const TO_EMAIL = process.env.CONTACT_TO_EMAIL ?? "contact@jabamiah.eu";
-        const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL ?? "Jabamiah <onboarding@resend.dev>";
-
-        // Archive in DB (best-effort)
-        try {
-          const url = process.env.SUPABASE_URL;
-          const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-          if (url && serviceKey) {
-            const admin = createClient(url, serviceKey, {
-              auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-            });
-            const ip = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? null;
-            await admin.from("contact_messages").insert({
-              name, email, subject: subject ?? null, message, locale: locale ?? null, ip_address: ip,
-            });
-          }
-        } catch (err) {
-          console.error("[contact] failed to archive", err);
+        const url = process.env.SUPABASE_URL;
+        const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        if (!url || !serviceKey) {
+          console.error("[contact] missing Supabase service role env");
+          return new Response(JSON.stringify({ error: "Service not configured" }), { status: 500, headers: corsHeaders });
         }
 
-        if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
-          console.error("[contact] missing email credentials");
-          return new Response(JSON.stringify({ error: "Email service not configured" }), {
-            status: 500,
-            headers: corsHeaders,
-          });
+        const admin = createClient(url, serviceKey, {
+          auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+        });
+
+        const ip = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? null;
+        const { error } = await admin.from("contact_messages").insert({
+          name, email, subject: subject ?? null, message, locale: locale ?? null, ip_address: ip,
+        });
+        if (error) {
+          console.error("[contact] insert failed", error);
+          return new Response(JSON.stringify({ error: "Submission failed" }), { status: 500, headers: corsHeaders });
         }
 
-        const subjectLine = subject?.trim() ? `[Jabamiah] ${subject.trim()}` : `[Jabamiah] Nouveau message de ${name}`;
-
-        const html = `
-<!doctype html>
-<html><body style="font-family: -apple-system, Segoe UI, Roboto, sans-serif; background:#f5f0e6; padding:24px;">
-  <div style="max-width:560px; margin:0 auto; background:#fff; border-radius:12px; padding:32px; border:1px solid #c4a661;">
-    <h1 style="color:#2c3a24; font-family: 'Cormorant Garamond', serif; margin:0 0 16px;">Nouveau message du site Jabamiah</h1>
-    <p style="margin:8px 0;"><strong>Nom :</strong> ${esc(name)}</p>
-    <p style="margin:8px 0;"><strong>Email :</strong> <a href="mailto:${esc(email)}">${esc(email)}</a></p>
-    ${subject ? `<p style="margin:8px 0;"><strong>Sujet :</strong> ${esc(subject)}</p>` : ""}
-    ${locale ? `<p style="margin:8px 0;"><strong>Langue :</strong> ${esc(locale)}</p>` : ""}
-    <hr style="border:none; border-top:1px solid #c4a661; margin:16px 0;" />
-    <div style="white-space:pre-wrap; color:#2c3a24;">${esc(message)}</div>
-  </div>
-</body></html>`;
-
         try {
-          const res = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${LOVABLE_API_KEY}`,
-              "X-Connection-Api-Key": RESEND_API_KEY,
-            },
-            body: JSON.stringify({
-              from: FROM_EMAIL,
-              to: [TO_EMAIL],
-              reply_to: email,
-              subject: subjectLine,
-              html,
-            }),
+          const { sendOwnerNotification, newContactMessageEmail } = await import("../../../lib/email.server");
+          await sendOwnerNotification({
+            subject: subject?.trim() ? `[Jabamiah] ${subject.trim()}` : `[Jabamiah] Nouveau message de ${name}`,
+            html: newContactMessageEmail(name, email, subject ?? null, message),
+            replyTo: email,
           });
-          if (!res.ok) {
-            const text = await res.text();
-            console.error("[contact] Resend error", res.status, text);
-            return new Response(JSON.stringify({ error: "Send failed" }), { status: 502, headers: corsHeaders });
-          }
         } catch (err) {
-          console.error("[contact] send exception", err);
-          return new Response(JSON.stringify({ error: "Send failed" }), { status: 502, headers: corsHeaders });
+          console.error("[contact] owner notification failed", err);
         }
 
         return new Response(JSON.stringify({ ok: true }), { status: 200, headers: corsHeaders });

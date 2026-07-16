@@ -1,5 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { adminGetNotificationSummary } from "../../lib/notifications.functions";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -182,14 +186,7 @@ export function AdminShell({ title, subtitle, actions, children, onSignOut, back
                 />
               </div>
               {actions}
-              <button
-                type="button"
-                className="relative grid h-10 w-10 place-items-center rounded-full border border-gold/30 text-forest hover:bg-cream-warm"
-                aria-label="Notifications"
-              >
-                <Bell className="h-4 w-4" />
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[color:var(--rose-text)] ring-2 ring-cream" />
-              </button>
+              <NotificationsBell />
             </div>
           </div>
         </header>
@@ -217,5 +214,81 @@ export function AdminShell({ title, subtitle, actions, children, onSignOut, back
         <div className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-10">{children}</div>
       </div>
     </div>
+  );
+}
+
+function NotificationsBell() {
+  const [open, setOpen] = useState(false);
+  const getSummary = useServerFn(adminGetNotificationSummary);
+  const { data } = useQuery({
+    queryKey: ["admin-notifications"],
+    queryFn: () => getSummary(),
+    refetchInterval: 60_000,
+  });
+
+  const unreadMessages = data?.unreadMessages ?? 0;
+  const pendingReviews = data?.pendingReviews ?? 0;
+  const total = unreadMessages + pendingReviews;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="relative grid h-10 w-10 place-items-center rounded-full border border-gold/30 text-forest hover:bg-cream-warm"
+          aria-label={total > 0 ? `Notifications (${total} nouvelles)` : "Notifications"}
+        >
+          <Bell className="h-4 w-4" />
+          {total > 0 && (
+            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-rose-text ring-2 ring-cream" />
+          )}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-80 bg-cream p-0">
+        <div className="border-b border-gold/15 px-4 py-3">
+          <p className="font-serif text-sm text-forest">Notifications</p>
+        </div>
+        {total === 0 ? (
+          <p className="px-4 py-6 text-center text-sm text-earth/60">Rien de nouveau pour le moment.</p>
+        ) : (
+          <div className="divide-y divide-gold/10">
+            {unreadMessages > 0 && (
+              <Link
+                to="/admin/messages"
+                onClick={() => setOpen(false)}
+                className="flex items-start gap-3 px-4 py-3 hover:bg-cream-warm/50"
+              >
+                <MessageSquare className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold" />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-forest">
+                    {unreadMessages} nouveau{unreadMessages > 1 ? "x" : ""} message{unreadMessages > 1 ? "s" : ""}
+                  </p>
+                  <p className="truncate text-xs text-earth/60">
+                    {data?.recentMessages.map((m) => m.name).join(", ")}
+                  </p>
+                </div>
+              </Link>
+            )}
+            {pendingReviews > 0 && (
+              <Link
+                to="/admin/avis"
+                onClick={() => setOpen(false)}
+                className="flex items-start gap-3 px-4 py-3 hover:bg-cream-warm/50"
+              >
+                <Star className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold" />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-forest">
+                    {pendingReviews} avis à modérer
+                  </p>
+                  <p className="truncate text-xs text-earth/60">
+                    {data?.recentReviews.map((r) => r.author_name).join(", ")}
+                  </p>
+                </div>
+              </Link>
+            )}
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
   );
 }

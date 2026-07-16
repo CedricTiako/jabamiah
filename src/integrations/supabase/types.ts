@@ -206,6 +206,7 @@ export type Database = {
           locale: string | null
           message: string
           name: string
+          read_at: string | null
           subject: string | null
         }
         Insert: {
@@ -216,6 +217,7 @@ export type Database = {
           locale?: string | null
           message: string
           name: string
+          read_at?: string | null
           subject?: string | null
         }
         Update: {
@@ -226,6 +228,7 @@ export type Database = {
           locale?: string | null
           message?: string
           name?: string
+          read_at?: string | null
           subject?: string | null
         }
         Relationships: []
