@@ -23,6 +23,7 @@ import approachPlants from "../assets/approach-plants.jpg";
 import approachHarmony from "../assets/approach-harmony.jpg";
 import approachSpirit from "../assets/approach-spirit.jpg";
 import { LeafDivider } from "../components/site/leaf-divider";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion";
 import { buildSeoHead, SITE_URL } from "../lib/seo";
 import { CALENDLY_URL, EMAIL, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
 import { getServerLocale } from "../lib/locale-server";
@@ -32,12 +33,58 @@ export const Route = createFileRoute("/")({
   loader: async () => ({ locale: await getServerLocale() }),
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
-    return buildSeoHead({
+    const head = buildSeoHead({
       path: "/",
       title: tServer(loc, "seo.home.title"),
       description: tServer(loc, "seo.home.description"),
       image: `${SITE_URL}${heroImage}`,
     });
+    return {
+      ...head,
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Les consultations sont-elles vraiment gratuites ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Oui, absolument. Jabamiah n'a jamais voulu faire payer ses soins. L'aide doit rester accessible à toutes et tous, sans condition.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Comment prendre rendez-vous avec Jabamiah ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Vous pouvez réserver directement en ligne via Calendly, ou contacter Jabamiah par WhatsApp, téléphone ou email.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Les séances avec Jabamiah sont-elles disponibles à distance ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Oui. Jabamiah propose des consultations en présentiel à Forges-les-Eaux (Normandie) et entièrement à distance, par téléphone ou visioconférence.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Combien de temps dure une séance avec Jabamiah ?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Une séance dure en général entre 45 minutes et 1 heure, selon votre demande et vos besoins.",
+                },
+              },
+            ],
+          }),
+        },
+      ],
+    };
   },
   component: HomePage,
 });
@@ -54,6 +101,7 @@ function HomePage() {
       <ValuesStrip />
       <ApproachesSection />
       <GagnoteSection />
+      <FAQSection />
       <QuoteSection />
     </>
   );
@@ -308,6 +356,39 @@ function GagnoteSection() {
             VISA
           </span>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  const { t } = useTranslation();
+  const faq = t("home.faq", { returnObjects: true }) as Array<{ question: string; answer: string }>;
+  return (
+    <section className="bg-cream-warm py-20">
+      <div className="mx-auto max-w-3xl px-6">
+        <div className="text-center">
+          <span className="eyebrow text-gold">{t("home.faqEyebrow")}</span>
+          <h2 className="mt-4 font-serif text-4xl text-forest md:text-5xl">{t("home.faqTitle")}</h2>
+          <LeafDivider className="mt-6" />
+        </div>
+
+        <Accordion type="single" collapsible className="mt-12 space-y-3">
+          {faq.map((item, idx) => (
+            <AccordionItem
+              key={item.question}
+              value={`faq-${idx}`}
+              className="rounded-lg border-none bg-card px-6 ring-1 ring-gold/20"
+            >
+              <AccordionTrigger className="font-serif text-base text-forest hover:no-underline">
+                {item.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-sm leading-relaxed text-earth/75">
+                {item.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </section>
   );

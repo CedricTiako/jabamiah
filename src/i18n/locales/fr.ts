@@ -83,6 +83,26 @@ export const fr = {
       gagnoteP2: "Si vous le souhaitez, vous pouvez participer à la gagnote solidaire : vos dons libres permettent d'accompagner ceux qui en ont le plus besoin.",
       gagnoteCta: "En savoir plus sur la démarche",
       gagnoteDonate: "Faire un don",
+      faqEyebrow: "Questions fréquentes",
+      faqTitle: "Vous vous posez peut-être ces questions",
+      faq: [
+        {
+          question: "Les consultations sont-elles vraiment gratuites ?",
+          answer: "Oui, absolument. Je n'ai jamais voulu faire payer mes soins. L'aide doit rester accessible à toutes et tous, sans condition.",
+        },
+        {
+          question: "Comment prendre rendez-vous ?",
+          answer: "Vous pouvez réserver directement en ligne via Calendly, ou me contacter par WhatsApp, téléphone ou email — tous les liens sont en haut de cette page.",
+        },
+        {
+          question: "Les séances sont-elles disponibles à distance ?",
+          answer: "Oui. Je propose des consultations en présentiel à Forges-les-Eaux (Normandie) et entièrement à distance, par téléphone ou visioconférence.",
+        },
+        {
+          question: "Combien de temps dure une séance ?",
+          answer: "Une séance dure en général entre 45 minutes et 1 heure, selon votre demande et vos besoins.",
+        },
+      ],
       quote: "« Le bien que tu fais aujourd'hui, revient toujours à ton âme. »",
     },
     about: {
