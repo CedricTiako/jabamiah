@@ -44,7 +44,7 @@ const SESSION_TYPE_LABELS: Record<string, string> = {
 };
 
 const LOCATION_LABELS: Record<string, string> = {
-  cabinet: "Cabinet — Rouen",
+  cabinet: "Cabinet — Forges-les-Eaux",
   distance: "À distance (visio)",
   domicile: "Au domicile du client",
 };

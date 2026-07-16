@@ -8,6 +8,20 @@ import { adminListClients } from "../../lib/clients.functions";
 
 const DURATIONS = [30, 60, 90];
 
+function pad2(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+// Derive both fields from local time (not toISOString, which is UTC and can land on
+// the wrong calendar day for evening appointments) so the prefilled date/time always
+// match what was originally chosen.
+function toLocalDateAndTime(d: Date) {
+  return {
+    date: `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`,
+    time: `${pad2(d.getHours())}:${pad2(d.getMinutes())}`,
+  };
+}
+
 const EMPTY = {
   client_id: "",
   date: "",
@@ -64,8 +78,7 @@ export function NewConsultationDrawer({
       const d = new Date(consultation.consultation_date);
       setForm({
         client_id: consultation.client_id,
-        date: d.toISOString().slice(0, 10),
-        time: d.toTimeString().slice(0, 5),
+        ...toLocalDateAndTime(d),
         duration_minutes: consultation.duration_minutes,
         mood: consultation.mood ?? 6,
         objectives: consultation.objectives ?? "",

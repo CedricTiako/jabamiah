@@ -17,10 +17,13 @@ const SESSION_TYPES = [
 const DURATIONS = [30, 60, 90, 120];
 
 const LOCATIONS = [
-  { value: "cabinet", label: "Cabinet — Rouen" },
+  { value: "cabinet", label: "Cabinet — Forges-les-Eaux" },
   { value: "distance", label: "À distance (visio)" },
   { value: "domicile", label: "Au domicile du client" },
+  { value: "__custom__", label: "Autre (préciser)…" },
 ];
+
+const KNOWN_LOCATION_VALUES = new Set(LOCATIONS.map((l) => l.value).filter((v) => v !== "__custom__"));
 
 const EMPTY = {
   client_id: "",
@@ -29,8 +32,23 @@ const EMPTY = {
   session_type: "premiere",
   duration_minutes: 60,
   location: "cabinet",
+  customLocation: "",
   note: "",
 };
+
+function pad2(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+// Derive both fields from local time (not toISOString, which is UTC and can land on
+// the wrong calendar day for evening appointments) so the prefilled date/time always
+// match what was originally chosen.
+function toLocalDateAndTime(d: Date) {
+  return {
+    date: `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`,
+    time: `${pad2(d.getHours())}:${pad2(d.getMinutes())}`,
+  };
+}
 
 export type AppointmentRecord = {
   id: string;
@@ -72,13 +90,15 @@ export function NewAppointmentDrawer({
     if (!isOpen) return;
     if (appointment) {
       const starts = new Date(appointment.starts_at);
+      const rawLocation = appointment.location ?? "cabinet";
+      const isKnown = KNOWN_LOCATION_VALUES.has(rawLocation);
       setForm({
         client_id: appointment.client_id,
-        date: starts.toISOString().slice(0, 10),
-        time: starts.toTimeString().slice(0, 5),
+        ...toLocalDateAndTime(starts),
         session_type: appointment.session_type ?? "premiere",
         duration_minutes: appointment.duration_minutes,
-        location: appointment.location ?? "cabinet",
+        location: isKnown ? rawLocation : "__custom__",
+        customLocation: isKnown ? "" : rawLocation,
         note: appointment.note ?? "",
       });
     } else {
@@ -96,7 +116,7 @@ export function NewAppointmentDrawer({
           starts_at: new Date(`${form.date}T${form.time}`).toISOString(),
           duration_minutes: form.duration_minutes,
           session_type: form.session_type || null,
-          location: form.location || null,
+          location: (form.location === "__custom__" ? form.customLocation.trim() : form.location) || null,
           note: form.note || null,
         },
       }),
@@ -111,7 +131,8 @@ export function NewAppointmentDrawer({
   const field = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
     setForm((s) => ({ ...s, [key]: value }));
 
-  const canSubmit = form.client_id && form.date && form.time;
+  const canSubmit =
+    form.client_id && form.date && form.time && (form.location !== "__custom__" || form.customLocation.trim());
 
   return (
     <Drawer open={isOpen} onOpenChange={setOpen}>
@@ -199,6 +220,15 @@ export function NewAppointmentDrawer({
                   <option key={l.value} value={l.value}>{l.label}</option>
                 ))}
               </select>
+              {form.location === "__custom__" && (
+                <input
+                  type="text"
+                  value={form.customLocation}
+                  onChange={(e) => field("customLocation", e.target.value)}
+                  placeholder="Ex. Cabinet secondaire, chez le client à Dieppe…"
+                  className="mt-2 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                />
+              )}
             </label>
             <label className="block sm:col-span-2">
               <span className="text-xs uppercase tracking-[0.15em] text-forest">Note</span>

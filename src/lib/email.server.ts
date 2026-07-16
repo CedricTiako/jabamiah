@@ -33,14 +33,14 @@ export async function sendClientEmail({ to, subject, html }: { to: string; subje
 
 // For internal notifications to the owner (not client-facing) — no CC needed since
 // they're already the recipient.
-export async function sendOwnerNotification({ subject, html }: { subject: string; html: string }) {
+export async function sendOwnerNotification({ subject, html, replyTo }: { subject: string; html: string; replyTo?: string }) {
   const resend = getResend();
   if (!resend) {
     console.error("[email] RESEND_API_KEY missing, skipping send:", subject);
     return;
   }
   try {
-    const { data, error } = await resend.emails.send({ from: FROM, to: OWNER_CC, subject, html });
+    const { data, error } = await resend.emails.send({ from: FROM, to: OWNER_CC, subject, html, ...(replyTo ? { replyTo } : {}) });
     if (error) console.error("[email] Resend error:", error);
     else console.log("[email] sent:", data?.id, "to", OWNER_CC, "-", subject);
   } catch (err) {
@@ -73,8 +73,19 @@ function layout(bodyHtml: string) {
 </html>`;
 }
 
+// The server process's local timezone is not guaranteed to be Europe/Paris (Plesk/Node
+// hosts often default to UTC), which silently shifted every emailed time by the UTC
+// offset. Pin the zone explicitly so the client always reads the time Loïc actually set.
 function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  return new Date(iso).toLocaleString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Paris",
+  });
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -118,6 +129,19 @@ export function consultationReportEmail(clientName: string, consultationDate: st
     </p>
     <p style="font-size:15px;line-height:1.6;">N'hésitez pas à me contacter si vous souhaitez en discuter.</p>
     <p style="font-size:15px;line-height:1.6;">À bientôt,<br />Loïc</p>
+  `);
+}
+
+function esc(s: string) {
+  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
+
+export function newContactMessageEmail(name: string, email: string, subject: string | null, message: string) {
+  return layout(`
+    <h1 style="font-size:22px;color:#1e3a2b;margin:0 0 16px;">Nouveau message du site</h1>
+    <p style="font-size:15px;line-height:1.6;"><strong>${esc(name)}</strong> (<a href="mailto:${esc(email)}">${esc(email)}</a>) vous a écrit${subject ? ` — ${esc(subject)}` : ""} :</p>
+    <p style="font-size:15px;line-height:1.6;background-color:#f7f1e8;border-radius:8px;padding:14px 18px;white-space:pre-wrap;">${esc(message)}</p>
+    <p style="font-size:15px;line-height:1.6;">Répondez directement à cet email pour lui répondre.</p>
   `);
 }
 
