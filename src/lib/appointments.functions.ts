@@ -57,9 +57,32 @@ export const adminUpsertAppointment = createServerFn({ method: "POST" })
       note: data.note || null,
     };
 
+    const emailDetails = {
+      startsAt: payload.starts_at,
+      sessionType: payload.session_type,
+      durationMinutes: payload.duration_minutes,
+      location: payload.location,
+      note: payload.note,
+    };
+
     if (data.id) {
       const { error } = await context.supabase.from("appointments").update(payload).eq("id", data.id);
       if (error) throw error;
+
+      const { data: client } = await context.supabase
+        .from("clients")
+        .select("full_name, email")
+        .eq("id", data.client_id)
+        .maybeSingle();
+      if (client?.email) {
+        const { sendClientEmail, appointmentUpdatedEmail } = await import("./email.server");
+        await sendClientEmail({
+          to: client.email,
+          subject: "Votre rendez-vous a été modifié — Jabamiah",
+          html: appointmentUpdatedEmail(client.full_name, emailDetails),
+        });
+      }
+
       return { id: data.id };
     }
 
@@ -80,7 +103,7 @@ export const adminUpsertAppointment = createServerFn({ method: "POST" })
       await sendClientEmail({
         to: client.email,
         subject: "Confirmation de votre rendez-vous — Jabamiah",
-        html: appointmentConfirmedEmail(client.full_name, payload.starts_at, payload.session_type),
+        html: appointmentConfirmedEmail(client.full_name, emailDetails),
       });
     }
 

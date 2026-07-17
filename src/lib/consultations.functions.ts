@@ -96,7 +96,14 @@ export const adminUpsertConsultation = createServerFn({ method: "POST" })
       await sendClientEmail({
         to: client.email,
         subject: "Votre compte-rendu de séance — Jabamiah",
-        html: consultationReportEmail(client.full_name, payload.consultation_date),
+        html: consultationReportEmail(client.full_name, {
+          consultationDate: payload.consultation_date,
+          durationMinutes: payload.duration_minutes,
+          objectives: payload.objectives,
+          techniques: payload.techniques,
+          report: payload.report,
+          advice: payload.advice,
+        }),
       });
     }
 

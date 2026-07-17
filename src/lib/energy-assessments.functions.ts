@@ -94,6 +94,32 @@ export const adminUpsertEnergyAssessment = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
+
+    const { data: client } = await context.supabase
+      .from("clients")
+      .select("full_name, email")
+      .eq("id", data.client_id)
+      .maybeSingle();
+    if (client?.email) {
+      const { sendClientEmail, energyAssessmentEmail } = await import("./email.server");
+      await sendClientEmail({
+        to: client.email,
+        subject: "Votre bilan énergétique — Jabamiah",
+        html: energyAssessmentEmail(client.full_name, {
+          assessmentDate: payload.assessment_date,
+          axisEnergie: payload.axis_energie,
+          axisStress: payload.axis_stress,
+          axisEmotions: payload.axis_emotions,
+          axisMotivation: payload.axis_motivation,
+          axisConfiance: payload.axis_confiance,
+          axisFatigue: payload.axis_fatigue,
+          axisDouleurs: payload.axis_douleurs,
+          axisConcentration: payload.axis_concentration,
+          observations: payload.observations,
+        }),
+      });
+    }
+
     return { id: created.id };
   });
 
