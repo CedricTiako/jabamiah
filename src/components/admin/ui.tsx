@@ -1,7 +1,9 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 /**
  * Reusable admin primitives for the redesigned dashboard.
@@ -92,5 +94,66 @@ export function Pill({
     <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.15em] ${map[tone]}`}>
       {children}
     </span>
+  );
+}
+
+function parseLocalDate(value: string): Date | undefined {
+  if (!value) return undefined;
+  const [y, m, d] = value.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatLocalDate(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+type DateFieldProps = {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  className?: string;
+};
+
+// A Popover + Calendar picker rather than a native <input type="date">: inside the
+// admin drawers (built on vaul, a Radix Dialog wrapper) the browser's native date
+// picker gets its focus stolen back by the drawer's focus trap the instant it opens,
+// so it never actually shows. Popover is a Radix primitive too, so it coordinates
+// with the drawer's focus/dismiss layers instead of fighting them.
+export function DateField({ label, value, onChange, required, className = "" }: DateFieldProps) {
+  const [open, setOpen] = useState(false);
+  const selected = parseLocalDate(value);
+
+  return (
+    <label className={`block ${className}`}>
+      <span className="text-xs uppercase tracking-[0.15em] text-forest">
+        {label}
+        {required ? " *" : ""}
+      </span>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className="mt-1 flex w-full items-center justify-between gap-2 rounded-md border border-gold/30 bg-card px-3 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+          >
+            <span className={selected ? "" : "text-earth/40"}>
+              {selected ? selected.toLocaleDateString("fr-FR") : "Sélectionner une date…"}
+            </span>
+            <CalendarIcon className="h-4 w-4 shrink-0 text-earth/50" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={selected}
+            defaultMonth={selected}
+            onSelect={(date) => {
+              if (date) onChange(formatLocalDate(date));
+              setOpen(false);
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    </label>
   );
 }

@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "../ui/drawer";
+import { DateField } from "./ui";
 import { adminUpsertEnergyAssessment } from "../../lib/energy-assessments.functions";
 import { adminListClients } from "../../lib/clients.functions";
 
@@ -159,15 +160,13 @@ export function NewBilanDrawer({
                 ))}
               </select>
             </label>
-            <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Date du bilan *</span>
-              <input
-                type="date"
-                value={form.date}
-                onChange={(e) => field("date", e.target.value)}
-                className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
-              />
-            </label>
+            <DateField
+              label="Date du bilan"
+              value={form.date}
+              onChange={(v) => field("date", v)}
+              required
+              className="sm:col-span-2"
+            />
 
             <div className="sm:col-span-2">
               <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.18em] text-forest">

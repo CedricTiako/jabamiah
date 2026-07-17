@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "../ui/drawer";
+import { DateField } from "./ui";
 import { adminUpsertClient } from "../../lib/clients.functions";
 
 const STATUSES = ["Nouveau", "Actif", "Fidèle", "Inactif"] as const;
@@ -151,15 +152,7 @@ export function NewClientDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               />
             </label>
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Date de naissance</span>
-              <input
-                type="date"
-                value={form.birth_date}
-                onChange={(e) => field("birth_date", e.target.value)}
-                className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
-              />
-            </label>
+            <DateField label="Date de naissance" value={form.birth_date} onChange={(v) => field("birth_date", v)} />
             <label className="block sm:col-span-2">
               <span className="text-xs uppercase tracking-[0.15em] text-forest">Motif de consultation</span>
               <input
