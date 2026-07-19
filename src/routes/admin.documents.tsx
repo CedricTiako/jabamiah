@@ -54,7 +54,7 @@ function DocumentsPage() {
     queryFn: () => listDocuments(),
   });
 
-  const rows = documents ?? [];
+  const rows = useMemo(() => documents ?? [], [documents]);
   const filtered = useMemo(() => {
     const query = q.toLowerCase();
     return rows.filter((d) => {

@@ -62,7 +62,7 @@ function ConsultationsPage() {
     },
   });
 
-  const rows = consultations ?? [];
+  const rows = useMemo(() => consultations ?? [], [consultations]);
 
   const stats = useMemo(() => {
     const now = new Date();

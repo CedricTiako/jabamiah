@@ -62,7 +62,7 @@ function PaiementsPage() {
     },
   });
 
-  const rows = payments ?? [];
+  const rows = useMemo(() => payments ?? [], [payments]);
 
   const stats = useMemo(() => {
     const now = new Date();

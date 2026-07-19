@@ -72,7 +72,7 @@ function ClientsPage() {
     },
   });
 
-  const rows = clients ?? [];
+  const rows = useMemo(() => clients ?? [], [clients]);
   const filtered = useMemo(
     () => rows.filter((c) => c.full_name.toLowerCase().includes(q.toLowerCase())),
     [rows, q],

@@ -98,7 +98,7 @@ function AgendaPage() {
     },
   });
 
-  const rows = appointments ?? [];
+  const rows = useMemo(() => appointments ?? [], [appointments]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, typeof rows>();
