@@ -212,9 +212,43 @@ export const adminListContactMessages = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data, error } = await context.supabase
       .from("contact_messages")
-      .select("id, name, email, subject, message, locale, created_at, read_at")
+      .select("id, name, email, subject, message, locale, created_at, read_at, reply_message, replied_at")
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) throw error;
     return data ?? [];
+  });
+
+const ReplySchema = z.object({
+  id: z.string().uuid(),
+  reply: z.string().min(1).max(5000),
+});
+
+export const adminReplyToMessage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => ReplySchema.parse(data))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { data: msg, error } = await context.supabase
+      .from("contact_messages")
+      .select("name, email, message")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!msg) throw new Error("Message introuvable");
+
+    const { sendClientEmail, contactReplyEmail } = await import("./email.server");
+    await sendClientEmail({
+      to: msg.email,
+      subject: "Réponse à votre message — Jabamiah",
+      html: contactReplyEmail(msg.name, msg.message, data.reply),
+    });
+
+    const { error: updateError } = await context.supabase
+      .from("contact_messages")
+      .update({ reply_message: data.reply, replied_at: new Date().toISOString() })
+      .eq("id", data.id);
+    if (updateError) throw updateError;
+
+    return { ok: true };
   });

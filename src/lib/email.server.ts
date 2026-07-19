@@ -203,6 +203,17 @@ export function consultationReportEmail(clientName: string, consult: Consultatio
   `);
 }
 
+export function contactReplyEmail(name: string, originalMessage: string, reply: string) {
+  return layout(`
+    <h1 style="font-size:22px;color:#1e3a2b;margin:0 0 16px;">Réponse à votre message</h1>
+    <p style="font-size:15px;line-height:1.6;">Bonjour ${esc(name)},</p>
+    <p style="font-size:15px;line-height:1.6;white-space:pre-wrap;">${esc(reply)}</p>
+    <p style="font-size:13px;line-height:1.6;color:#8a7f6b;margin-top:24px;">Votre message :</p>
+    <p style="font-size:13px;line-height:1.6;color:#8a7f6b;background-color:#f7f1e8;border-radius:8px;padding:12px 16px;white-space:pre-wrap;">${esc(originalMessage)}</p>
+    <p style="font-size:15px;line-height:1.6;margin-top:16px;">À bientôt,<br />Loïc</p>
+  `);
+}
+
 export function newContactMessageEmail(name: string, email: string, subject: string | null, message: string) {
   return layout(`
     <h1 style="font-size:22px;color:#1e3a2b;margin:0 0 16px;">Nouveau message du site</h1>
