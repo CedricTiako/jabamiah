@@ -25,7 +25,7 @@ import approachSpirit from "../assets/approach-spirit.jpg";
 import { LeafDivider } from "../components/site/leaf-divider";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion";
 import { buildSeoHead, SITE_URL } from "../lib/seo";
-import { CALENDLY_URL, EMAIL, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
+import { CALENDLY_URL, EMAIL, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
 import { getServerLocale } from "../lib/locale-server";
 import { tServer } from "../lib/t-server";
 
@@ -117,7 +117,7 @@ function MobileQuickActions() {
     external?: boolean;
   }> = [
     { href: CALENDLY_URL, Icon: Calendar, label: t("cta.bookNow"), primary: true, external: true },
-    { href: `tel:${PHONE_HREF.replace("tel:", "")}`, Icon: Phone, label: t("contact.phone") },
+    { href: PHONE_HREF, Icon: Phone, label: PHONE_DISPLAY },
     { href: WHATSAPP_HREF, Icon: MessageCircle, label: t("contact.whatsapp"), external: true },
     { href: `mailto:${EMAIL}`, Icon: Mail, label: t("contact.email") },
   ];
@@ -218,7 +218,7 @@ function HeroSection() {
             <div className="mt-5 grid grid-cols-3 gap-2 border-t border-cream/10 pt-4 text-xs uppercase tracking-[0.15em] text-cream/70">
               <a href={PHONE_HREF} className="flex flex-col items-center gap-1 hover:text-gold">
                 <Phone className="size-4 text-gold" aria-hidden="true" />
-                {t("contact.phone")}
+                {PHONE_DISPLAY}
               </a>
               <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 hover:text-gold">
                 <MessageCircle className="size-4 text-gold" aria-hidden="true" />
