@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { NewClientDrawer, type ClientRecord } from "../components/admin/new-client-drawer";
 import { useAdmin } from "../lib/admin-context";
-import { Search, Phone, Mail, Filter, Edit3, Trash2 } from "lucide-react";
+import { Search, Phone, Mail, Filter, Edit3, Trash2, Lock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -165,10 +165,15 @@ function ClientsPage() {
                   <td className="px-4 py-3 text-earth/80">{c.city ?? "—"}</td>
                   <td className="px-4 py-3 text-earth/80">{c.reason ?? "—"}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}
-                    >
-                      {status}
+                    <span className="inline-flex items-center gap-1.5">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}
+                      >
+                        {status}
+                      </span>
+                      {(c as unknown as { status_locked?: boolean }).status_locked && (
+                        <Lock className="h-3 w-3 text-earth/40" aria-label="Fixé manuellement" />
+                      )}
                     </span>
                   </td>
                   <td className="px-4 py-3">

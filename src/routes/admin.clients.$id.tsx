@@ -12,11 +12,16 @@ import {
   TrendingUp,
   FileText,
   Trash2,
+  Lock,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminGetClient, adminUpdateClientNotes } from "../lib/clients.functions";
+import {
+  adminGetClient,
+  adminUnlockClientStatus,
+  adminUpdateClientNotes,
+} from "../lib/clients.functions";
 import { adminListConsultationsByClient } from "../lib/consultations.functions";
 import { adminListEnergyAssessmentsByClient } from "../lib/energy-assessments.functions";
 import { adminListPaymentsByClient } from "../lib/payments.functions";
@@ -90,11 +95,21 @@ function ClientDetailPage() {
   const { signOut } = useAdmin();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Résumé");
   const [editOpen, setEditOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const getClient = useServerFn(adminGetClient);
   const { data: client, isLoading } = useQuery({
     queryKey: ["admin-client", id],
     queryFn: () => getClient({ data: { id } }),
+  });
+
+  const unlock = useServerFn(adminUnlockClientStatus);
+  const unlockMutation = useMutation({
+    mutationFn: () => unlock({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-client", id] });
+      queryClient.invalidateQueries({ queryKey: ["admin-clients"] });
+    },
   });
 
   if (isLoading) {
@@ -151,6 +166,18 @@ function ClientDetailPage() {
               >
                 {status}
               </span>
+              {client.status_locked && (
+                <span className="inline-flex items-center gap-1.5 text-[11px] text-earth/50">
+                  <Lock className="h-3 w-3" /> Fixé manuellement
+                  <button
+                    onClick={() => unlockMutation.mutate()}
+                    disabled={unlockMutation.isPending}
+                    className="text-gold underline-offset-2 hover:underline disabled:opacity-50"
+                  >
+                    Réactiver l'automatique
+                  </button>
+                </span>
+              )}
             </div>
             <p className="mt-1 text-sm text-earth/70">
               {age !== null ? `${age} ans` : "Âge non renseigné"}

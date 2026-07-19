@@ -96,6 +96,7 @@ export type Database = {
           private_notes: string | null;
           reason: string | null;
           status: string;
+          status_locked: boolean;
           updated_at: string;
         };
         Insert: {
@@ -110,6 +111,7 @@ export type Database = {
           private_notes?: string | null;
           reason?: string | null;
           status?: string;
+          status_locked?: boolean;
           updated_at?: string;
         };
         Update: {
@@ -124,6 +126,7 @@ export type Database = {
           private_notes?: string | null;
           reason?: string | null;
           status?: string;
+          status_locked?: boolean;
           updated_at?: string;
         };
         Relationships: [];

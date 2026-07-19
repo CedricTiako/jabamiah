@@ -28,6 +28,7 @@ export type ClientRecord = {
   birth_date: string | null;
   reason: string | null;
   status: string | null;
+  status_locked?: boolean;
   private_notes?: string | null;
 };
 
@@ -185,6 +186,9 @@ export function NewClientDrawer({
                   </option>
                 ))}
               </select>
+              <span className="mt-1 block text-[11px] text-earth/50">
+                Calculé automatiquement depuis les rendez-vous. Le changer ici le fige manuellement.
+              </span>
             </label>
             <label className="block sm:col-span-2">
               <span className="text-xs uppercase tracking-[0.15em] text-forest">Notes privées</span>
