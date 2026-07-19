@@ -240,7 +240,9 @@ function NotificationsBell() {
         >
           <Bell className="h-4 w-4" />
           {total > 0 && (
-            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-rose-text ring-2 ring-cream" />
+            <span className="absolute -right-1 -top-1 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-rose-text px-1 text-[10px] font-semibold leading-none text-white ring-2 ring-cream">
+              {total > 9 ? "9+" : total}
+            </span>
           )}
         </button>
       </PopoverTrigger>
