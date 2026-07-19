@@ -25,7 +25,8 @@ export const fr = {
       discoverApproaches: "Découvrir mes approches",
     },
     footer: {
-      tagline: "L'amour, la lumière et la guérison sont en chacun de nous. Je vous accompagne sur ce chemin avec bienveillance.",
+      tagline:
+        "L'amour, la lumière et la guérison sont en chacun de nous. Je vous accompagne sur ce chemin avec bienveillance.",
       consultations: "Consultations",
       free: "Gratuites",
       byAppt: "Sur rendez-vous",
@@ -44,7 +45,8 @@ export const fr = {
       heroTitle1: "Retrouvez l'équilibre",
       heroTitle2: "du corps, de l'esprit",
       heroTitle3: "et de l'âme.",
-      heroSubtitle: "Des approches naturelles et holistiques pour réactiver votre énergie vitale, apaiser votre esprit et vous accompagner vers votre plein potentiel.",
+      heroSubtitle:
+        "Des approches naturelles et holistiques pour réactiver votre énergie vitale, apaiser votre esprit et vous accompagner vers votre plein potentiel.",
       heroDiscover: "Découvrir",
       heroMyApproaches: "mes approches",
       heroPeopleHelped: "+ de 500 personnes accompagnées",
@@ -61,26 +63,53 @@ export const fr = {
       heroBookSub: "Consultations gratuites sur rendez-vous",
       heroPresentialOrRemote: "En présentiel ou à distance",
       values: [
-        { title: "Approche naturelle", text: "Des méthodes douces et respectueuses de votre être." },
-        { title: "Écoute & bienveillance", text: "Un accompagnement humain, sans jugement, en toute confiance." },
-        { title: "Énergie & harmonie", text: "Rééquilibrez vos énergies et retrouvez votre vitalité." },
+        {
+          title: "Approche naturelle",
+          text: "Des méthodes douces et respectueuses de votre être.",
+        },
+        {
+          title: "Écoute & bienveillance",
+          text: "Un accompagnement humain, sans jugement, en toute confiance.",
+        },
+        {
+          title: "Énergie & harmonie",
+          text: "Rééquilibrez vos énergies et retrouvez votre vitalité.",
+        },
         { title: "Soutien global", text: "Un engagement pour le bien de tous, ici et ailleurs." },
       ],
       approachesEyebrow: "Mes approches",
       approachesTitle1: "Cinq voies",
       approachesTitle2: "vers votre équilibre",
-      approachesSubtitle: "Chaque âme est unique. Je vous propose plusieurs approches complémentaires pour répondre à vos besoins profonds.",
+      approachesSubtitle:
+        "Chaque âme est unique. Je vous propose plusieurs approches complémentaires pour répondre à vos besoins profonds.",
       approaches: [
-        { title: "Soins énergétiques", text: "Rééquilibrez vos énergies, libérez les blocages et retrouvez votre harmonie." },
-        { title: "Guérison par la pensée", text: "Transformez vos pensées limitantes et activez votre pouvoir d'auto-guérison." },
-        { title: "Plantes & remèdes naturels", text: "La sagesse des plantes au service de votre bien-être et de votre équilibre naturel." },
-        { title: "Harmonisation globale", text: "Travail sur le corps, l'esprit et l'âme pour une harmonie profonde et durable." },
-        { title: "Développement spirituel", text: "Élevez votre conscience et reconnectez-vous à votre essence profonde." },
+        {
+          title: "Soins énergétiques",
+          text: "Rééquilibrez vos énergies, libérez les blocages et retrouvez votre harmonie.",
+        },
+        {
+          title: "Guérison par la pensée",
+          text: "Transformez vos pensées limitantes et activez votre pouvoir d'auto-guérison.",
+        },
+        {
+          title: "Plantes & remèdes naturels",
+          text: "La sagesse des plantes au service de votre bien-être et de votre équilibre naturel.",
+        },
+        {
+          title: "Harmonisation globale",
+          text: "Travail sur le corps, l'esprit et l'âme pour une harmonie profonde et durable.",
+        },
+        {
+          title: "Développement spirituel",
+          text: "Élevez votre conscience et reconnectez-vous à votre essence profonde.",
+        },
       ],
       gagnoteEyebrow: "Gagnote solidaire",
       gagnoteTitle: "Mes consultations sont 100% gratuites",
-      gagnoteP1: "Je n'ai jamais voulu faire payer mes soins. L'aide doit rester accessible à toutes et tous, sans condition.",
-      gagnoteP2: "Si vous le souhaitez, vous pouvez participer à la gagnote solidaire : vos dons libres permettent d'accompagner ceux qui en ont le plus besoin.",
+      gagnoteP1:
+        "Je n'ai jamais voulu faire payer mes soins. L'aide doit rester accessible à toutes et tous, sans condition.",
+      gagnoteP2:
+        "Si vous le souhaitez, vous pouvez participer à la gagnote solidaire : vos dons libres permettent d'accompagner ceux qui en ont le plus besoin.",
       gagnoteCta: "En savoir plus sur la démarche",
       gagnoteDonate: "Faire un don",
       faqEyebrow: "Questions fréquentes",
@@ -91,8 +120,10 @@ export const fr = {
       heroEyebrow: "Qui je suis",
       heroTitle1: "Un chemin de cœur",
       heroTitle2: "au service de l'humain.",
-      heroP1: "Je suis un être humain avant tout, guidé par la lumière, l'amour et le besoin profond d'aider mon prochain.",
-      heroP2: "Depuis toujours, j'ai ressenti en moi ce devoir de faire le bien, d'apporter du réconfort, d'écouter, d'accompagner et de soulager les souffrances invisibles.",
+      heroP1:
+        "Je suis un être humain avant tout, guidé par la lumière, l'amour et le besoin profond d'aider mon prochain.",
+      heroP2:
+        "Depuis toujours, j'ai ressenti en moi ce devoir de faire le bien, d'apporter du réconfort, d'écouter, d'accompagner et de soulager les souffrances invisibles.",
       badgeFreeTitle: "Mes consultations sont",
       badgeFreeSub: "totalement gratuites",
       badgeRdv: "Sur rendez-vous",
@@ -101,24 +132,48 @@ export const fr = {
       whyIntro: "J'aide les gens parce que j'ai le devoir de faire le bien.",
       whyP1: "J'ai toujours voulu être quelqu'un de bien.",
       whyP2: "Même si parfois, comme tout le monde, nous faisons tous des choses interdites.",
-      whyP3: "Mais dans le fond, mon âme me rappelle le chemin à suivre pour toujours être meilleur avec moi-même et mon prochain.",
+      whyP3:
+        "Mais dans le fond, mon âme me rappelle le chemin à suivre pour toujours être meilleur avec moi-même et mon prochain.",
       values: [
         { title: "La bienveillance est ma boussole.", text: "Elle guide chacune de mes actions." },
-        { title: "L'amour inconditionnel est ma force.", text: "Il me permet d'accueillir chaque être avec respect et sans jugement." },
-        { title: "L'élévation de l'âme est ma mission.", text: "Aider chacun à se reconnecter à sa lumière et à retrouver son équilibre." },
+        {
+          title: "L'amour inconditionnel est ma force.",
+          text: "Il me permet d'accueillir chaque être avec respect et sans jugement.",
+        },
+        {
+          title: "L'élévation de l'âme est ma mission.",
+          text: "Aider chacun à se reconnecter à sa lumière et à retrouver son équilibre.",
+        },
       ],
       pillarsTitle: "Les piliers de mon accompagnement",
-      pillarsSubtitle: "Une approche globale, à la croisée de l'écoute, de l'énergie et de la nature.",
+      pillarsSubtitle:
+        "Une approche globale, à la croisée de l'écoute, de l'énergie et de la nature.",
       pillars: [
-        { title: "Écoute & accueil", text: "Je vous écoute avec le cœur, dans la bienveillance et le respect total de qui vous êtes." },
-        { title: "Énergie & équilibre", text: "J'utilise des soins énergétiques et des méthodes naturelles pour réharmoniser votre être." },
-        { title: "Plantes & nature", text: "Les plantes médicinales et les remèdes naturels sont de puissants alliés pour le corps et l'âme." },
-        { title: "Guidance & lumière", text: "Je vous guide vers vos propres réponses pour que vous retrouviez votre force intérieure." },
-        { title: "Évolution & paix", text: "Mon rôle est de vous aider à avancer sur votre chemin de vie en paix, avec vous-même et les autres." },
+        {
+          title: "Écoute & accueil",
+          text: "Je vous écoute avec le cœur, dans la bienveillance et le respect total de qui vous êtes.",
+        },
+        {
+          title: "Énergie & équilibre",
+          text: "J'utilise des soins énergétiques et des méthodes naturelles pour réharmoniser votre être.",
+        },
+        {
+          title: "Plantes & nature",
+          text: "Les plantes médicinales et les remèdes naturels sont de puissants alliés pour le corps et l'âme.",
+        },
+        {
+          title: "Guidance & lumière",
+          text: "Je vous guide vers vos propres réponses pour que vous retrouviez votre force intérieure.",
+        },
+        {
+          title: "Évolution & paix",
+          text: "Mon rôle est de vous aider à avancer sur votre chemin de vie en paix, avec vous-même et les autres.",
+        },
       ],
       ctaEyebrow: "Réservez votre séance",
       ctaTitle: "Une consultation gratuite, en toute confiance",
-      ctaSub: "Quel que soit votre cheminement, je serai là pour vous accompagner avec bienveillance et confidentialité.",
+      ctaSub:
+        "Quel que soit votre cheminement, je serai là pour vous accompagner avec bienveillance et confidentialité.",
       ctaButton: "Prendre rendez-vous",
       miniConfidential: { title: "Confidentialité", text: "Vos échanges restent entre nous." },
       miniListening: { title: "Écoute sincère", text: "Sans jugement, à votre rythme." },
@@ -129,7 +184,8 @@ export const fr = {
     contact: {
       eyebrow: "Contact",
       title: "Échangeons ensemble",
-      subtitle: "Choisissez le moyen qui vous convient le mieux. Je vous réponds avec attention et bienveillance.",
+      subtitle:
+        "Choisissez le moyen qui vous convient le mieux. Je vous réponds avec attention et bienveillance.",
       whatsapp: "WhatsApp",
       whatsappValue: "Message direct",
       phone: "Téléphone",
@@ -154,7 +210,8 @@ export const fr = {
     blog: {
       eyebrow: "Blog",
       title: "Réflexions, partages et guidances",
-      subtitle: "Mes articles, méditations et conseils autour du soin énergétique, de l'âme et de la nature.",
+      subtitle:
+        "Mes articles, méditations et conseils autour du soin énergétique, de l'âme et de la nature.",
       readMore: "Lire l'article",
       by: "Par",
       publishedOn: "Publié le",
@@ -210,46 +267,73 @@ export const fr = {
       siteName: "Jabamiah",
       home: {
         title: "Jabamiah — Soins énergétiques & médecine parallèle",
-        description: "Consultations énergétiques gratuites avec Jabamiah, medium et thérapeute holistique à Forges-les-Eaux. Soins, plantes et accompagnement pour le corps, l'esprit et l'âme.",
+        description:
+          "Consultations énergétiques gratuites avec Jabamiah, medium et thérapeute holistique à Forges-les-Eaux. Soins, plantes et accompagnement pour le corps, l'esprit et l'âme.",
       },
       about: {
         title: "À propos — Jabamiah, un chemin de cœur au service de l'humain",
-        description: "Découvrez Jabamiah, medium et thérapeute holistique animé par l'amour et le besoin d'aider. Consultations énergétiques gratuites sur rendez-vous.",
+        description:
+          "Découvrez Jabamiah, medium et thérapeute holistique animé par l'amour et le besoin d'aider. Consultations énergétiques gratuites sur rendez-vous.",
       },
       contact: {
         title: "Contact — Jabamiah",
-        description: "Contactez Jabamiah pour une consultation énergétique gratuite : WhatsApp, téléphone, email ou prise de rendez-vous en ligne.",
+        description:
+          "Contactez Jabamiah pour une consultation énergétique gratuite : WhatsApp, téléphone, email ou prise de rendez-vous en ligne.",
       },
       soins: {
         title: "Soins & Thérapies — Jabamiah",
-        description: "Cinq approches complémentaires : soins énergétiques, guérison par la pensée, plantes, harmonisation, développement spirituel. Consultations gratuites.",
+        description:
+          "Cinq approches complémentaires : soins énergétiques, guérison par la pensée, plantes, harmonisation, développement spirituel. Consultations gratuites.",
       },
       plantes: {
         title: "Plantes & Remèdes naturels — Jabamiah",
-        description: "Découvrez les plantes médicinales et remèdes naturels utilisés par Jabamiah pour accompagner votre bien-être au quotidien.",
+        description:
+          "Découvrez les plantes médicinales et remèdes naturels utilisés par Jabamiah pour accompagner votre bien-être au quotidien.",
       },
       temoignages: {
         title: "Témoignages — Jabamiah",
-        description: "Lisez les témoignages de celles et ceux qui ont été accompagnés par Jabamiah sur le chemin du bien-être et de la guérison.",
+        description:
+          "Lisez les témoignages de celles et ceux qui ont été accompagnés par Jabamiah sur le chemin du bien-être et de la guérison.",
       },
       blog: {
         title: "Blog — Jabamiah",
-        description: "Réflexions, méditations et guidances autour des soins énergétiques, des plantes et du chemin de l'âme.",
+        description:
+          "Réflexions, méditations et guidances autour des soins énergétiques, des plantes et du chemin de l'âme.",
       },
-      mentions: { title: "Mentions légales — Jabamiah", description: "Mentions légales du site Jabamiah." },
-      privacy: { title: "Politique de confidentialité — Jabamiah", description: "Politique de confidentialité du site Jabamiah." },
-      donate: { title: "Faire un don — Cagnotte solidaire Jabamiah", description: "Soutenez la mission de Jabamiah : consultations gratuites, dons reversés à la Ligue contre le Cancer et aux associations solidaires." },
+      mentions: {
+        title: "Mentions légales — Jabamiah",
+        description: "Mentions légales du site Jabamiah.",
+      },
+      privacy: {
+        title: "Politique de confidentialité — Jabamiah",
+        description: "Politique de confidentialité du site Jabamiah.",
+      },
+      donate: {
+        title: "Faire un don — Cagnotte solidaire Jabamiah",
+        description:
+          "Soutenez la mission de Jabamiah : consultations gratuites, dons reversés à la Ligue contre le Cancer et aux associations solidaires.",
+      },
     },
     therapiesPage: {
       eyebrow: "Soins & Thérapies",
       title1: "Des soins personnalisés",
       title2: "pour chaque être",
-      subtitle: "Chaque approche est unique et adaptée à votre histoire, votre rythme et vos besoins profonds.",
+      subtitle:
+        "Chaque approche est unique et adaptée à votre histoire, votre rythme et vos besoins profonds.",
       stepsTitle: "Comment se déroule une séance",
       steps: [
-        { title: "Accueil & écoute", text: "Un temps d'échange pour comprendre votre demande, votre histoire et vos attentes, en toute bienveillance." },
-        { title: "Soin personnalisé", text: "Selon vos besoins, je choisis la ou les approches les plus adaptées : énergétique, plantes, guidance, harmonisation." },
-        { title: "Retour & ancrage", text: "Nous prenons le temps de débriefer, de poser des conseils naturels et de vous accompagner après la séance." },
+        {
+          title: "Accueil & écoute",
+          text: "Un temps d'échange pour comprendre votre demande, votre histoire et vos attentes, en toute bienveillance.",
+        },
+        {
+          title: "Soin personnalisé",
+          text: "Selon vos besoins, je choisis la ou les approches les plus adaptées : énergétique, plantes, guidance, harmonisation.",
+        },
+        {
+          title: "Retour & ancrage",
+          text: "Nous prenons le temps de débriefer, de poser des conseils naturels et de vous accompagner après la séance.",
+        },
       ],
       benefits: "Bienfaits",
       forWhom: "Pour qui ?",
@@ -259,36 +343,52 @@ export const fr = {
       eyebrow: "Plantes & Remèdes",
       title1: "La sagesse de la nature",
       title2: "au service de votre santé",
-      subtitle: "Les plantes médicinales m'accompagnent depuis toujours. Découvrez celles que j'utilise et leurs vertus.",
+      subtitle:
+        "Les plantes médicinales m'accompagnent depuis toujours. Découvrez celles que j'utilise et leurs vertus.",
       remediesTitle: "Mes remèdes naturels",
       remedies: [
-        { title: "Tisanes & infusions", text: "Mélanges personnalisés selon vos besoins : digestion, sommeil, stress, immunité." },
-        { title: "Élixirs floraux", text: "Pour rééquilibrer les émotions et libérer les blocages intérieurs en douceur." },
-        { title: "Huiles & onguents", text: "Préparations naturelles pour soulager les tensions du corps et nourrir la peau." },
+        {
+          title: "Tisanes & infusions",
+          text: "Mélanges personnalisés selon vos besoins : digestion, sommeil, stress, immunité.",
+        },
+        {
+          title: "Élixirs floraux",
+          text: "Pour rééquilibrer les émotions et libérer les blocages intérieurs en douceur.",
+        },
+        {
+          title: "Huiles & onguents",
+          text: "Préparations naturelles pour soulager les tensions du corps et nourrir la peau.",
+        },
       ],
       latinName: "Nom latin",
       properties: "Propriétés",
       uses: "Indications",
       disclaimerTitle: "Information importante",
-      disclaimer: "Les plantes médicinales sont de précieuses alliées mais ne remplacent jamais un avis médical. Demandez toujours conseil à votre médecin en cas de traitement en cours, de grossesse ou de pathologie.",
+      disclaimer:
+        "Les plantes médicinales sont de précieuses alliées mais ne remplacent jamais un avis médical. Demandez toujours conseil à votre médecin en cas de traitement en cours, de grossesse ou de pathologie.",
     },
     donate: {
       eyebrow: "Cagnotte solidaire",
       title: "Vos dons changent des vies",
-      subtitle: "Mes consultations sont 100% gratuites. Vos dons volontaires sont intégralement reversés à des associations et à la Ligue contre le Cancer.",
+      subtitle:
+        "Mes consultations sont 100% gratuites. Vos dons volontaires sont intégralement reversés à des associations et à la Ligue contre le Cancer.",
       causesTitle: "Les causes soutenues",
       amountTitle: "Choisir un montant",
       customAmount: "Autre montant (€)",
       payTitle: "Faire un don sécurisé",
       pending: "Paiement en ligne bientôt disponible",
-      pendingSub: "La cagnotte en ligne sera activée très prochainement. En attendant, contactez-moi directement par WhatsApp ou email.",
+      pendingSub:
+        "La cagnotte en ligne sera activée très prochainement. En attendant, contactez-moi directement par WhatsApp ou email.",
       contactCta: "Contacter par WhatsApp",
       cause1Name: "Ligue contre le Cancer",
-      cause1Text: "Financement de la recherche, soutien aux malades et à leurs proches, prévention et dépistage.",
+      cause1Text:
+        "Financement de la recherche, soutien aux malades et à leurs proches, prévention et dépistage.",
       cause2Name: "Associations solidaires",
-      cause2Text: "Aide aux personnes en situation de vulnérabilité et accompagnement social de proximité.",
+      cause2Text:
+        "Aide aux personnes en situation de vulnérabilité et accompagnement social de proximité.",
       transparencyTitle: "Engagement de transparence",
-      transparencyText: "100% de vos dons sont reversés aux associations partenaires. Aucune commission n'est prélevée.",
+      transparencyText:
+        "100% de vos dons sont reversés aux associations partenaires. Aucune commission n'est prélevée.",
       altContact: "Ou contactez-moi directement",
     },
     testimonialsPage: {
@@ -299,7 +399,8 @@ export const fr = {
       filterAll: "Tous",
       realReviewsTitle: "Avis de nos clients",
       shareTitle: "Partagez votre expérience",
-      shareText: "Votre témoignage peut éclairer le chemin d'une autre âme. Il sera publié après vérification.",
+      shareText:
+        "Votre témoignage peut éclairer le chemin d'une autre âme. Il sera publié après vérification.",
       formName: "Votre nom",
       formEmail: "Votre email (facultatif, non publié)",
       formRating: "Votre note",

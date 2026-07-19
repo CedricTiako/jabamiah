@@ -14,7 +14,10 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }

@@ -115,7 +115,9 @@ export function NewBilanDrawer({
       }),
     onSuccess: ({ id }) => {
       queryClient.invalidateQueries({ queryKey: ["admin-energy-assessments"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-energy-assessments-by-client", form.client_id] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-energy-assessments-by-client", form.client_id],
+      });
       setForm(EMPTY);
       setOpen(false);
       onCreated?.(id);
@@ -156,7 +158,9 @@ export function NewBilanDrawer({
               >
                 <option value="">Sélectionner un client…</option>
                 {(clients ?? []).map((c) => (
-                  <option key={c.id} value={c.id}>{c.full_name}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.full_name}
+                  </option>
                 ))}
               </select>
             </label>
@@ -174,7 +178,10 @@ export function NewBilanDrawer({
               </p>
               <div className="grid grid-cols-2 gap-3">
                 {AXES.map((axe) => (
-                  <label key={axe.key} className="flex items-center justify-between gap-2 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm">
+                  <label
+                    key={axe.key}
+                    className="flex items-center justify-between gap-2 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm"
+                  >
                     <span className="text-earth/80">{axe.label}</span>
                     <input
                       type="number"
@@ -207,7 +214,11 @@ export function NewBilanDrawer({
               disabled={saveMutation.isPending || !canSubmit}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {saveMutation.isPending ? "Enregistrement…" : bilan ? "Enregistrer" : "Créer le bilan"}
+              {saveMutation.isPending
+                ? "Enregistrement…"
+                : bilan
+                  ? "Enregistrer"
+                  : "Créer le bilan"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -215,7 +226,9 @@ export function NewBilanDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>

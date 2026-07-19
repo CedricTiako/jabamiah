@@ -9,7 +9,9 @@ import { adminMarkMessagesRead } from "../lib/notifications.functions";
 import { Mail, Send } from "lucide-react";
 
 export const Route = createFileRoute("/admin/messages")({
-  head: () => ({ meta: [{ title: "Messages — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "Messages — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: MessagesPage,
 });
 
@@ -17,7 +19,10 @@ function MessagesPage() {
   const { signOut } = useAdmin();
   const queryClient = useQueryClient();
   const list = useServerFn(adminListContactMessages);
-  const { data: messages, isLoading } = useQuery({ queryKey: ["admin-messages"], queryFn: () => list() });
+  const { data: messages, isLoading } = useQuery({
+    queryKey: ["admin-messages"],
+    queryFn: () => list(),
+  });
 
   const markRead = useServerFn(adminMarkMessagesRead);
   const markReadMutation = useMutation({
@@ -90,9 +95,14 @@ function MessageRow({ message: m }: { message: Message }) {
     <li className={`p-5 hover:bg-cream-warm/30 ${!m.read_at ? "bg-gold/5" : ""}`}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div className="flex items-center gap-2">
-          {!m.read_at && <span className="h-2 w-2 shrink-0 rounded-full bg-rose-text" aria-label="Non lu" />}
+          {!m.read_at && (
+            <span className="h-2 w-2 shrink-0 rounded-full bg-rose-text" aria-label="Non lu" />
+          )}
           <p className="font-medium text-forest">
-            {m.name} — <a href={`mailto:${m.email}`} className="text-gold hover:underline">{m.email}</a>
+            {m.name} —{" "}
+            <a href={`mailto:${m.email}`} className="text-gold hover:underline">
+              {m.email}
+            </a>
           </p>
           {m.subject && <p className="text-xs text-earth/70">{m.subject}</p>}
         </div>
@@ -128,12 +138,17 @@ function MessageRow({ message: m }: { message: Message }) {
               {replyMutation.isPending ? "Envoi…" : "Envoyer la réponse"}
             </button>
             <button
-              onClick={() => { setReplying(false); setReply(""); }}
+              onClick={() => {
+                setReplying(false);
+                setReply("");
+              }}
               className="rounded-md border border-gold/30 px-4 py-2 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm"
             >
               Annuler
             </button>
-            {replyMutation.isError && <span className="text-xs text-red-700">Erreur lors de l'envoi.</span>}
+            {replyMutation.isError && (
+              <span className="text-xs text-red-700">Erreur lors de l'envoi.</span>
+            )}
           </div>
         </div>
       ) : (

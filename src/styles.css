@@ -57,16 +57,16 @@
   --radius: 0.5rem;
 
   /* Brand palette (OKLCH equivalents of the mockup colors) */
-  --forest: oklch(0.32 0.04 130);          /* #2C3A24 vert forêt profond */
-  --forest-deep: oklch(0.24 0.035 130);    /* plus sombre, bandeau top */
-  --forest-soft: oklch(0.42 0.05 130);     /* hover / variant */
-  --gold: oklch(0.74 0.09 80);             /* #C4A661 or doré */
-  --gold-soft: oklch(0.85 0.07 80);        /* survol / fond doux */
-  --cream: oklch(0.96 0.018 85);           /* #F5F0E6 fond principal */
-  --cream-warm: oklch(0.93 0.025 80);      /* cartes / encarts crème */
-  --earth: oklch(0.28 0.025 60);           /* texte foncé brun */
-  --rose-soft: oklch(0.91 0.035 30);       /* #F4D7CE bandeau solidaire */
-  --rose-text: oklch(0.52 0.10 25);        /* rouge rosé lisible sur fond clair */
+  --forest: oklch(0.32 0.04 130); /* #2C3A24 vert forêt profond */
+  --forest-deep: oklch(0.24 0.035 130); /* plus sombre, bandeau top */
+  --forest-soft: oklch(0.42 0.05 130); /* hover / variant */
+  --gold: oklch(0.74 0.09 80); /* #C4A661 or doré */
+  --gold-soft: oklch(0.85 0.07 80); /* survol / fond doux */
+  --cream: oklch(0.96 0.018 85); /* #F5F0E6 fond principal */
+  --cream-warm: oklch(0.93 0.025 80); /* cartes / encarts crème */
+  --earth: oklch(0.28 0.025 60); /* texte foncé brun */
+  --rose-soft: oklch(0.91 0.035 30); /* #F4D7CE bandeau solidaire */
+  --rose-text: oklch(0.52 0.1 25); /* rouge rosé lisible sur fond clair */
 
   /* shadcn tokens mapped onto Jabamiah palette */
   --background: var(--cream);
@@ -160,4 +160,3 @@
     opacity: 0.7;
   }
 }
-

@@ -186,7 +186,10 @@ export function SiteNav() {
                     <Link
                       key={item.to}
                       to={item.to}
-                      onClick={() => { setMobileOpen(false); setMobileApproachesOpen(false); }}
+                      onClick={() => {
+                        setMobileOpen(false);
+                        setMobileApproachesOpen(false);
+                      }}
                       className="block border-b border-gold/10 py-2.5 text-sm uppercase tracking-[0.15em] text-earth/70"
                       activeProps={{ className: "text-forest font-medium" }}
                     >

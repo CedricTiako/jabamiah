@@ -28,8 +28,6 @@ export function LegalPage({ eyebrow, title, lastUpdated, children }: LegalPagePr
 
 export function TBD({ children }: { children: ReactNode }) {
   return (
-    <mark className="rounded bg-gold/20 px-1 py-0.5 text-forest">
-      [à compléter : {children}]
-    </mark>
+    <mark className="rounded bg-gold/20 px-1 py-0.5 text-forest">[à compléter : {children}]</mark>
   );
 }

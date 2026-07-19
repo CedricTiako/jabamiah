@@ -8,6 +8,7 @@ import { adminCreatePayment, adminUpdatePayment } from "../../lib/payments.funct
 
 const METHODS = [
   { value: "paypal", label: "PayPal" },
+  { value: "stripe_card", label: "Carte (Stripe)" },
   { value: "virement", label: "Virement" },
   { value: "especes", label: "Espèces" },
   { value: "cheque", label: "Chèque" },
@@ -91,7 +92,8 @@ export function NewPaymentDrawer({
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["admin-payments"] });
-      if (defaultClientId) queryClient.invalidateQueries({ queryKey: ["admin-payments-by-client", defaultClientId] });
+      if (defaultClientId)
+        queryClient.invalidateQueries({ queryKey: ["admin-payments-by-client", defaultClientId] });
       setForm(emptyForm(defaultClientId));
       setOpen(false);
       if ("id" in result) onCreated?.(result.id);
@@ -152,7 +154,9 @@ export function NewPaymentDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {METHODS.map((m) => (
-                  <option key={m.value} value={m.value}>{m.label}</option>
+                  <option key={m.value} value={m.value}>
+                    {m.label}
+                  </option>
                 ))}
               </select>
             </label>
@@ -190,7 +194,9 @@ export function NewPaymentDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>

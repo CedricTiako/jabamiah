@@ -1,12 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewAppointmentDrawer, type AppointmentRecord } from "../components/admin/new-appointment-drawer";
+import {
+  NewAppointmentDrawer,
+  type AppointmentRecord,
+} from "../components/admin/new-appointment-drawer";
 import { useAdmin } from "../lib/admin-context";
 import { CalendarDays, Clock, MapPin, Edit3, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminDeleteAppointment, adminListAppointments, adminUpdateAppointmentStatus } from "../lib/appointments.functions";
+import {
+  adminDeleteAppointment,
+  adminListAppointments,
+  adminUpdateAppointmentStatus,
+} from "../lib/appointments.functions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +26,9 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/agenda")({
-  head: () => ({ meta: [{ title: "Agenda — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "Agenda — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: AgendaPage,
 });
 
@@ -50,7 +59,12 @@ const LOCATION_LABELS: Record<string, string> = {
 };
 
 function formatDayHeading(date: Date) {
-  return date.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  return date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function formatTime(date: Date) {
@@ -92,14 +106,14 @@ function AgendaPage() {
       const day = new Date(a.starts_at).toDateString();
       map.set(day, [...(map.get(day) ?? []), a]);
     }
-    return [...map.entries()].sort(
-      ([a], [b]) => new Date(a).getTime() - new Date(b).getTime(),
-    );
+    return [...map.entries()].sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime());
   }, [rows]);
 
   const stats = useMemo(() => {
     const now = Date.now();
-    const upcoming = rows.filter((a) => new Date(a.starts_at).getTime() >= now && a.status !== "Annulé");
+    const upcoming = rows.filter(
+      (a) => new Date(a.starts_at).getTime() >= now && a.status !== "Annulé",
+    );
     const hours = upcoming.reduce((sum, a) => sum + a.duration_minutes, 0) / 60;
     return {
       upcoming: upcoming.length,
@@ -116,7 +130,11 @@ function AgendaPage() {
       onSignOut={signOut}
       actions={<NewAppointmentDrawer />}
     >
-      <NewAppointmentDrawer appointment={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
+      <NewAppointmentDrawer
+        appointment={editing ?? undefined}
+        open={!!editing}
+        onOpenChange={(v) => !v && setEditing(null)}
+      />
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatBadge label="RDV à venir" value={String(stats.upcoming)} icon={CalendarDays} />
         <StatBadge label="Heures planifiées" value={`${stats.hours}h`} icon={Clock} />
@@ -139,7 +157,8 @@ function AgendaPage() {
             <ul className="divide-y divide-gold/10">
               {dayAppointments.map((a) => {
                 const status = (a.status as AppointmentStatus) ?? "Planifié";
-                const clientName = (a.clients as { full_name: string } | null)?.full_name ?? "Client";
+                const clientName =
+                  (a.clients as { full_name: string } | null)?.full_name ?? "Client";
                 return (
                   <li key={a.id} className="flex flex-wrap items-center gap-4 p-4">
                     <div className="w-16 flex-shrink-0 text-sm font-medium text-forest">
@@ -148,24 +167,35 @@ function AgendaPage() {
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-forest">{clientName}</p>
                       <p className="text-xs text-earth/60">
-                        {a.session_type ? SESSION_TYPE_LABELS[a.session_type] ?? a.session_type : "—"}
+                        {a.session_type
+                          ? (SESSION_TYPE_LABELS[a.session_type] ?? a.session_type)
+                          : "—"}
                         {" · "}
                         {a.duration_minutes} min
                         {" · "}
-                        {a.location ? LOCATION_LABELS[a.location] ?? a.location : "—"}
+                        {a.location ? (LOCATION_LABELS[a.location] ?? a.location) : "—"}
                       </p>
                     </div>
-                    <span className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}>
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}
+                    >
                       {status}
                     </span>
                     <select
                       value={status}
-                      onChange={(e) => statusMutation.mutate({ id: a.id, status: e.target.value as AppointmentStatus })}
+                      onChange={(e) =>
+                        statusMutation.mutate({
+                          id: a.id,
+                          status: e.target.value as AppointmentStatus,
+                        })
+                      }
                       disabled={statusMutation.isPending}
                       className="rounded-md border border-gold/30 bg-card px-2 py-1.5 text-xs text-forest focus:outline-none focus:ring-2 focus:ring-gold"
                     >
                       {STATUSES.map((s) => (
-                        <option key={s} value={s}>{s}</option>
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
                       ))}
                     </select>
                     <button
@@ -213,7 +243,15 @@ function AgendaPage() {
   );
 }
 
-function StatBadge({ label, value, icon: Icon }: { label: string; value: string; icon: typeof CalendarDays }) {
+function StatBadge({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  icon: typeof CalendarDays;
+}) {
   return (
     <div className="flex items-center gap-3 rounded-xl bg-card px-4 py-3 ring-1 ring-gold/15">
       <div className="grid h-9 w-9 place-items-center rounded-full bg-forest/10 text-forest">

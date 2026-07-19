@@ -37,4 +37,9 @@ supabase/.temp/
 *.sln
 *.sw?
 
+# Secrets / environment files
+.env
+.env.*
+!.env.example
+
 

@@ -57,8 +57,18 @@ export const Route = createFileRoute("/soins-et-therapies/$slug")({
                 "@type": "BreadcrumbList",
                 itemListElement: [
                   { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
-                  { "@type": "ListItem", position: 2, name: "Soins & Thérapies", item: `${SITE_URL}/soins-et-therapies` },
-                  { "@type": "ListItem", position: 3, name: localized(therapy.title, "fr"), item: `${SITE_URL}/soins-et-therapies/${slug}` },
+                  {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: "Soins & Thérapies",
+                    item: `${SITE_URL}/soins-et-therapies`,
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 3,
+                    name: localized(therapy.title, "fr"),
+                    item: `${SITE_URL}/soins-et-therapies/${slug}`,
+                  },
                 ],
               }),
             },

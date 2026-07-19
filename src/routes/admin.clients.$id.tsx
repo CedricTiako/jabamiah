@@ -1,7 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
 import { useAdmin } from "../lib/admin-context";
-import { Phone, Mail, MapPin, User, Edit3, Printer, Plus, TrendingUp, FileText, Trash2 } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  User,
+  Edit3,
+  Printer,
+  Plus,
+  TrendingUp,
+  FileText,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,7 +20,11 @@ import { adminGetClient, adminUpdateClientNotes } from "../lib/clients.functions
 import { adminListConsultationsByClient } from "../lib/consultations.functions";
 import { adminListEnergyAssessmentsByClient } from "../lib/energy-assessments.functions";
 import { adminListPaymentsByClient } from "../lib/payments.functions";
-import { adminDeleteDocument, adminGetDocumentSignedUrl, adminListDocumentsByClient } from "../lib/documents.functions";
+import {
+  adminDeleteDocument,
+  adminGetDocumentSignedUrl,
+  adminListDocumentsByClient,
+} from "../lib/documents.functions";
 import { UploadDocumentDrawer } from "../components/admin/upload-document-drawer";
 import { NewClientDrawer } from "../components/admin/new-client-drawer";
 import { NewPaymentDrawer } from "../components/admin/new-payment-drawer";
@@ -25,21 +40,38 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/clients/$id")({
-  head: () => ({ meta: [{ title: "Fiche client — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Fiche client — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: ClientDetailPage,
 });
 
-const TABS = ["Résumé", "Consultations", "Suivi & Évolution", "Documents", "Paiements", "Notes privées"] as const;
+const TABS = [
+  "Résumé",
+  "Consultations",
+  "Suivi & Évolution",
+  "Documents",
+  "Paiements",
+  "Notes privées",
+] as const;
 
 const statusTone: Record<string, string> = {
   Actif: "bg-forest/10 text-forest",
-  "Fidèle": "bg-[color:var(--gold-soft)]/60 text-[color:var(--earth)]",
+  Fidèle: "bg-[color:var(--gold-soft)]/60 text-[color:var(--earth)]",
   Nouveau: "bg-[color:var(--rose-soft)] text-[color:var(--rose-text)]",
   Inactif: "bg-earth/10 text-earth/70",
 };
 
 function initials(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 function ageFromBirthDate(birthDate: string | null) {
@@ -66,7 +98,9 @@ function ClientDetailPage() {
   });
 
   if (isLoading) {
-    return <div className="grid min-h-screen place-items-center bg-cream text-earth/70">Chargement…</div>;
+    return (
+      <div className="grid min-h-screen place-items-center bg-cream text-earth/70">Chargement…</div>
+    );
   }
   if (!client) throw notFound();
 
@@ -112,7 +146,9 @@ function ClientDetailPage() {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="font-serif text-3xl text-forest">{client.full_name}</h2>
-              <span className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-widest ${statusTone[status] ?? statusTone.Nouveau}`}>
+              <span
+                className={`rounded-full px-3 py-1 text-[10px] uppercase tracking-widest ${statusTone[status] ?? statusTone.Nouveau}`}
+              >
                 {status}
               </span>
             </div>
@@ -121,10 +157,22 @@ function ClientDetailPage() {
               {client.birth_date ? ` · ${formatDate(client.birth_date)}` : ""}
             </p>
             <div className="mt-4 grid gap-3 text-sm text-earth/80 sm:grid-cols-2">
-              <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-forest" />{client.phone ?? "—"}</p>
-              <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-forest" />{client.email ?? "—"}</p>
-              <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-forest" />{client.city ?? "—"}</p>
-              <p className="flex items-center gap-2"><User className="h-4 w-4 text-forest" />Thérapeute : Loïc Omont</p>
+              <p className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-forest" />
+                {client.phone ?? "—"}
+              </p>
+              <p className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-forest" />
+                {client.email ?? "—"}
+              </p>
+              <p className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-forest" />
+                {client.city ?? "—"}
+              </p>
+              <p className="flex items-center gap-2">
+                <User className="h-4 w-4 text-forest" />
+                Thérapeute : Loïc Omont
+              </p>
             </div>
           </div>
           <div className="w-full max-w-sm space-y-2 rounded-xl bg-cream-warm p-4 text-sm">
@@ -157,7 +205,9 @@ function ClientDetailPage() {
       {tab === "Suivi & Évolution" && <SuiviTab clientId={client.id} />}
       {tab === "Documents" && <DocumentsTab clientId={client.id} />}
       {tab === "Paiements" && <PaiementsTab clientId={client.id} />}
-      {tab === "Notes privées" && <NotesTab clientId={client.id} initialNotes={client.private_notes} />}
+      {tab === "Notes privées" && (
+        <NotesTab clientId={client.id} initialNotes={client.private_notes} />
+      )}
     </AdminShell>
   );
 }
@@ -185,10 +235,15 @@ function ResumeTab({ reason }: { reason: string | null }) {
     <div className="mt-8 grid gap-6 lg:grid-cols-3">
       <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15 lg:col-span-2">
         <h3 className="font-serif text-xl text-forest">Motif de la consultation</h3>
-        <p className="mt-3 text-sm text-earth/80">{reason || "Aucun motif renseigné pour ce client."}</p>
+        <p className="mt-3 text-sm text-earth/80">
+          {reason || "Aucun motif renseigné pour ce client."}
+        </p>
       </div>
       <div className="space-y-6">
-        <ComingSoonTab title="État émotionnel" hint="Sera calculé depuis les bilans énergétiques." />
+        <ComingSoonTab
+          title="État émotionnel"
+          hint="Sera calculé depuis les bilans énergétiques."
+        />
       </div>
     </div>
   );
@@ -220,7 +275,9 @@ function ConsultationsTab({ clientId }: { clientId: string }) {
                 </p>
               </div>
               <p className="mt-1 text-sm text-earth/80">{r.report}</p>
-              {r.advice && <p className="mt-1 text-xs text-earth/60">Recommandations : {r.advice}</p>}
+              {r.advice && (
+                <p className="mt-1 text-xs text-earth/60">Recommandations : {r.advice}</p>
+              )}
             </div>
           </li>
         ))}
@@ -262,16 +319,23 @@ function SuiviTab({ clientId }: { clientId: string }) {
         <h3 className="font-serif text-xl text-forest">Dernier bilan énergétique</h3>
         {isLoading && <p className="mt-3 text-sm text-earth/60">Chargement…</p>}
         {!isLoading && !latest && (
-          <p className="mt-3 text-sm text-earth/60">Aucun bilan énergétique enregistré pour ce client.</p>
+          <p className="mt-3 text-sm text-earth/60">
+            Aucun bilan énergétique enregistré pour ce client.
+          </p>
         )}
         {latest && (
           <>
             <p className="mt-1 text-xs text-earth/60">{formatDate(latest.assessment_date)}</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {Object.entries(AXIS_LABELS).map(([key, label]) => (
-                <div key={key} className="flex items-center justify-between gap-2 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm">
+                <div
+                  key={key}
+                  className="flex items-center justify-between gap-2 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm"
+                >
                   <span className="text-earth/80">{label}</span>
-                  <span className="font-medium text-forest">{(latest as unknown as Record<string, number>)[key]}/10</span>
+                  <span className="font-medium text-forest">
+                    {(latest as unknown as Record<string, number>)[key]}/10
+                  </span>
                 </div>
               ))}
             </div>
@@ -323,7 +387,10 @@ function PaiementsTab({ clientId }: { clientId: string }) {
             <li key={p.id} className="flex items-center justify-between gap-4 p-5">
               <div>
                 <p className="text-sm font-medium text-forest">{formatDate(p.payment_date)}</p>
-                <p className="text-xs text-earth/60">{p.method ?? "—"}{p.reference ? ` · ${p.reference}` : ""}</p>
+                <p className="text-xs text-earth/60">
+                  {p.method ?? "—"}
+                  {p.reference ? ` · ${p.reference}` : ""}
+                </p>
               </div>
               <p className="font-serif text-lg text-forest">{p.amount.toFixed(2)} €</p>
             </li>
@@ -379,7 +446,9 @@ function DocumentsTab({ clientId }: { clientId: string }) {
             <FileText className="h-6 w-6" />
           </div>
           <p className="mt-4 text-sm font-medium text-forest">{d.title}</p>
-          <p className="text-xs text-earth/60">{d.doc_type ?? "Document"} · {formatSize(d.file_size)}</p>
+          <p className="text-xs text-earth/60">
+            {d.doc_type ?? "Document"} · {formatSize(d.file_size)}
+          </p>
           <div className="mt-4 flex gap-2">
             <button
               onClick={() => openMutation.mutate(d.storage_path)}
@@ -468,7 +537,9 @@ function NotesTab({ clientId, initialNotes }: { clientId: string; initialNotes: 
           {saveMutation.isPending ? "Enregistrement…" : "Enregistrer"}
         </button>
         {saveMutation.isSuccess && <span className="text-sm text-forest">Enregistré ✓</span>}
-        {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+        {saveMutation.isError && (
+          <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+        )}
       </div>
     </div>
   );

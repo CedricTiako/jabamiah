@@ -108,9 +108,13 @@ export function NewClientDrawer({
       <DrawerContent className="bg-cream">
         <div className="mx-auto w-full max-w-2xl">
           <DrawerHeader>
-            <DrawerTitle className="font-serif text-2xl text-forest">{client ? "Modifier le client" : "Nouveau client"}</DrawerTitle>
+            <DrawerTitle className="font-serif text-2xl text-forest">
+              {client ? "Modifier le client" : "Nouveau client"}
+            </DrawerTitle>
             <DrawerDescription>
-              {client ? "Mettez à jour les informations de ce client." : "Créez une fiche client. Vous pourrez compléter les informations plus tard."}
+              {client
+                ? "Mettez à jour les informations de ce client."
+                : "Créez une fiche client. Vous pourrez compléter les informations plus tard."}
             </DrawerDescription>
           </DrawerHeader>
 
@@ -152,9 +156,15 @@ export function NewClientDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               />
             </label>
-            <DateField label="Date de naissance" value={form.birth_date} onChange={(v) => field("birth_date", v)} />
+            <DateField
+              label="Date de naissance"
+              value={form.birth_date}
+              onChange={(v) => field("birth_date", v)}
+            />
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Motif de consultation</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Motif de consultation
+              </span>
               <input
                 value={form.reason}
                 onChange={(e) => field("reason", e.target.value)}
@@ -170,7 +180,9 @@ export function NewClientDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {STATUSES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
                 ))}
               </select>
             </label>
@@ -192,7 +204,11 @@ export function NewClientDrawer({
               disabled={saveMutation.isPending || !form.full_name.trim()}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {saveMutation.isPending ? "Enregistrement…" : client ? "Enregistrer" : "Créer le client"}
+              {saveMutation.isPending
+                ? "Enregistrement…"
+                : client
+                  ? "Enregistrer"
+                  : "Créer le client"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -200,7 +216,9 @@ export function NewClientDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>

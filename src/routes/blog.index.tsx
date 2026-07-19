@@ -77,7 +77,11 @@ function BlogIndex() {
                   <div className="flex flex-1 flex-col p-6">
                     {post.published_at && (
                       <time className="text-xs uppercase tracking-[0.18em] text-gold">
-                        {new Date(post.published_at).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+                        {new Date(post.published_at).toLocaleDateString(locale, {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </time>
                     )}
                     <h2 className="mt-3 font-serif text-2xl text-forest group-hover:text-forest-deep">

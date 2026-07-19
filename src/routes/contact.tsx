@@ -40,9 +40,21 @@ function ContactPage() {
       website: String(fd.get("website") ?? ""),
       locale: i18n.resolvedLanguage ?? i18n.language ?? "fr",
     };
-    if (payload.name.length < 2) { setErrorMsg(t("contact.formNameMin")); setStatus("error"); return; }
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(payload.email)) { setErrorMsg(t("contact.formEmailInvalid")); setStatus("error"); return; }
-    if (payload.message.length < 10) { setErrorMsg(t("contact.formMessageMin")); setStatus("error"); return; }
+    if (payload.name.length < 2) {
+      setErrorMsg(t("contact.formNameMin"));
+      setStatus("error");
+      return;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(payload.email)) {
+      setErrorMsg(t("contact.formEmailInvalid"));
+      setStatus("error");
+      return;
+    }
+    if (payload.message.length < 10) {
+      setErrorMsg(t("contact.formMessageMin"));
+      setStatus("error");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -70,21 +82,56 @@ function ContactPage() {
         </div>
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <ContactCard icon={MessageCircle} label={t("contact.whatsapp")} value={t("contact.whatsappValue")} href={WHATSAPP_HREF} />
-          <ContactCard icon={Phone} label={t("contact.phone")} value={PHONE_DISPLAY} href={PHONE_HREF} />
-          <ContactCard icon={Mail} label={t("contact.email")} value={EMAIL} href={`mailto:${EMAIL}`} />
-          <ContactCard icon={MapPin} label={t("contact.location")} value={t("contact.locationValue")} />
+          <ContactCard
+            icon={MessageCircle}
+            label={t("contact.whatsapp")}
+            value={t("contact.whatsappValue")}
+            href={WHATSAPP_HREF}
+          />
+          <ContactCard
+            icon={Phone}
+            label={t("contact.phone")}
+            value={PHONE_DISPLAY}
+            href={PHONE_HREF}
+          />
+          <ContactCard
+            icon={Mail}
+            label={t("contact.email")}
+            value={EMAIL}
+            href={`mailto:${EMAIL}`}
+          />
+          <ContactCard
+            icon={MapPin}
+            label={t("contact.location")}
+            value={t("contact.locationValue")}
+          />
         </div>
 
         <div className="mt-16 grid gap-10 lg:grid-cols-5">
           <div className="lg:col-span-3">
-            <h2 className="font-serif text-2xl text-forest md:text-3xl">{t("contact.formTitle")}</h2>
+            <h2 className="font-serif text-2xl text-forest md:text-3xl">
+              {t("contact.formTitle")}
+            </h2>
             <p className="mt-2 text-sm text-earth/70">{t("contact.formSubtitle")}</p>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate aria-describedby="contact-form-status">
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+            <form
+              onSubmit={handleSubmit}
+              className="mt-6 space-y-4"
+              noValidate
+              aria-describedby="contact-form-status"
+            >
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formName")}</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                  {t("contact.formName")}
+                </span>
                 <input
                   name="name"
                   type="text"
@@ -95,7 +142,9 @@ function ContactPage() {
                 />
               </label>
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formEmail")}</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                  {t("contact.formEmail")}
+                </span>
                 <input
                   name="email"
                   type="email"
@@ -105,7 +154,9 @@ function ContactPage() {
                 />
               </label>
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formSubject")}</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                  {t("contact.formSubject")}
+                </span>
                 <input
                   name="subject"
                   type="text"
@@ -113,7 +164,9 @@ function ContactPage() {
                 />
               </label>
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("contact.formMessage")}</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                  {t("contact.formMessage")}
+                </span>
                 <textarea
                   name="message"
                   required
@@ -126,10 +179,14 @@ function ContactPage() {
 
               <div id="contact-form-status" aria-live="polite">
                 {status === "error" && errorMsg && (
-                  <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMsg}</p>
+                  <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+                    {errorMsg}
+                  </p>
                 )}
                 {status === "success" && (
-                  <p className="rounded-md bg-forest/10 px-3 py-2 text-sm text-forest">{t("contact.formSuccess")}</p>
+                  <p className="rounded-md bg-forest/10 px-3 py-2 text-sm text-forest">
+                    {t("contact.formSuccess")}
+                  </p>
                 )}
               </div>
 
@@ -145,7 +202,9 @@ function ContactPage() {
           </div>
 
           <div className="lg:col-span-2">
-            <h2 className="font-serif text-2xl text-forest md:text-3xl">{t("contact.calendarTitle")}</h2>
+            <h2 className="font-serif text-2xl text-forest md:text-3xl">
+              {t("contact.calendarTitle")}
+            </h2>
             <div className="mt-4 overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-gold/20">
               <iframe
                 src={CALENDLY_EMBED_URL}
@@ -162,7 +221,17 @@ function ContactPage() {
   );
 }
 
-function ContactCard({ icon: Icon, label, value, href }: { icon: typeof Phone; label: string; value: string; href?: string }) {
+function ContactCard({
+  icon: Icon,
+  label,
+  value,
+  href,
+}: {
+  icon: typeof Phone;
+  label: string;
+  value: string;
+  href?: string;
+}) {
   const inner = (
     <>
       <Icon className="size-6 text-gold" aria-hidden="true" />

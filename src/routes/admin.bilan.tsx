@@ -6,7 +6,10 @@ import { Edit3, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminDeleteEnergyAssessment, adminListEnergyAssessments } from "../lib/energy-assessments.functions";
+import {
+  adminDeleteEnergyAssessment,
+  adminListEnergyAssessments,
+} from "../lib/energy-assessments.functions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +22,12 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/bilan")({
-  head: () => ({ meta: [{ title: "Bilan énergétique — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Bilan énergétique — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: BilanPage,
 });
 
@@ -35,7 +43,11 @@ const AXES = [
 ] as const;
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+  return new Date(iso).toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function BilanPage() {
@@ -71,7 +83,11 @@ function BilanPage() {
       onSignOut={signOut}
       actions={<NewBilanDrawer />}
     >
-      <NewBilanDrawer bilan={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
+      <NewBilanDrawer
+        bilan={editing ?? undefined}
+        open={!!editing}
+        onOpenChange={(v) => !v && setEditing(null)}
+      />
       {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
       {!isLoading && rows.length === 0 && (
         <p className="rounded-xl bg-card p-6 text-center text-sm text-earth/60 ring-1 ring-gold/15">
@@ -89,11 +105,19 @@ function BilanPage() {
                   <button
                     onClick={() => setSelectedId(a.id)}
                     className={`w-full rounded-md px-3 py-2 text-left text-sm transition ${
-                      (current?.id === a.id) ? "bg-forest text-cream" : "text-earth/80 hover:bg-cream-warm"
+                      current?.id === a.id
+                        ? "bg-forest text-cream"
+                        : "text-earth/80 hover:bg-cream-warm"
                     }`}
                   >
-                    <p className="font-medium">{(a.clients as { full_name: string } | null)?.full_name ?? "Client"}</p>
-                    <p className={`text-xs ${current?.id === a.id ? "text-cream/80" : "text-earth/60"}`}>{formatDate(a.assessment_date)}</p>
+                    <p className="font-medium">
+                      {(a.clients as { full_name: string } | null)?.full_name ?? "Client"}
+                    </p>
+                    <p
+                      className={`text-xs ${current?.id === a.id ? "text-cream/80" : "text-earth/60"}`}
+                    >
+                      {formatDate(a.assessment_date)}
+                    </p>
                   </button>
                 </li>
               ))}
@@ -108,7 +132,9 @@ function BilanPage() {
                     {(current.clients as { full_name: string } | null)?.full_name ?? "Client"}
                   </h3>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-earth/60">{formatDate(current.assessment_date)}</span>
+                    <span className="text-xs text-earth/60">
+                      {formatDate(current.assessment_date)}
+                    </span>
                     <button
                       onClick={() => setEditing(current as unknown as BilanRecord)}
                       className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-forest"
@@ -120,7 +146,9 @@ function BilanPage() {
                       onClick={() =>
                         setPendingDelete({
                           id: current.id,
-                          name: (current.clients as { full_name: string } | null)?.full_name ?? "ce client",
+                          name:
+                            (current.clients as { full_name: string } | null)?.full_name ??
+                            "ce client",
                         })
                       }
                       className="rounded-md p-1.5 text-earth/40 hover:bg-cream-warm hover:text-red-700"
@@ -140,7 +168,10 @@ function BilanPage() {
                           <span className="font-medium text-forest">{value}/10</span>
                         </div>
                         <div className="mt-1 h-2 rounded-full bg-cream-warm">
-                          <div className="h-full rounded-full bg-forest" style={{ width: `${value * 10}%` }} />
+                          <div
+                            className="h-full rounded-full bg-forest"
+                            style={{ width: `${value * 10}%` }}
+                          />
                         </div>
                       </div>
                     );
@@ -148,7 +179,9 @@ function BilanPage() {
                 </div>
                 {current.observations && (
                   <div className="mt-6 rounded-lg bg-cream-warm p-4 text-sm text-earth/80">
-                    <p className="mb-1 text-xs uppercase tracking-[0.15em] text-forest">Observations</p>
+                    <p className="mb-1 text-xs uppercase tracking-[0.15em] text-forest">
+                      Observations
+                    </p>
                     <p className="whitespace-pre-wrap">{current.observations}</p>
                   </div>
                 )}

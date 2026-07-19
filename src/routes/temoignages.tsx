@@ -45,7 +45,10 @@ function TestimonialsPage() {
   );
 
   const listReviews = useServerFn(listApprovedReviews);
-  const { data: realReviews } = useQuery({ queryKey: ["approved-reviews"], queryFn: () => listReviews() });
+  const { data: realReviews } = useQuery({
+    queryKey: ["approved-reviews"],
+    queryFn: () => listReviews(),
+  });
 
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -63,8 +66,16 @@ function TestimonialsPage() {
       body: String(fd.get("body") ?? "").trim(),
       website: String(fd.get("website") ?? ""),
     };
-    if (payload.author_name.length < 2) { setErrorMsg(t("testimonialsPage.formNameMin")); setStatus("error"); return; }
-    if (payload.body.length < 10) { setErrorMsg(t("testimonialsPage.formBodyMin")); setStatus("error"); return; }
+    if (payload.author_name.length < 2) {
+      setErrorMsg(t("testimonialsPage.formNameMin"));
+      setStatus("error");
+      return;
+    }
+    if (payload.body.length < 10) {
+      setErrorMsg(t("testimonialsPage.formBodyMin"));
+      setStatus("error");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -83,13 +94,24 @@ function TestimonialsPage() {
     }
   }
 
-  const categories: Array<TestimonialCategory | "all"> = ["all", "energetique", "guerison", "spirituel"];
+  const categories: Array<TestimonialCategory | "all"> = [
+    "all",
+    "energetique",
+    "guerison",
+    "spirituel",
+  ];
 
   return (
     <>
       <section className="relative overflow-hidden bg-forest text-cream">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="" width={1920} height={1280} className="size-full object-cover opacity-80" />
+          <img
+            src={heroImage}
+            alt=""
+            width={1920}
+            height={1280}
+            className="size-full object-cover opacity-80"
+          />
           <div className="absolute inset-0 bg-linear-to-r from-forest/95 via-forest/80 to-forest/50" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
@@ -162,14 +184,21 @@ function TestimonialsPage() {
             </h2>
             <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {realReviews.map((r) => (
-                <article key={r.id} className="flex flex-col rounded-2xl bg-card p-7 ring-1 ring-gold/20">
+                <article
+                  key={r.id}
+                  className="flex flex-col rounded-2xl bg-card p-7 ring-1 ring-gold/20"
+                >
                   <div className="flex items-center gap-1 text-gold">
                     {Array.from({ length: r.rating }).map((_, i) => (
                       <Star key={i} className="size-3.5 fill-gold" />
                     ))}
                   </div>
-                  <p className="mt-4 flex-1 font-serif text-base italic leading-relaxed text-earth/85">« {r.body} »</p>
-                  <p className="mt-4 border-t border-gold/15 pt-4 text-sm font-medium text-forest">{r.author_name}</p>
+                  <p className="mt-4 flex-1 font-serif text-base italic leading-relaxed text-earth/85">
+                    « {r.body} »
+                  </p>
+                  <p className="mt-4 border-t border-gold/15 pt-4 text-sm font-medium text-forest">
+                    {r.author_name}
+                  </p>
                 </article>
               ))}
             </div>
@@ -182,12 +211,28 @@ function TestimonialsPage() {
           <h2 className="font-serif text-3xl text-forest md:text-4xl">
             {t("testimonialsPage.shareTitle")}
           </h2>
-          <p className="mt-4 text-sm leading-relaxed text-earth/80">{t("testimonialsPage.shareText")}</p>
+          <p className="mt-4 text-sm leading-relaxed text-earth/80">
+            {t("testimonialsPage.shareText")}
+          </p>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-4 text-left" noValidate aria-describedby="review-form-status">
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-4 text-left"
+            noValidate
+            aria-describedby="review-form-status"
+          >
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              className="hidden"
+              aria-hidden="true"
+            />
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("testimonialsPage.formName")}</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                {t("testimonialsPage.formName")}
+              </span>
               <input
                 name="author_name"
                 type="text"
@@ -197,7 +242,9 @@ function TestimonialsPage() {
               />
             </label>
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("testimonialsPage.formEmail")}</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                {t("testimonialsPage.formEmail")}
+              </span>
               <input
                 name="author_email"
                 type="email"
@@ -205,7 +252,9 @@ function TestimonialsPage() {
               />
             </label>
             <div>
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("testimonialsPage.formRating")}</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                {t("testimonialsPage.formRating")}
+              </span>
               <div className="mt-1 flex items-center gap-1">
                 {Array.from({ length: 5 }, (_, i) => {
                   const value = i + 1;
@@ -217,14 +266,18 @@ function TestimonialsPage() {
                       aria-label={`${value} / 5`}
                       className="p-1"
                     >
-                      <Star className={`size-6 ${value <= rating ? "fill-gold text-gold" : "text-earth/25"}`} />
+                      <Star
+                        className={`size-6 ${value <= rating ? "fill-gold text-gold" : "text-earth/25"}`}
+                      />
                     </button>
                   );
                 })}
               </div>
             </div>
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("testimonialsPage.formBody")}</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                {t("testimonialsPage.formBody")}
+              </span>
               <textarea
                 name="body"
                 required
@@ -236,10 +289,14 @@ function TestimonialsPage() {
 
             <div id="review-form-status" aria-live="polite">
               {status === "error" && errorMsg && (
-                <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMsg}</p>
+                <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {errorMsg}
+                </p>
               )}
               {status === "success" && (
-                <p className="rounded-md bg-forest/10 px-3 py-2 text-sm text-forest">{t("testimonialsPage.formSuccess")}</p>
+                <p className="rounded-md bg-forest/10 px-3 py-2 text-sm text-forest">
+                  {t("testimonialsPage.formSuccess")}
+                </p>
               )}
             </div>
 
@@ -249,7 +306,9 @@ function TestimonialsPage() {
               className="inline-flex items-center gap-2 rounded-md bg-forest px-7 py-4 text-xs uppercase tracking-[0.18em] text-cream hover:bg-forest-soft disabled:opacity-60"
             >
               <Send className="size-4" />
-              {status === "sending" ? t("testimonialsPage.formSending") : t("testimonialsPage.formSubmit")}
+              {status === "sending"
+                ? t("testimonialsPage.formSending")
+                : t("testimonialsPage.formSubmit")}
             </button>
           </form>
         </div>

@@ -20,7 +20,6 @@ import { SiteFooter } from "../components/site/site-footer";
 import { MobileBottomNav } from "../components/site/mobile-bottom-nav";
 import { CookieConsent } from "../components/site/cookie-consent";
 
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-4 text-center">
@@ -79,127 +78,167 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     const locale = loaderData?.locale ?? "fr";
     const ogLocale = LOCALE_TO_OG[locale as keyof typeof LOCALE_TO_OG] ?? "fr_FR";
     const SITE = SITE_URL;
+    const isProd = process.env.NODE_ENV === "production";
     return {
-    scripts: [
-      // SSR lang attribute — runs before React hydration so crawlers see the right lang
-      { children: `document.documentElement.lang=${JSON.stringify(locale)};` },
-      {
-        children:
-          "if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}",
-      },
-      // Google Analytics : chargé uniquement après consentement (voir src/lib/analytics.ts + CookieConsent).
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": ["LocalBusiness", "HealthAndWellnessService"],
-          name: "Jabamiah",
-          description: "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
-          url: SITE,
-          telephone: "+33745155451",
-          email: "contact@jabamiah.eu",
-          image: `${SITE}/og-default.jpg`,
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Forges-les-Eaux",
-            postalCode: "76440",
-            addressRegion: "Normandie",
-            addressCountry: "FR",
-          },
-          geo: { "@type": "GeoCoordinates", latitude: 49.6183, longitude: 1.5431 },
-          priceRange: "Gratuit",
-          areaServed: [
-            { "@type": "AdministrativeArea", name: "Normandie" },
-            { "@type": "Country", name: "France" },
-            "À distance — France & Europe",
-          ],
-          hasOfferCatalog: {
-            "@type": "OfferCatalog",
-            name: "Soins énergétiques et thérapies naturelles",
-            itemListElement: [
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Soins énergétiques" }, price: "0", priceCurrency: "EUR" },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Guérison par la pensée" }, price: "0", priceCurrency: "EUR" },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Plantes médicinales & remèdes naturels" }, price: "0", priceCurrency: "EUR" },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Harmonisation globale" }, price: "0", priceCurrency: "EUR" },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "Développement spirituel" }, price: "0", priceCurrency: "EUR" },
-            ],
-          },
-          contactPoint: {
-            "@type": "ContactPoint",
+      scripts: [
+        // SSR lang attribute — runs before React hydration so crawlers see the right lang
+        { children: `document.documentElement.lang=${JSON.stringify(locale)};` },
+        ...(isProd
+          ? [
+              {
+                children:
+                  "if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}",
+              },
+            ]
+          : []),
+        // Google Analytics : chargé uniquement après consentement (voir src/lib/analytics.ts + CookieConsent).
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": ["LocalBusiness", "HealthAndWellnessService"],
+            name: "Jabamiah",
+            description:
+              "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
+            url: SITE,
             telephone: "+33745155451",
-            contactType: "customer service",
-            availableLanguage: ["French", "English"],
-          },
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Jabamiah",
-          url: SITE,
-          description: "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites.",
-          inLanguage: ["fr", "en", "de", "es", "it", "nl", "pl", "pt"],
-          potentialAction: {
-            "@type": "SearchAction",
-            target: { "@type": "EntryPoint", urlTemplate: `${SITE}/blog?q={search_term_string}` },
-            "query-input": "required name=search_term_string",
-          },
-        }),
-      },
-    ],
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#1E3A2B" },
-      { title: "Jabamiah — Médecine parallèle & soins énergétiques" },
-      {
-        name: "description",
-        content:
-          "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Consultations 100% gratuites à Forges-les-Eaux (Normandie) ou à distance.",
-      },
-      { name: "author", content: "Jabamiah" },
-      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
-      { property: "og:url", content: SITE_URL },
-      { property: "og:site_name", content: "Jabamiah" },
-      { property: "og:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
-      {
-        property: "og:description",
-        content:
-          "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:locale", content: ogLocale },
-      { property: "og:image", content: `${SITE_URL}/og-default.jpg` },
-      { property: "og:image:width", content: "1216" },
-      { property: "og:image:height", content: "640" },
-      { property: "og:image:alt", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
-      {
-        name: "twitter:description",
-        content:
-          "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
-      },
-      { name: "twitter:image", content: `${SITE_URL}/og-default.jpg` },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/manifest.json" },
-      { rel: "icon", type: "image/svg+xml", href: "/jabamiah-icon.svg" },
-      { rel: "icon", type: "image/svg+xml", media: "(prefers-color-scheme: dark)", href: "/jabamiah-icon-dark.svg" },
-      { rel: "alternate icon", href: "/favicon.ico" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
-      { rel: "mask-icon", href: "/jabamiah-icon.svg", color: "#1E3A2B" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap",
-      },
-    ],
-  };
+            email: "contact@jabamiah.eu",
+            image: `${SITE}/og-default.jpg`,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Forges-les-Eaux",
+              postalCode: "76440",
+              addressRegion: "Normandie",
+              addressCountry: "FR",
+            },
+            geo: { "@type": "GeoCoordinates", latitude: 49.6183, longitude: 1.5431 },
+            priceRange: "Gratuit",
+            areaServed: [
+              { "@type": "AdministrativeArea", name: "Normandie" },
+              { "@type": "Country", name: "France" },
+              "À distance — France & Europe",
+            ],
+            hasOfferCatalog: {
+              "@type": "OfferCatalog",
+              name: "Soins énergétiques et thérapies naturelles",
+              itemListElement: [
+                {
+                  "@type": "Offer",
+                  itemOffered: { "@type": "Service", name: "Soins énergétiques" },
+                  price: "0",
+                  priceCurrency: "EUR",
+                },
+                {
+                  "@type": "Offer",
+                  itemOffered: { "@type": "Service", name: "Guérison par la pensée" },
+                  price: "0",
+                  priceCurrency: "EUR",
+                },
+                {
+                  "@type": "Offer",
+                  itemOffered: {
+                    "@type": "Service",
+                    name: "Plantes médicinales & remèdes naturels",
+                  },
+                  price: "0",
+                  priceCurrency: "EUR",
+                },
+                {
+                  "@type": "Offer",
+                  itemOffered: { "@type": "Service", name: "Harmonisation globale" },
+                  price: "0",
+                  priceCurrency: "EUR",
+                },
+                {
+                  "@type": "Offer",
+                  itemOffered: { "@type": "Service", name: "Développement spirituel" },
+                  price: "0",
+                  priceCurrency: "EUR",
+                },
+              ],
+            },
+            contactPoint: {
+              "@type": "ContactPoint",
+              telephone: "+33745155451",
+              contactType: "customer service",
+              availableLanguage: ["French", "English"],
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Jabamiah",
+            url: SITE,
+            description:
+              "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites.",
+            inLanguage: ["fr", "en", "de", "es", "it", "nl", "pl", "pt"],
+            potentialAction: {
+              "@type": "SearchAction",
+              target: { "@type": "EntryPoint", urlTemplate: `${SITE}/blog?q={search_term_string}` },
+              "query-input": "required name=search_term_string",
+            },
+          }),
+        },
+      ],
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "theme-color", content: "#1E3A2B" },
+        { title: "Jabamiah — Médecine parallèle & soins énergétiques" },
+        {
+          name: "description",
+          content:
+            "Jabamiah vous accompagne sur le chemin du bien-être grâce aux soins énergétiques, à la radiesthésie et aux plantes naturelles. Consultations 100% gratuites à Forges-les-Eaux (Normandie) ou à distance.",
+        },
+        { name: "author", content: "Jabamiah" },
+        { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
+        { property: "og:url", content: SITE_URL },
+        { property: "og:site_name", content: "Jabamiah" },
+        { property: "og:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
+        {
+          property: "og:description",
+          content:
+            "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:locale", content: ogLocale },
+        { property: "og:image", content: `${SITE_URL}/og-default.jpg` },
+        { property: "og:image:width", content: "1216" },
+        { property: "og:image:height", content: "640" },
+        { property: "og:image:alt", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "Jabamiah — Médecine parallèle & soins énergétiques" },
+        {
+          name: "twitter:description",
+          content:
+            "Soins énergétiques, médecine naturelle et accompagnement spirituel. Consultations 100% gratuites sur rendez-vous.",
+        },
+        { name: "twitter:image", content: `${SITE_URL}/og-default.jpg` },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "manifest", href: "/manifest.json" },
+        { rel: "icon", type: "image/svg+xml", href: "/jabamiah-icon.svg" },
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          media: "(prefers-color-scheme: dark)",
+          href: "/jabamiah-icon-dark.svg",
+        },
+        { rel: "alternate icon", href: "/favicon.ico" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        { rel: "mask-icon", href: "/jabamiah-icon.svg", color: "#1E3A2B" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap",
+        },
+      ],
+    };
   },
   shellComponent: RootShell,
   component: RootComponent,
@@ -262,6 +301,5 @@ function RootComponent() {
         <CookieConsent />
       </div>
     </QueryClientProvider>
-
   );
 }

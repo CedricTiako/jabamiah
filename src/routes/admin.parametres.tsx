@@ -12,24 +12,101 @@ import { adminListConsultations } from "../lib/consultations.functions";
 import { adminListDocuments } from "../lib/documents.functions";
 import { adminListAppointments } from "../lib/appointments.functions";
 import { supabase } from "../integrations/supabase/client";
-import { User, Bell, Palette, CalendarCog, Shield, CreditCard, FileText, Users, LifeBuoy, Info, Settings as SettingsIcon } from "lucide-react";
+import {
+  User,
+  Bell,
+  Palette,
+  CalendarCog,
+  Shield,
+  CreditCard,
+  FileText,
+  Users,
+  LifeBuoy,
+  Info,
+  Settings as SettingsIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/admin/parametres")({
-  head: () => ({ meta: [{ title: "Paramètres — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Paramètres — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: ParametresPage,
 });
 
 const tiles = [
-  { icon: User, label: "Mon profil", desc: "Gérez vos informations personnelles et professionnelles.", cta: "Modifier", anchor: "mon-profil" },
-  { icon: Bell, label: "Notifications", desc: "Choisissez vos préférences de notifications et rappels.", cta: "Configurer", anchor: "notifications" },
-  { icon: Palette, label: "Préférences", desc: "Personnalisez votre interface et vos préférences d'utilisation.", cta: "Personnaliser", anchor: "preferences" },
-  { icon: CalendarCog, label: "Agenda", desc: "Définissez vos horaires, durées de consultation et disponibilités.", cta: "Paramétrer", anchor: "agenda-settings" },
-  { icon: Shield, label: "Confidentialité", desc: "Gérez la confidentialité de vos données et celles de vos clients.", cta: "Voir", anchor: "confidentialite" },
-  { icon: FileText, label: "Modèles & Documents", desc: "Gérez vos modèles de documents, ordonnances et comptes-rendus.", cta: "Gérer", anchor: "modeles" },
-  { icon: Shield, label: "Sécurité", desc: "Changez votre mot de passe et renforcez la sécurité de votre compte.", cta: "Sécuriser", anchor: "securite" },
-  { icon: Users, label: "Équipe", desc: "Gérez les membres de votre équipe et leurs accès.", cta: "Gérer", anchor: "equipe" },
-  { icon: SettingsIcon, label: "Paramètres généraux", desc: "Paramètres généraux de l'application et du compte.", cta: "Configurer", anchor: "parametres-generaux" },
-  { icon: Info, label: "À propos de Jabamiah", desc: "Informations sur la plateforme Jabamiah Médecine Parallèle.", cta: "En savoir plus", anchor: "a-propos" },
+  {
+    icon: User,
+    label: "Mon profil",
+    desc: "Gérez vos informations personnelles et professionnelles.",
+    cta: "Modifier",
+    anchor: "mon-profil",
+  },
+  {
+    icon: Bell,
+    label: "Notifications",
+    desc: "Choisissez vos préférences de notifications et rappels.",
+    cta: "Configurer",
+    anchor: "notifications",
+  },
+  {
+    icon: Palette,
+    label: "Préférences",
+    desc: "Personnalisez votre interface et vos préférences d'utilisation.",
+    cta: "Personnaliser",
+    anchor: "preferences",
+  },
+  {
+    icon: CalendarCog,
+    label: "Agenda",
+    desc: "Définissez vos horaires, durées de consultation et disponibilités.",
+    cta: "Paramétrer",
+    anchor: "agenda-settings",
+  },
+  {
+    icon: Shield,
+    label: "Confidentialité",
+    desc: "Gérez la confidentialité de vos données et celles de vos clients.",
+    cta: "Voir",
+    anchor: "confidentialite",
+  },
+  {
+    icon: FileText,
+    label: "Modèles & Documents",
+    desc: "Gérez vos modèles de documents, ordonnances et comptes-rendus.",
+    cta: "Gérer",
+    anchor: "modeles",
+  },
+  {
+    icon: Shield,
+    label: "Sécurité",
+    desc: "Changez votre mot de passe et renforcez la sécurité de votre compte.",
+    cta: "Sécuriser",
+    anchor: "securite",
+  },
+  {
+    icon: Users,
+    label: "Équipe",
+    desc: "Gérez les membres de votre équipe et leurs accès.",
+    cta: "Gérer",
+    anchor: "equipe",
+  },
+  {
+    icon: SettingsIcon,
+    label: "Paramètres généraux",
+    desc: "Paramètres généraux de l'application et du compte.",
+    cta: "Configurer",
+    anchor: "parametres-generaux",
+  },
+  {
+    icon: Info,
+    label: "À propos de Jabamiah",
+    desc: "Informations sur la plateforme Jabamiah Médecine Parallèle.",
+    cta: "En savoir plus",
+    anchor: "a-propos",
+  },
 ];
 
 function ParametresPage() {
@@ -40,9 +117,18 @@ function ParametresPage() {
   const listAppointments = useServerFn(adminListAppointments);
 
   const { data: clients } = useQuery({ queryKey: ["admin-clients"], queryFn: () => listClients() });
-  const { data: consultations } = useQuery({ queryKey: ["admin-consultations"], queryFn: () => listConsultations() });
-  const { data: documents } = useQuery({ queryKey: ["admin-documents"], queryFn: () => listDocuments() });
-  const { data: appointments } = useQuery({ queryKey: ["admin-appointments"], queryFn: () => listAppointments() });
+  const { data: consultations } = useQuery({
+    queryKey: ["admin-consultations"],
+    queryFn: () => listConsultations(),
+  });
+  const { data: documents } = useQuery({
+    queryKey: ["admin-documents"],
+    queryFn: () => listDocuments(),
+  });
+  const { data: appointments } = useQuery({
+    queryKey: ["admin-appointments"],
+    queryFn: () => listAppointments(),
+  });
 
   const now = new Date();
   const nextAppointment = (appointments ?? [])
@@ -50,14 +136,22 @@ function ParametresPage() {
     .sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime())[0];
 
   return (
-    <AdminShell title="Paramètres" subtitle="Gérez votre compte et vos préférences" onSignOut={signOut}>
+    <AdminShell
+      title="Paramètres"
+      subtitle="Gérez votre compte et vos préférences"
+      onSignOut={signOut}
+    >
       {/* Welcome banner */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-card p-6 ring-1 ring-gold/15 md:p-8">
         <div className="flex items-center gap-4">
-          <div className="grid h-14 w-14 place-items-center rounded-full bg-forest text-lg font-medium text-cream">LO</div>
+          <div className="grid h-14 w-14 place-items-center rounded-full bg-forest text-lg font-medium text-cream">
+            LO
+          </div>
           <div>
             <h2 className="font-serif text-2xl text-forest">Bienvenue, Loïc</h2>
-            <p className="text-sm text-earth/70">Configurez votre espace Jabamiah selon vos besoins.</p>
+            <p className="text-sm text-earth/70">
+              Configurez votre espace Jabamiah selon vos besoins.
+            </p>
           </div>
         </div>
         <div className="text-right italic text-sm text-earth/70">
@@ -96,7 +190,9 @@ function ParametresPage() {
             <LifeBuoy className="h-5 w-5" />
           </div>
           <h3 className="mt-4 font-serif text-lg text-forest">Aide & support</h3>
-          <p className="mt-1 flex-1 text-sm text-earth/70">Accédez à l'aide en ligne et contactez notre support.</p>
+          <p className="mt-1 flex-1 text-sm text-earth/70">
+            Accédez à l'aide en ligne et contactez notre support.
+          </p>
           <span className="mt-5 inline-flex items-center justify-between rounded-md border border-gold/30 px-3 py-2 text-xs uppercase tracking-[0.15em] text-forest">
             <span>Accéder</span>
             <span>›</span>
@@ -104,52 +200,114 @@ function ParametresPage() {
         </Link>
 
         {/* Mon profil */}
-        <SettingsSection id="mon-profil" icon={User} title="Mon profil" desc="Vos informations personnelles et professionnelles.">
+        <SettingsSection
+          id="mon-profil"
+          icon={User}
+          title="Mon profil"
+          desc="Vos informations personnelles et professionnelles."
+        >
           <ProfileSettings />
         </SettingsSection>
 
         {/* Notifications */}
-        <SettingsSection id="notifications" icon={Bell} title="Notifications" desc="Choisissez les notifications que vous recevez.">
+        <SettingsSection
+          id="notifications"
+          icon={Bell}
+          title="Notifications"
+          desc="Choisissez les notifications que vous recevez."
+        >
           <NotificationsSettings />
         </SettingsSection>
 
         {/* Préférences */}
-        <SettingsSection id="preferences" icon={Palette} title="Préférences" desc="Interface et préférences d'utilisation.">
-          <GenericSettingsGroup fields={PREFERENCES_FIELDS} successMessage="Préférences enregistrées ✓" />
+        <SettingsSection
+          id="preferences"
+          icon={Palette}
+          title="Préférences"
+          desc="Interface et préférences d'utilisation."
+        >
+          <GenericSettingsGroup
+            fields={PREFERENCES_FIELDS}
+            successMessage="Préférences enregistrées ✓"
+          />
         </SettingsSection>
 
         {/* Agenda */}
-        <SettingsSection id="agenda-settings" icon={CalendarCog} title="Agenda" desc="Horaires et durées de consultation par défaut.">
-          <GenericSettingsGroup fields={AGENDA_FIELDS} successMessage="Paramètres d'agenda enregistrés ✓" />
+        <SettingsSection
+          id="agenda-settings"
+          icon={CalendarCog}
+          title="Agenda"
+          desc="Horaires et durées de consultation par défaut."
+        >
+          <GenericSettingsGroup
+            fields={AGENDA_FIELDS}
+            successMessage="Paramètres d'agenda enregistrés ✓"
+          />
         </SettingsSection>
 
         {/* Confidentialité */}
-        <SettingsSection id="confidentialite" icon={Shield} title="Confidentialité" desc="Confidentialité de vos données et de celles de vos clients.">
-          <GenericSettingsGroup fields={PRIVACY_FIELDS} successMessage="Paramètres de confidentialité enregistrés ✓" />
+        <SettingsSection
+          id="confidentialite"
+          icon={Shield}
+          title="Confidentialité"
+          desc="Confidentialité de vos données et de celles de vos clients."
+        >
+          <GenericSettingsGroup
+            fields={PRIVACY_FIELDS}
+            successMessage="Paramètres de confidentialité enregistrés ✓"
+          />
         </SettingsSection>
 
         {/* Modèles & Documents */}
-        <SettingsSection id="modeles" icon={FileText} title="Modèles & Documents" desc="Modèles de comptes-rendus et de factures.">
+        <SettingsSection
+          id="modeles"
+          icon={FileText}
+          title="Modèles & Documents"
+          desc="Modèles de comptes-rendus et de factures."
+        >
           <GenericSettingsGroup fields={TEMPLATE_FIELDS} successMessage="Modèles enregistrés ✓" />
         </SettingsSection>
 
         {/* Sécurité */}
-        <SettingsSection id="securite" icon={Shield} title="Sécurité" desc="Mot de passe et sessions actives.">
+        <SettingsSection
+          id="securite"
+          icon={Shield}
+          title="Sécurité"
+          desc="Mot de passe et sessions actives."
+        >
           <SecuritySettings />
         </SettingsSection>
 
         {/* Équipe */}
-        <SettingsSection id="equipe" icon={Users} title="Équipe" desc="Membres ayant accès au tableau de bord admin.">
+        <SettingsSection
+          id="equipe"
+          icon={Users}
+          title="Équipe"
+          desc="Membres ayant accès au tableau de bord admin."
+        >
           <TeamPanel />
         </SettingsSection>
 
         {/* Paramètres généraux */}
-        <SettingsSection id="parametres-generaux" icon={SettingsIcon} title="Paramètres généraux" desc="Identité et coordonnées de l'application.">
-          <GenericSettingsGroup fields={GENERAL_FIELDS} successMessage="Paramètres généraux enregistrés ✓" />
+        <SettingsSection
+          id="parametres-generaux"
+          icon={SettingsIcon}
+          title="Paramètres généraux"
+          desc="Identité et coordonnées de l'application."
+        >
+          <GenericSettingsGroup
+            fields={GENERAL_FIELDS}
+            successMessage="Paramètres généraux enregistrés ✓"
+          />
         </SettingsSection>
 
         {/* À propos */}
-        <SettingsSection id="a-propos" icon={Info} title="À propos de Jabamiah" desc="Texte de présentation de la plateforme.">
+        <SettingsSection
+          id="a-propos"
+          icon={Info}
+          title="À propos de Jabamiah"
+          desc="Texte de présentation de la plateforme."
+        >
           <GenericSettingsGroup fields={ABOUT_FIELDS} successMessage="Enregistré ✓" />
         </SettingsSection>
 
@@ -159,7 +317,9 @@ function ParametresPage() {
             <CreditCard className="h-5 w-5" />
           </div>
           <h3 className="mt-4 font-serif text-lg text-forest">Paiements — Configuration PayPal</h3>
-          <p className="mt-1 text-sm text-earth/70">Client ID PayPal et montants de dons suggérés pour la page /don.</p>
+          <p className="mt-1 text-sm text-earth/70">
+            Client ID PayPal et montants de dons suggérés pour la page /don.
+          </p>
           <PaymentsSettings />
         </div>
 
@@ -168,9 +328,12 @@ function ParametresPage() {
           <div className="grid h-12 w-12 place-items-center rounded-full bg-[color:var(--gold-soft)]/50 text-forest">
             <FileText className="h-5 w-5" />
           </div>
-          <h3 className="mt-4 font-serif text-lg text-forest">Informations légales (Mentions légales / RGPD)</h3>
+          <h3 className="mt-4 font-serif text-lg text-forest">
+            Informations légales (Mentions légales / RGPD)
+          </h3>
           <p className="mt-1 text-sm text-earth/70">
-            Ces champs alimentent les pages <em>Mentions légales</em>, <em>Politique de confidentialité</em> et <em>CGU</em>.
+            Ces champs alimentent les pages <em>Mentions légales</em>,{" "}
+            <em>Politique de confidentialité</em> et <em>CGU</em>.
           </p>
           <LegalSettings />
         </div>
@@ -181,7 +344,17 @@ function ParametresPage() {
         <h3 className="font-serif text-xl text-forest">Résumé du compte</h3>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {[
-            ["Prochain RDV", nextAppointment ? new Date(nextAppointment.starts_at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "Aucun"],
+            [
+              "Prochain RDV",
+              nextAppointment
+                ? new Date(nextAppointment.starts_at).toLocaleString("fr-FR", {
+                    day: "numeric",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : "Aucun",
+            ],
             ["Clients", String(clients?.length ?? "—")],
             ["Consultations", String(consultations?.length ?? "—")],
             ["Documents", String(documents?.length ?? "—")],
@@ -230,7 +403,10 @@ function SettingsSection({
 function PaymentsSettings() {
   const getSettings = useServerFn(adminGetSettings);
   const updateSetting = useServerFn(adminUpdateSetting);
-  const { data: settings } = useQuery({ queryKey: ["admin-settings"], queryFn: () => getSettings() });
+  const { data: settings } = useQuery({
+    queryKey: ["admin-settings"],
+    queryFn: () => getSettings(),
+  });
 
   const [paypalClientId, setPaypalClientId] = useState("");
   const [donationAmounts, setDonationAmounts] = useState("5,10,20,50");
@@ -251,7 +427,10 @@ function PaymentsSettings() {
     setSaveStatus("saving");
     try {
       await updateSetting({ data: { key: "paypal_client_id", value: paypalClientId.trim() } });
-      const amounts = donationAmounts.split(",").map((s) => parseInt(s.trim(), 10)).filter((n) => !isNaN(n) && n > 0);
+      const amounts = donationAmounts
+        .split(",")
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => !isNaN(n) && n > 0);
       await updateSetting({ data: { key: "donation_amounts", value: JSON.stringify(amounts) } });
       setSaveStatus("saved");
       setTimeout(() => setSaveStatus("idle"), 2500);
@@ -299,17 +478,37 @@ function PaymentsSettings() {
 }
 
 const LEGAL_FIELDS: { key: string; label: string; placeholder: string; multiline?: boolean }[] = [
-  { key: "legal_editor_name", label: "Raison sociale / nom de l'éditeur", placeholder: "Ex. Loïc Omont" },
-  { key: "legal_editor_status", label: "Statut juridique", placeholder: "EI / EIRL / auto-entrepreneur / SASU…" },
+  {
+    key: "legal_editor_name",
+    label: "Raison sociale / nom de l'éditeur",
+    placeholder: "Ex. Loïc Omont",
+  },
+  {
+    key: "legal_editor_status",
+    label: "Statut juridique",
+    placeholder: "EI / EIRL / auto-entrepreneur / SASU…",
+  },
   { key: "legal_editor_siret", label: "SIRET", placeholder: "14 chiffres" },
-  { key: "legal_editor_address", label: "Adresse postale", placeholder: "N°, rue, code postal, ville", multiline: true },
-  { key: "legal_publication_director", label: "Directeur / directrice de la publication", placeholder: "Nom et prénom" },
+  {
+    key: "legal_editor_address",
+    label: "Adresse postale",
+    placeholder: "N°, rue, code postal, ville",
+    multiline: true,
+  },
+  {
+    key: "legal_publication_director",
+    label: "Directeur / directrice de la publication",
+    placeholder: "Nom et prénom",
+  },
 ];
 
 function LegalSettings() {
   const getSettings = useServerFn(adminGetSettings);
   const updateSetting = useServerFn(adminUpdateSetting);
-  const { data: settings, refetch } = useQuery({ queryKey: ["admin-settings"], queryFn: () => getSettings() });
+  const { data: settings, refetch } = useQuery({
+    queryKey: ["admin-settings"],
+    queryFn: () => getSettings(),
+  });
 
   const [values, setValues] = useState<Record<string, string>>({});
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -368,7 +567,9 @@ function LegalSettings() {
         >
           {saveStatus === "saving" ? "Enregistrement…" : "Enregistrer"}
         </button>
-        {saveStatus === "saved" && <p className="text-xs text-forest">Informations légales enregistrées ✓</p>}
+        {saveStatus === "saved" && (
+          <p className="text-xs text-forest">Informations légales enregistrées ✓</p>
+        )}
         {saveStatus === "error" && <p className="text-xs text-red-700">Erreur d'enregistrement.</p>}
       </div>
     </div>
@@ -387,17 +588,34 @@ const GENERAL_FIELDS: SettingField[] = [
 ];
 
 const ABOUT_FIELDS: SettingField[] = [
-  { key: "about_text", label: "Texte de présentation", placeholder: "Jabamiah accompagne…", multiline: true },
+  {
+    key: "about_text",
+    label: "Texte de présentation",
+    placeholder: "Jabamiah accompagne…",
+    multiline: true,
+  },
 ];
 
 const AGENDA_FIELDS: SettingField[] = [
   { key: "booking_default_duration_minutes", label: "Durée par défaut (min)", placeholder: "60" },
-  { key: "booking_working_hours", label: "Horaires de disponibilité", placeholder: "Lun-Ven 9h-18h" },
+  {
+    key: "booking_working_hours",
+    label: "Horaires de disponibilité",
+    placeholder: "Lun-Ven 9h-18h",
+  },
 ];
 
 const PRIVACY_FIELDS: SettingField[] = [
-  { key: "privacy_data_retention_days", label: "Durée de conservation des données (jours)", placeholder: "365" },
-  { key: "privacy_export_enabled", label: "Export des données activé (true/false)", placeholder: "true" },
+  {
+    key: "privacy_data_retention_days",
+    label: "Durée de conservation des données (jours)",
+    placeholder: "365",
+  },
+  {
+    key: "privacy_export_enabled",
+    label: "Export des données activé (true/false)",
+    placeholder: "true",
+  },
 ];
 
 const PREFERENCES_FIELDS: SettingField[] = [
@@ -406,14 +624,33 @@ const PREFERENCES_FIELDS: SettingField[] = [
 ];
 
 const TEMPLATE_FIELDS: SettingField[] = [
-  { key: "template_compte_rendu", label: "Modèle de compte-rendu", placeholder: "Séance du {{date}} avec {{client}}…", multiline: true },
-  { key: "template_facture", label: "Modèle de facture / reçu", placeholder: "Reçu pour {{client}}, montant {{montant}}…", multiline: true },
+  {
+    key: "template_compte_rendu",
+    label: "Modèle de compte-rendu",
+    placeholder: "Séance du {{date}} avec {{client}}…",
+    multiline: true,
+  },
+  {
+    key: "template_facture",
+    label: "Modèle de facture / reçu",
+    placeholder: "Reçu pour {{client}}, montant {{montant}}…",
+    multiline: true,
+  },
 ];
 
-function GenericSettingsGroup({ fields, successMessage }: { fields: SettingField[]; successMessage: string }) {
+function GenericSettingsGroup({
+  fields,
+  successMessage,
+}: {
+  fields: SettingField[];
+  successMessage: string;
+}) {
   const getSettings = useServerFn(adminGetSettings);
   const updateSetting = useServerFn(adminUpdateSetting);
-  const { data: settings } = useQuery({ queryKey: ["admin-settings"], queryFn: () => getSettings() });
+  const { data: settings } = useQuery({
+    queryKey: ["admin-settings"],
+    queryFn: () => getSettings(),
+  });
 
   const [values, setValues] = useState<Record<string, string>>({});
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -597,7 +834,10 @@ function NotificationsSettings() {
   return (
     <div className="mt-4 space-y-3">
       {NOTIFICATION_TOGGLES.map((t) => (
-        <label key={t.key} className="flex items-center justify-between gap-4 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm">
+        <label
+          key={t.key}
+          className="flex items-center justify-between gap-4 rounded-lg bg-cream-warm/60 px-3 py-2 text-sm"
+        >
           <span className="text-earth/80">{t.label}</span>
           <input
             type="checkbox"
@@ -616,7 +856,9 @@ function NotificationsSettings() {
         >
           {saveStatus === "saving" ? "Enregistrement…" : "Enregistrer"}
         </button>
-        {saveStatus === "saved" && <p className="text-xs text-forest">Préférences enregistrées ✓</p>}
+        {saveStatus === "saved" && (
+          <p className="text-xs text-forest">Préférences enregistrées ✓</p>
+        )}
         {saveStatus === "error" && <p className="text-xs text-red-700">Erreur d'enregistrement.</p>}
       </div>
     </div>
@@ -668,7 +910,9 @@ function SecuritySettings() {
     <div className="mt-4 space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.15em] text-forest">Nouveau mot de passe</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-forest">
+            Nouveau mot de passe
+          </span>
           <input
             type="password"
             value={password}
@@ -677,7 +921,9 @@ function SecuritySettings() {
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.15em] text-forest">Confirmer le mot de passe</span>
+          <span className="text-xs uppercase tracking-[0.15em] text-forest">
+            Confirmer le mot de passe
+          </span>
           <input
             type="password"
             value={confirmPassword}
@@ -700,14 +946,20 @@ function SecuritySettings() {
       </div>
 
       <div className="border-t border-gold/15 pt-4">
-        <p className="text-sm text-earth/80">Déconnecter toutes les autres sessions actives (autres navigateurs/appareils).</p>
+        <p className="text-sm text-earth/80">
+          Déconnecter toutes les autres sessions actives (autres navigateurs/appareils).
+        </p>
         <button
           type="button"
           onClick={handleSignOutOthers}
           disabled={signOutStatus === "working"}
           className="mt-3 rounded-md border border-gold/30 px-5 py-2.5 text-xs uppercase tracking-[0.15em] text-forest hover:bg-cream-warm disabled:opacity-60"
         >
-          {signOutStatus === "working" ? "Déconnexion…" : signOutStatus === "done" ? "Fait ✓" : "Déconnecter les autres sessions"}
+          {signOutStatus === "working"
+            ? "Déconnexion…"
+            : signOutStatus === "done"
+              ? "Fait ✓"
+              : "Déconnecter les autres sessions"}
         </button>
       </div>
     </div>

@@ -48,6 +48,8 @@ import { Route as ApiPublicReviewsRouteImport } from './routes/api/public/review
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as AdminPostsIdRouteImport } from './routes/admin.posts.$id'
 import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
+import { Route as ApiPublicDonationsWebhookRouteImport } from './routes/api/public/donations.webhook'
+import { Route as ApiPublicDonationsCheckoutRouteImport } from './routes/api/public/donations.checkout'
 
 const TemoignagesRoute = TemoignagesRouteImport.update({
   id: '/temoignages',
@@ -245,6 +247,18 @@ const AdminClientsIdRoute = AdminClientsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminClientsRoute,
 } as any)
+const ApiPublicDonationsWebhookRoute =
+  ApiPublicDonationsWebhookRouteImport.update({
+    id: '/api/public/donations/webhook',
+    path: '/api/public/donations/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicDonationsCheckoutRoute =
+  ApiPublicDonationsCheckoutRouteImport.update({
+    id: '/api/public/donations/checkout',
+    path: '/api/public/donations/checkout',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -286,6 +300,8 @@ export interface FileRoutesByFullPath {
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/reviews': typeof ApiPublicReviewsRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
+  '/api/public/donations/checkout': typeof ApiPublicDonationsCheckoutRoute
+  '/api/public/donations/webhook': typeof ApiPublicDonationsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -324,6 +340,8 @@ export interface FileRoutesByTo {
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/reviews': typeof ApiPublicReviewsRoute
   '/admin/clients': typeof AdminClientsIndexRoute
+  '/api/public/donations/checkout': typeof ApiPublicDonationsCheckoutRoute
+  '/api/public/donations/webhook': typeof ApiPublicDonationsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -366,6 +384,8 @@ export interface FileRoutesById {
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/reviews': typeof ApiPublicReviewsRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
+  '/api/public/donations/checkout': typeof ApiPublicDonationsCheckoutRoute
+  '/api/public/donations/webhook': typeof ApiPublicDonationsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -409,6 +429,8 @@ export interface FileRouteTypes {
     | '/api/public/contact'
     | '/api/public/reviews'
     | '/admin/clients/'
+    | '/api/public/donations/checkout'
+    | '/api/public/donations/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -447,6 +469,8 @@ export interface FileRouteTypes {
     | '/api/public/contact'
     | '/api/public/reviews'
     | '/admin/clients'
+    | '/api/public/donations/checkout'
+    | '/api/public/donations/webhook'
   id:
     | '__root__'
     | '/'
@@ -488,6 +512,8 @@ export interface FileRouteTypes {
     | '/api/public/contact'
     | '/api/public/reviews'
     | '/admin/clients/'
+    | '/api/public/donations/checkout'
+    | '/api/public/donations/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -509,6 +535,8 @@ export interface RootRouteChildren {
   SoinsEtTherapiesIndexRoute: typeof SoinsEtTherapiesIndexRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
   ApiPublicReviewsRoute: typeof ApiPublicReviewsRoute
+  ApiPublicDonationsCheckoutRoute: typeof ApiPublicDonationsCheckoutRoute
+  ApiPublicDonationsWebhookRoute: typeof ApiPublicDonationsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -786,6 +814,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientsIdRouteImport
       parentRoute: typeof AdminClientsRoute
     }
+    '/api/public/donations/webhook': {
+      id: '/api/public/donations/webhook'
+      path: '/api/public/donations/webhook'
+      fullPath: '/api/public/donations/webhook'
+      preLoaderRoute: typeof ApiPublicDonationsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/donations/checkout': {
+      id: '/api/public/donations/checkout'
+      path: '/api/public/donations/checkout'
+      fullPath: '/api/public/donations/checkout'
+      preLoaderRoute: typeof ApiPublicDonationsCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -876,6 +918,8 @@ const rootRouteChildren: RootRouteChildren = {
   SoinsEtTherapiesIndexRoute: SoinsEtTherapiesIndexRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
   ApiPublicReviewsRoute: ApiPublicReviewsRoute,
+  ApiPublicDonationsCheckoutRoute: ApiPublicDonationsCheckoutRoute,
+  ApiPublicDonationsWebhookRoute: ApiPublicDonationsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -16,7 +16,10 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }
@@ -27,7 +30,9 @@ export const adminListAppointments = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data, error } = await context.supabase
       .from("appointments")
-      .select("id, client_id, starts_at, duration_minutes, session_type, location, status, note, clients(full_name)")
+      .select(
+        "id, client_id, starts_at, duration_minutes, session_type, location, status, note, clients(full_name)",
+      )
       .order("starts_at", { ascending: true });
     if (error) throw error;
     return data ?? [];
@@ -66,7 +71,10 @@ export const adminUpsertAppointment = createServerFn({ method: "POST" })
     };
 
     if (data.id) {
-      const { error } = await context.supabase.from("appointments").update(payload).eq("id", data.id);
+      const { error } = await context.supabase
+        .from("appointments")
+        .update(payload)
+        .eq("id", data.id);
       if (error) throw error;
 
       const { data: client } = await context.supabase
@@ -120,7 +128,10 @@ export const adminUpdateAppointmentStatus = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => StatusSchema.parse(data))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const { error } = await context.supabase.from("appointments").update({ status: data.status }).eq("id", data.id);
+    const { error } = await context.supabase
+      .from("appointments")
+      .update({ status: data.status })
+      .eq("id", data.id);
     if (error) throw error;
 
     const { data: appointment } = await context.supabase

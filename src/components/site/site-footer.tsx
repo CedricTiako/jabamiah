@@ -13,7 +13,9 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <Logo variant="dark" />
-          <p className="mt-6 max-w-xs text-sm leading-relaxed text-cream/70">{t("footer.tagline")}</p>
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-cream/70">
+            {t("footer.tagline")}
+          </p>
         </div>
 
         <div className="lg:col-span-5">
@@ -21,7 +23,12 @@ export function SiteFooter() {
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-3">
               <MessageCircle className="mt-0.5 size-4 text-gold" aria-hidden="true" />
-              <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="text-cream/90 hover:text-gold">
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream/90 hover:text-gold"
+              >
                 WhatsApp
                 <span className="block text-xs text-cream/60">{t("footer.whatsappSub")}</span>
               </a>
@@ -77,12 +84,22 @@ export function SiteFooter() {
 
       <div className="border-t border-cream/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 text-xs uppercase tracking-[0.15em] text-cream/60 md:flex-row">
-          <p>© {new Date().getFullYear()} Jabamiah — {t("footer.copyright")}</p>
+          <p>
+            © {new Date().getFullYear()} Jabamiah — {t("footer.copyright")}
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Link to="/mentions-legales" className="hover:text-gold">{t("footer.legal")}</Link>
-            <Link to="/politique-de-confidentialite" className="hover:text-gold">{t("footer.privacy")}</Link>
-            <Link to="/cgu" className="hover:text-gold">CGU</Link>
-            <Link to="/cookies" className="hover:text-gold">Cookies</Link>
+            <Link to="/mentions-legales" className="hover:text-gold">
+              {t("footer.legal")}
+            </Link>
+            <Link to="/politique-de-confidentialite" className="hover:text-gold">
+              {t("footer.privacy")}
+            </Link>
+            <Link to="/cgu" className="hover:text-gold">
+              CGU
+            </Link>
+            <Link to="/cookies" className="hover:text-gold">
+              Cookies
+            </Link>
           </div>
         </div>
       </div>

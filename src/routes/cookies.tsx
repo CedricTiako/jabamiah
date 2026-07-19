@@ -33,8 +33,7 @@ function CookiesPage() {
 
   useEffect(() => {
     setChoice(getConsent());
-    const onChange = (e: Event) =>
-      setChoice((e as CustomEvent).detail as ConsentValue | null);
+    const onChange = (e: Event) => setChoice((e as CustomEvent).detail as ConsentValue | null);
     window.addEventListener(CONSENT_EVENT, onChange);
     return () => window.removeEventListener(CONSENT_EVENT, onChange);
   }, []);
@@ -55,8 +54,8 @@ function CookiesPage() {
       <h2>1. Qu'est-ce qu'un cookie ?</h2>
       <p>
         Un cookie est un petit fichier texte déposé sur votre terminal (ordinateur, mobile,
-        tablette) lors de la consultation d'un site. Il permet notamment de reconnaître
-        votre navigateur, de mémoriser des préférences ou de mesurer l'audience.
+        tablette) lors de la consultation d'un site. Il permet notamment de reconnaître votre
+        navigateur, de mémoriser des préférences ou de mesurer l'audience.
       </p>
 
       <h2>2. Cookies déposés sur ce site</h2>
@@ -64,9 +63,8 @@ function CookiesPage() {
       <h3>Cookies strictement nécessaires (sans consentement)</h3>
       <ul>
         <li>
-          <strong>jabamiah_consent_v1</strong> — mémorise votre choix de consentement.
-          Durée : 13 mois. Sans dépôt de ce cookie, la bannière réapparaîtrait à chaque
-          visite.
+          <strong>jabamiah_consent_v1</strong> — mémorise votre choix de consentement. Durée : 13
+          mois. Sans dépôt de ce cookie, la bannière réapparaîtrait à chaque visite.
         </li>
         <li>
           <strong>i18nextLng</strong> — mémorise votre langue préférée. Durée : 13 mois.
@@ -76,13 +74,13 @@ function CookiesPage() {
       <h3>Cookies de mesure d'audience (soumis à consentement)</h3>
       <ul>
         <li>
-          <strong>_ga, _ga_&lt;ID&gt;</strong> — Google Analytics 4, mesure d'audience avec
-          IP anonymisée. Durée : 13 mois. Émetteur : Google Ireland Ltd.
+          <strong>_ga, _ga_&lt;ID&gt;</strong> — Google Analytics 4, mesure d'audience avec IP
+          anonymisée. Durée : 13 mois. Émetteur : Google Ireland Ltd.
         </li>
       </ul>
       <p>
-        Ces cookies ne sont déposés qu'après votre consentement explicite. Aucun cookie
-        publicitaire n'est utilisé sur ce site.
+        Ces cookies ne sont déposés qu'après votre consentement explicite. Aucun cookie publicitaire
+        n'est utilisé sur ce site.
       </p>
 
       <h2>3. Gérer votre consentement</h2>
@@ -115,33 +113,52 @@ function CookiesPage() {
 
       <h2>4. Paramétrer votre navigateur</h2>
       <p>
-        Vous pouvez également configurer votre navigateur pour bloquer ou supprimer les
-        cookies :
+        Vous pouvez également configurer votre navigateur pour bloquer ou supprimer les cookies :
       </p>
       <ul>
         <li>
-          <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noreferrer">Chrome</a>
+          <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noreferrer">
+            Chrome
+          </a>
         </li>
         <li>
-          <a href="https://support.mozilla.org/fr/kb/protection-renforcee-contre-pistage-firefox-ordinateur" target="_blank" rel="noreferrer">Firefox</a>
+          <a
+            href="https://support.mozilla.org/fr/kb/protection-renforcee-contre-pistage-firefox-ordinateur"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Firefox
+          </a>
         </li>
         <li>
-          <a href="https://support.apple.com/fr-fr/guide/safari/sfri11471/mac" target="_blank" rel="noreferrer">Safari</a>
+          <a
+            href="https://support.apple.com/fr-fr/guide/safari/sfri11471/mac"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Safari
+          </a>
         </li>
         <li>
-          <a href="https://support.microsoft.com/fr-fr/microsoft-edge" target="_blank" rel="noreferrer">Edge</a>
+          <a
+            href="https://support.microsoft.com/fr-fr/microsoft-edge"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Edge
+          </a>
         </li>
       </ul>
       <p>
-        Bloquer certains cookies peut altérer le fonctionnement de certaines fonctionnalités
-        du Site.
+        Bloquer certains cookies peut altérer le fonctionnement de certaines fonctionnalités du
+        Site.
       </p>
 
       <h2>5. En savoir plus</h2>
       <p>
         Consultez notre <Link to="/politique-de-confidentialite">Politique de confidentialité</Link>{" "}
-        pour connaître l'ensemble des traitements de données personnelles, ou écrivez-nous
-        à <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+        pour connaître l'ensemble des traitements de données personnelles, ou écrivez-nous à{" "}
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
       </p>
     </LegalPage>
   );

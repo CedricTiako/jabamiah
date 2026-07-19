@@ -16,14 +16,28 @@ function getResend() {
 }
 
 // Best-effort: a failed/misconfigured send must never break the admin action that triggered it.
-export async function sendClientEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
+export async function sendClientEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+}) {
   const resend = getResend();
   if (!resend) {
     console.error("[email] RESEND_API_KEY missing, skipping send:", subject);
     return;
   }
   try {
-    const { data, error } = await resend.emails.send({ from: FROM, to, cc: OWNER_CC, subject, html });
+    const { data, error } = await resend.emails.send({
+      from: FROM,
+      to,
+      cc: OWNER_CC,
+      subject,
+      html,
+    });
     if (error) console.error("[email] Resend error:", error);
     else console.log("[email] sent:", data?.id, "to", to, "-", subject);
   } catch (err) {
@@ -33,14 +47,28 @@ export async function sendClientEmail({ to, subject, html }: { to: string; subje
 
 // For internal notifications to the owner (not client-facing) — no CC needed since
 // they're already the recipient.
-export async function sendOwnerNotification({ subject, html, replyTo }: { subject: string; html: string; replyTo?: string }) {
+export async function sendOwnerNotification({
+  subject,
+  html,
+  replyTo,
+}: {
+  subject: string;
+  html: string;
+  replyTo?: string;
+}) {
   const resend = getResend();
   if (!resend) {
     console.error("[email] RESEND_API_KEY missing, skipping send:", subject);
     return;
   }
   try {
-    const { data, error } = await resend.emails.send({ from: FROM, to: OWNER_CC, subject, html, ...(replyTo ? { replyTo } : {}) });
+    const { data, error } = await resend.emails.send({
+      from: FROM,
+      to: OWNER_CC,
+      subject,
+      html,
+      ...(replyTo ? { replyTo } : {}),
+    });
     if (error) console.error("[email] Resend error:", error);
     else console.log("[email] sent:", data?.id, "to", OWNER_CC, "-", subject);
   } catch (err) {
@@ -89,10 +117,10 @@ function formatDateTime(iso: string) {
 }
 
 const STATUS_LABELS: Record<string, string> = {
-  "Planifié": "planifié",
-  "Confirmé": "confirmé",
-  "Annulé": "annulé",
-  "Honoré": "honoré",
+  Planifié: "planifié",
+  Confirmé: "confirmé",
+  Annulé: "annulé",
+  Honoré: "honoré",
   "No-show": "marqué comme absence",
 };
 
@@ -119,8 +147,10 @@ export type AppointmentEmailDetails = {
 };
 
 function appointmentDetailsBlock(appt: AppointmentEmailDetails) {
-  const sessionLabel = appt.sessionType ? SESSION_TYPE_LABELS[appt.sessionType] ?? appt.sessionType : null;
-  const locationLabel = appt.location ? LOCATION_LABELS[appt.location] ?? appt.location : null;
+  const sessionLabel = appt.sessionType
+    ? (SESSION_TYPE_LABELS[appt.sessionType] ?? appt.sessionType)
+    : null;
+  const locationLabel = appt.location ? (LOCATION_LABELS[appt.location] ?? appt.location) : null;
   return `
     <p style="font-size:15px;line-height:1.6;background-color:#f7f1e8;border-radius:8px;padding:14px 18px;">
       📅 ${formatDateTime(appt.startsAt)}<br />
@@ -165,7 +195,10 @@ export function appointmentStatusEmail(clientName: string, startsAt: string, sta
 }
 
 function esc(s: string) {
-  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+  return s.replace(
+    /[&<>"']/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
+  );
 }
 
 export type ConsultationEmailDetails = {
@@ -214,7 +247,12 @@ export function contactReplyEmail(name: string, originalMessage: string, reply: 
   `);
 }
 
-export function newContactMessageEmail(name: string, email: string, subject: string | null, message: string) {
+export function newContactMessageEmail(
+  name: string,
+  email: string,
+  subject: string | null,
+  message: string,
+) {
   return layout(`
     <h1 style="font-size:22px;color:#1e3a2b;margin:0 0 16px;">Nouveau message du site</h1>
     <p style="font-size:15px;line-height:1.6;"><strong>${esc(name)}</strong> (<a href="mailto:${esc(email)}">${esc(email)}</a>) vous a écrit${subject ? ` — ${esc(subject)}` : ""} :</p>

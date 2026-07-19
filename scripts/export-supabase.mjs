@@ -30,7 +30,9 @@ mkdirSync(OUT_DIR, { recursive: true });
 const hasPgVars = process.env.PGHOST && process.env.PGUSER && process.env.PGDATABASE;
 const hasUrl = !!process.env.DATABASE_URL;
 if (!hasPgVars && !hasUrl) {
-  console.error("❌ Fournissez soit DATABASE_URL, soit PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE.");
+  console.error(
+    "❌ Fournissez soit DATABASE_URL, soit PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE.",
+  );
   process.exit(1);
 }
 
@@ -58,9 +60,7 @@ console.log("→ Connexion OK, export en cours…");
 
 // --- 2. Schéma public (structure) ----------------------------------------
 console.log("→ Export du schéma public (structure)…");
-const schemaSql = pgDump(
-  "--schema-only --schema=public --no-owner --no-privileges --no-comments",
-);
+const schemaSql = pgDump("--schema-only --schema=public --no-owner --no-privileges --no-comments");
 writeFileSync(resolve(OUT_DIR, "01_schema.sql"), schemaSql);
 
 // --- 3. Données du schéma public -----------------------------------------
@@ -98,7 +98,10 @@ try {
       );
   writeFileSync(resolve(OUT_DIR, "04_auth_users.csv"), usersCsv);
 } catch (e) {
-  writeFileSync(resolve(OUT_DIR, "04_auth_users.csv"), `# Export auth.users échoué : ${e.message}\n`);
+  writeFileSync(
+    resolve(OUT_DIR, "04_auth_users.csv"),
+    `# Export auth.users échoué : ${e.message}\n`,
+  );
 }
 
 // --- 6. README -----------------------------------------------------------

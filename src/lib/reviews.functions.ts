@@ -14,7 +14,10 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }
@@ -43,7 +46,11 @@ export const adminModerateReview = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase
       .from("reviews")
-      .update({ status: data.status, moderated_by: context.userId, moderated_at: new Date().toISOString() })
+      .update({
+        status: data.status,
+        moderated_by: context.userId,
+        moderated_at: new Date().toISOString(),
+      })
       .eq("id", data.id);
     if (error) throw error;
     return { ok: true };
@@ -60,14 +67,13 @@ export const adminDeleteReview = createServerFn({ method: "POST" })
   });
 
 // ---- Public: approved reviews for display on /temoignages ----
-export const listApprovedReviews = createServerFn({ method: "GET" })
-  .handler(async () => {
-    const sb = getPublicClient();
-    const { data, error } = await sb
-      .from("reviews")
-      .select("id, author_name, rating, body, created_at")
-      .eq("status", "approved")
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return data ?? [];
-  });
+export const listApprovedReviews = createServerFn({ method: "GET" }).handler(async () => {
+  const sb = getPublicClient();
+  const { data, error } = await sb
+    .from("reviews")
+    .select("id, author_name, rating, body, created_at")
+    .eq("status", "approved")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+});

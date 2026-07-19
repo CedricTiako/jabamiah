@@ -27,9 +27,10 @@ export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]["code"];
 const resources = { fr, en, es, de, it, nl, pl, pt };
 
 if (!i18n.isInitialized) {
-  const chain = typeof window !== "undefined"
-    ? i18n.use(LanguageDetector).use(initReactI18next)
-    : i18n.use(initReactI18next);
+  const chain =
+    typeof window !== "undefined"
+      ? i18n.use(LanguageDetector).use(initReactI18next)
+      : i18n.use(initReactI18next);
   void chain.init({
     resources,
     lng: typeof window === "undefined" ? "fr" : undefined,
@@ -44,8 +45,6 @@ if (!i18n.isInitialized) {
     },
     react: { useSuspense: false },
   });
-
 }
-
 
 export default i18n;

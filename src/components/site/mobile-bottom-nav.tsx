@@ -17,8 +17,6 @@ export function MobileBottomNav() {
     { to: "/don", label: t("footer.donate"), Icon: Heart },
   ];
 
-
-
   return (
     <>
       {/* spacer so content never hides under the bar (incl. iOS safe area) */}
@@ -84,7 +82,6 @@ function TabLink({
       className="flex flex-col items-center gap-1 py-2 text-[0.62rem] font-medium uppercase tracking-[0.08em] text-earth/70 transition-colors"
       activeProps={{ className: "text-forest" }}
     >
-
       {({ isActive }) => (
         <>
           <span

@@ -89,7 +89,9 @@ export function NewFaqDrawer({
             <DrawerTitle className="font-serif text-2xl text-forest">
               {faq ? "Modifier la question" : "Nouvelle question"}
             </DrawerTitle>
-            <DrawerDescription>Affichée dans la FAQ de la page d'accueil du site.</DrawerDescription>
+            <DrawerDescription>
+              Affichée dans la FAQ de la page d'accueil du site.
+            </DrawerDescription>
           </DrawerHeader>
 
           <div className="grid gap-4 px-4 pb-4">
@@ -113,7 +115,9 @@ export function NewFaqDrawer({
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.15em] text-forest">Ordre d'affichage</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                  Ordre d'affichage
+                </span>
                 <input
                   type="number"
                   min={0}
@@ -140,7 +144,11 @@ export function NewFaqDrawer({
               disabled={saveMutation.isPending || !form.question.trim() || !form.answer.trim()}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {saveMutation.isPending ? "Enregistrement…" : faq ? "Enregistrer" : "Créer la question"}
+              {saveMutation.isPending
+                ? "Enregistrement…"
+                : faq
+                  ? "Enregistrer"
+                  : "Créer la question"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -148,7 +156,9 @@ export function NewFaqDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>

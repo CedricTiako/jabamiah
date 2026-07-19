@@ -14,8 +14,12 @@ type LogoProps = {
 export function Logo({ variant = "light", className, iconOnly = false }: LogoProps) {
   const isDark = variant === "dark";
   const src = iconOnly
-    ? isDark ? logoIconDark : logoIconLight
-    : isDark ? logoHorizontalDark : logoHorizontalLight;
+    ? isDark
+      ? logoIconDark
+      : logoIconLight
+    : isDark
+      ? logoHorizontalDark
+      : logoHorizontalLight;
 
   return (
     <Link
@@ -28,11 +32,7 @@ export function Logo({ variant = "light", className, iconOnly = false }: LogoPro
         alt="Jabamiah — Médecine parallèle"
         width={iconOnly ? 120 : 420}
         height={iconOnly ? 120 : 140}
-        className={
-          iconOnly
-            ? "size-10 sm:size-11"
-            : "h-10 w-auto sm:h-12 md:h-14"
-        }
+        className={iconOnly ? "size-10 sm:size-11" : "h-10 w-auto sm:h-12 md:h-14"}
         loading="eager"
         decoding="async"
       />

@@ -29,7 +29,8 @@ export const Route = createFileRoute("/about")({
             "@type": "Person",
             name: "Jabamiah",
             jobTitle: "Thérapeute holistique & guérisseur énergétique",
-            description: "Jabamiah accompagne ses patients grâce aux soins énergétiques, à la guérison par la pensée, aux plantes médicinales et à l'harmonisation spirituelle. Consultations 100% gratuites.",
+            description:
+              "Jabamiah accompagne ses patients grâce aux soins énergétiques, à la guérison par la pensée, aux plantes médicinales et à l'harmonisation spirituelle. Consultations 100% gratuites.",
             url: SITE_URL,
             telephone: "+33745155451",
             email: "contact@jabamiah.eu",
@@ -117,7 +118,13 @@ function AboutHero() {
   return (
     <section className="relative overflow-hidden bg-forest text-cream">
       <div className="absolute inset-0">
-        <img src={heroAbout} alt="" width={1920} height={1280} className="size-full object-cover opacity-80" />
+        <img
+          src={heroAbout}
+          alt=""
+          width={1920}
+          height={1280}
+          className="size-full object-cover opacity-80"
+        />
         <div className="absolute inset-0 bg-linear-to-r from-forest/95 via-forest/55 to-forest/20" />
       </div>
 
@@ -128,8 +135,12 @@ function AboutHero() {
             {t("about.heroTitle1")}
             <br /> <em className="not-italic italic text-gold">{t("about.heroTitle2")}</em>
           </h1>
-          <p className="mt-8 max-w-xl text-base leading-relaxed text-cream/85 md:text-lg">{t("about.heroP1")}</p>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-cream/80">{t("about.heroP2")}</p>
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-cream/85 md:text-lg">
+            {t("about.heroP1")}
+          </p>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-cream/80">
+            {t("about.heroP2")}
+          </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
             <div className="flex items-center gap-3 rounded-md border border-gold/30 bg-forest-deep/70 px-5 py-4 backdrop-blur">
@@ -143,7 +154,9 @@ function AboutHero() {
               <Calendar className="size-5 text-gold" aria-hidden="true" />
               <div className="text-xs uppercase tracking-[0.15em] text-cream/85">
                 {t("about.badgeRdv")}
-                <span className="block text-cream/70 normal-case tracking-normal">{t("about.badgeRdvSub")}</span>
+                <span className="block text-cream/70 normal-case tracking-normal">
+                  {t("about.badgeRdvSub")}
+                </span>
               </div>
             </div>
           </div>
@@ -155,7 +168,10 @@ function AboutHero() {
 
 function WhySection() {
   const { t } = useTranslation();
-  const values = t("about.values", { returnObjects: true }) as Array<{ title: string; text: string }>;
+  const values = t("about.values", { returnObjects: true }) as Array<{
+    title: string;
+    text: string;
+  }>;
   return (
     <section className="bg-cream py-20">
       <div className="mx-auto max-w-6xl px-6">
@@ -190,7 +206,14 @@ function WhySection() {
           </ul>
 
           <div className="relative overflow-hidden rounded-2xl lg:col-span-4">
-            <img src={forestPath} alt="" width={800} height={1000} loading="lazy" className="size-full object-cover" />
+            <img
+              src={forestPath}
+              alt=""
+              width={800}
+              height={1000}
+              loading="lazy"
+              className="size-full object-cover"
+            />
             <div className="absolute inset-0 bg-forest/60" />
             <div className="absolute inset-0 flex items-center justify-center p-8">
               <blockquote className="text-center font-serif text-base italic leading-relaxed text-cream md:text-lg">
@@ -207,7 +230,10 @@ function WhySection() {
 
 function PillarsSection() {
   const { t } = useTranslation();
-  const pillars = t("about.pillars", { returnObjects: true }) as Array<{ title: string; text: string }>;
+  const pillars = t("about.pillars", { returnObjects: true }) as Array<{
+    title: string;
+    text: string;
+  }>;
   return (
     <section className="bg-cream-warm py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -239,9 +265,18 @@ function PillarsSection() {
 function ConsultationCTA() {
   const { t } = useTranslation();
   const mini = [
-    { ...(t("about.miniFree", { returnObjects: true }) as { title: string; text: string }), Icon: Heart },
-    { ...(t("about.miniListening", { returnObjects: true }) as { title: string; text: string }), Icon: Calendar },
-    { ...(t("about.miniConfidential", { returnObjects: true }) as { title: string; text: string }), Icon: Lock },
+    {
+      ...(t("about.miniFree", { returnObjects: true }) as { title: string; text: string }),
+      Icon: Heart,
+    },
+    {
+      ...(t("about.miniListening", { returnObjects: true }) as { title: string; text: string }),
+      Icon: Calendar,
+    },
+    {
+      ...(t("about.miniConfidential", { returnObjects: true }) as { title: string; text: string }),
+      Icon: Lock,
+    },
   ];
   return (
     <section className="bg-cream pb-20">
@@ -253,12 +288,19 @@ function ConsultationCTA() {
                 <Calendar className="size-7 text-gold" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="font-serif text-2xl text-cream md:text-3xl">{t("about.ctaTitle")}</h2>
+                <h2 className="font-serif text-2xl text-cream md:text-3xl">
+                  {t("about.ctaTitle")}
+                </h2>
                 <p className="mt-2 text-sm text-cream/80">{t("about.ctaSub")}</p>
               </div>
             </div>
             <div className="flex flex-col items-start gap-3 lg:col-span-6 lg:items-end">
-              <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-md bg-gold px-8 py-4 text-sm uppercase tracking-[0.18em] text-forest shadow-md hover:bg-gold-soft">
+              <a
+                href={CALENDLY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md bg-gold px-8 py-4 text-sm uppercase tracking-[0.18em] text-forest shadow-md hover:bg-gold-soft"
+              >
                 {t("about.ctaButton")}
               </a>
             </div>
@@ -285,10 +327,19 @@ function QuoteSection() {
   const { t } = useTranslation();
   return (
     <section className="relative overflow-hidden py-24">
-      <img src={forestPath} alt="" width={1920} height={900} loading="lazy" className="absolute inset-0 size-full object-cover" />
+      <img
+        src={forestPath}
+        alt=""
+        width={1920}
+        height={900}
+        loading="lazy"
+        className="absolute inset-0 size-full object-cover"
+      />
       <div className="absolute inset-0 bg-linear-to-b from-forest/60 via-forest/40 to-forest/70" />
       <div className="relative mx-auto max-w-4xl px-6 text-center text-cream">
-        <p className="font-serif text-2xl italic leading-relaxed md:text-3xl">{t("about.quoteFooter")}</p>
+        <p className="font-serif text-2xl italic leading-relaxed md:text-3xl">
+          {t("about.quoteFooter")}
+        </p>
         <LeafDivider className="mt-6 text-gold" />
       </div>
     </section>

@@ -19,7 +19,12 @@ import {
 import { Plus, Layers, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/protocoles")({
-  head: () => ({ meta: [{ title: "Protocoles — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Protocoles — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: ProtocolesPage,
 });
 
@@ -69,12 +74,18 @@ function ProtocolesPage() {
       }
     >
       <NewProtocolDrawer open={newOpen} onOpenChange={setNewOpen} />
-      <NewProtocolDrawer protocol={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
+      <NewProtocolDrawer
+        protocol={editing ?? undefined}
+        open={!!editing}
+        onOpenChange={(v) => !v && setEditing(null)}
+      />
 
       {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
 
       {!isLoading && (protocols?.length ?? 0) === 0 && (
-        <p className="text-sm text-earth/60">Aucun protocole pour le moment. Créez le premier avec le bouton ci-dessus.</p>
+        <p className="text-sm text-earth/60">
+          Aucun protocole pour le moment. Créez le premier avec le bouton ci-dessus.
+        </p>
       )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -95,7 +106,7 @@ function ProtocolesPage() {
             <h3 className="mt-4 font-serif text-lg text-forest">{p.name}</h3>
             <p className="mt-1 flex-1 text-sm text-earth/70">{p.description}</p>
             <div className="mt-4 flex items-center justify-between text-xs text-earth/60">
-              <span>{p.category ? CATEGORY_LABELS[p.category] ?? p.category : "—"}</span>
+              <span>{p.category ? (CATEGORY_LABELS[p.category] ?? p.category) : "—"}</span>
               <span>{p.duration_minutes ? `${p.duration_minutes} min` : "—"}</span>
             </div>
             <button
@@ -113,7 +124,8 @@ function ProtocolesPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Supprimer ce protocole ?</AlertDialogTitle>
             <AlertDialogDescription>
-              « {pendingDelete?.name} » sera définitivement supprimé de la bibliothèque. Cette action est irréversible.
+              « {pendingDelete?.name} » sera définitivement supprimé de la bibliothèque. Cette
+              action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -19,7 +19,9 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/clients/")({
-  head: () => ({ meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "Clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: ClientsPage,
 });
 
@@ -33,7 +35,12 @@ const statusTone: Record<ClientStatus, string> = {
 };
 
 function initials(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 function ageFromBirthDate(birthDate: string | null) {
@@ -78,7 +85,11 @@ function ClientsPage() {
       onSignOut={signOut}
       actions={<NewClientDrawer />}
     >
-      <NewClientDrawer client={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
+      <NewClientDrawer
+        client={editing ?? undefined}
+        open={!!editing}
+        onOpenChange={(v) => !v && setEditing(null)}
+      />
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[220px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-earth/50" />
@@ -108,10 +119,18 @@ function ClientsPage() {
           </thead>
           <tbody className="divide-y divide-gold/10">
             {isLoading && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">
+                  Chargement…
+                </td>
+              </tr>
             )}
             {!isLoading && filtered.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Aucun client pour le moment.</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">
+                  Aucun client pour le moment.
+                </td>
+              </tr>
             )}
             {filtered.map((c) => {
               const age = ageFromBirthDate(c.birth_date);
@@ -130,19 +149,35 @@ function ClientsPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-xs text-earth/70">
-                    {c.phone && <p className="flex items-center gap-1"><Phone className="h-3 w-3" />{c.phone}</p>}
-                    {c.email && <p className="flex items-center gap-1 mt-1"><Mail className="h-3 w-3" />{c.email}</p>}
+                    {c.phone && (
+                      <p className="flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {c.phone}
+                      </p>
+                    )}
+                    {c.email && (
+                      <p className="flex items-center gap-1 mt-1">
+                        <Mail className="h-3 w-3" />
+                        {c.email}
+                      </p>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-earth/80">{c.city ?? "—"}</td>
                   <td className="px-4 py-3 text-earth/80">{c.reason ?? "—"}</td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}>
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-[10px] uppercase tracking-widest ${statusTone[status]}`}
+                    >
                       {status}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-3">
-                      <Link to="/admin/clients/$id" params={{ id: c.id }} className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
+                      <Link
+                        to="/admin/clients/$id"
+                        params={{ id: c.id }}
+                        className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest"
+                      >
                         Ouvrir →
                       </Link>
                       <button
@@ -173,8 +208,8 @@ function ClientsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Supprimer ce client ?</AlertDialogTitle>
             <AlertDialogDescription>
-              « {pendingDelete?.name} » et toutes ses données associées (consultations, documents, bilans) seront
-              définitivement supprimés. Cette action est irréversible.
+              « {pendingDelete?.name} » et toutes ses données associées (consultations, documents,
+              bilans) seront définitivement supprimés. Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

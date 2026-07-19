@@ -85,7 +85,8 @@ type Props = {
 
 export function AdminShell({ title, subtitle, actions, children, onSignOut, backTo }: Props) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isActive = (to: string) => (to === "/admin" ? pathname === "/admin" : pathname.startsWith(to));
+  const isActive = (to: string) =>
+    to === "/admin" ? pathname === "/admin" : pathname.startsWith(to);
 
   return (
     <div className="flex min-h-screen bg-cream">
@@ -93,7 +94,9 @@ export function AdminShell({ title, subtitle, actions, children, onSignOut, back
       <aside className="hidden w-72 flex-shrink-0 flex-col border-r border-gold/15 bg-cream-warm/40 lg:flex">
         <div className="flex flex-col items-center border-b border-gold/15 px-6 py-8">
           <Logo variant="light" className="!h-20" />
-          <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-earth/50">Espace praticien</p>
+          <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-earth/50">
+            Espace praticien
+          </p>
         </div>
 
         <nav className="flex-1 space-y-6 overflow-y-auto px-4 py-6">
@@ -119,7 +122,9 @@ export function AdminShell({ title, subtitle, actions, children, onSignOut, back
                       {active && (
                         <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-gold" />
                       )}
-                      <Icon className={`h-4 w-4 ${active ? "text-gold" : "text-earth/50 group-hover:text-forest"}`} />
+                      <Icon
+                        className={`h-4 w-4 ${active ? "text-gold" : "text-earth/50 group-hover:text-forest"}`}
+                      />
                       <span>{it.label}</span>
                     </Link>
                   );
@@ -171,11 +176,15 @@ export function AdminShell({ title, subtitle, actions, children, onSignOut, back
                 </Link>
               ) : null}
               <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-earth/50">Jabamiah · Admin</p>
+                <p className="text-[10px] uppercase tracking-[0.22em] text-earth/50">
+                  Jabamiah · Admin
+                </p>
                 <h1 className="mt-0.5 truncate font-serif text-2xl leading-tight text-forest md:text-3xl">
                   {title}
                 </h1>
-                {subtitle ? <p className="mt-0.5 truncate text-sm text-earth/65">{subtitle}</p> : null}
+                {subtitle ? (
+                  <p className="mt-0.5 truncate text-sm text-earth/65">{subtitle}</p>
+                ) : null}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -253,7 +262,9 @@ function NotificationsBell() {
           <p className="font-serif text-sm text-forest">Notifications</p>
         </div>
         {total === 0 ? (
-          <p className="px-4 py-6 text-center text-sm text-earth/60">Rien de nouveau pour le moment.</p>
+          <p className="px-4 py-6 text-center text-sm text-earth/60">
+            Rien de nouveau pour le moment.
+          </p>
         ) : (
           <div className="divide-y divide-gold/10">
             {unreadMessages > 0 && (
@@ -265,7 +276,8 @@ function NotificationsBell() {
                 <MessageSquare className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold" />
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-forest">
-                    {unreadMessages} nouveau{unreadMessages > 1 ? "x" : ""} message{unreadMessages > 1 ? "s" : ""}
+                    {unreadMessages} nouveau{unreadMessages > 1 ? "x" : ""} message
+                    {unreadMessages > 1 ? "s" : ""}
                   </p>
                   <p className="truncate text-xs text-earth/60">
                     {data?.recentMessages.map((m) => m.name).join(", ")}
@@ -281,9 +293,7 @@ function NotificationsBell() {
               >
                 <Star className="mt-0.5 h-4 w-4 flex-shrink-0 text-gold" />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-forest">
-                    {pendingReviews} avis à modérer
-                  </p>
+                  <p className="text-sm font-medium text-forest">{pendingReviews} avis à modérer</p>
                   <p className="truncate text-xs text-earth/60">
                     {data?.recentReviews.map((r) => r.author_name).join(", ")}
                   </p>

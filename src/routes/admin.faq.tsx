@@ -20,7 +20,9 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/faq")({
-  head: () => ({ meta: [{ title: "FAQ — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "FAQ — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: FaqPage,
 });
 
@@ -52,7 +54,11 @@ function FaqPage() {
       onSignOut={signOut}
       actions={<NewFaqDrawer />}
     >
-      <NewFaqDrawer faq={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
+      <NewFaqDrawer
+        faq={editing ?? undefined}
+        open={!!editing}
+        onOpenChange={(v) => !v && setEditing(null)}
+      />
 
       {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
       {!isLoading && rows.length === 0 && (
@@ -70,7 +76,11 @@ function FaqPage() {
                 <p className="mt-1 text-sm text-earth/75 whitespace-pre-wrap">{f.answer}</p>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                {f.published ? <Pill tone="green">Visible</Pill> : <Pill tone="neutral">Masquée</Pill>}
+                {f.published ? (
+                  <Pill tone="green">Visible</Pill>
+                ) : (
+                  <Pill tone="neutral">Masquée</Pill>
+                )}
                 <span className="text-xs text-earth/50">#{f.sort_order}</span>
                 <button
                   onClick={() => setEditing(f)}

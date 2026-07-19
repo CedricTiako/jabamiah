@@ -49,7 +49,13 @@ type SectionCardProps = {
   className?: string;
 };
 
-export function SectionCard({ title, eyebrow, action, children, className = "" }: SectionCardProps) {
+export function SectionCard({
+  title,
+  eyebrow,
+  action,
+  children,
+  className = "",
+}: SectionCardProps) {
   return (
     <section className={`rounded-2xl bg-card p-6 ring-1 ring-gold/15 ${className}`}>
       <header className="mb-5 flex items-start justify-between gap-3">
@@ -91,7 +97,9 @@ export function Pill({
     neutral: "bg-earth/8 text-earth/70",
   };
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.15em] ${map[tone]}`}>
+    <span
+      className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.15em] ${map[tone]}`}
+    >
       {children}
     </span>
   );

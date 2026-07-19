@@ -15,10 +15,18 @@ type TranslationDraft = {
   meta_description: string;
 };
 
-const EMPTY: TranslationDraft = { locale: "fr", title: "", excerpt: "", body: "", meta_description: "" };
+const EMPTY: TranslationDraft = {
+  locale: "fr",
+  title: "",
+  excerpt: "",
+  body: "",
+  meta_description: "",
+};
 
 export const Route = createFileRoute("/admin/posts/$id")({
-  head: () => ({ meta: [{ title: "Éditeur — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "Éditeur — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: AdminPostEditor,
 });
 
@@ -58,11 +66,15 @@ function AdminPostEditor() {
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [activeLocale, setActiveLocale] = useState<SupportedLanguage>("fr");
-  const [translations, setTranslations] = useState<Record<SupportedLanguage, TranslationDraft>>(() => {
-    const obj = {} as Record<SupportedLanguage, TranslationDraft>;
-    SUPPORTED_LANGUAGES.forEach((l) => { obj[l.code] = { ...EMPTY, locale: l.code }; });
-    return obj;
-  });
+  const [translations, setTranslations] = useState<Record<SupportedLanguage, TranslationDraft>>(
+    () => {
+      const obj = {} as Record<SupportedLanguage, TranslationDraft>;
+      SUPPORTED_LANGUAGES.forEach((l) => {
+        obj[l.code] = { ...EMPTY, locale: l.code };
+      });
+      return obj;
+    },
+  );
 
   useEffect(() => {
     if (post) {
@@ -70,8 +82,16 @@ function AdminPostEditor() {
       setStatus(post.status as "draft" | "published");
       setCoverImageUrl(post.cover_image_url ?? "");
       const next = {} as Record<SupportedLanguage, TranslationDraft>;
-      SUPPORTED_LANGUAGES.forEach((l) => { next[l.code] = { ...EMPTY, locale: l.code }; });
-      const arr = (post.post_translations ?? []) as Array<{ locale: string; title: string; excerpt: string | null; body: string | null; meta_description: string | null }>;
+      SUPPORTED_LANGUAGES.forEach((l) => {
+        next[l.code] = { ...EMPTY, locale: l.code };
+      });
+      const arr = (post.post_translations ?? []) as Array<{
+        locale: string;
+        title: string;
+        excerpt: string | null;
+        body: string | null;
+        meta_description: string | null;
+      }>;
       arr.forEach((tr) => {
         const code = tr.locale as SupportedLanguage;
         if (next[code]) {
@@ -90,24 +110,24 @@ function AdminPostEditor() {
 
   const upsert = useServerFn(adminUpsertPost);
   const saveMutation = useMutation({
-    mutationFn: () => upsert({
-      data: {
-        id: isNew ? null : id,
-        slug,
-        status,
-        cover_image_url: coverImageUrl || null,
-        translations: SUPPORTED_LANGUAGES
-          .map((l) => translations[l.code])
-          .filter((tr) => tr.title.trim().length > 0)
-          .map((tr) => ({
-            locale: tr.locale,
-            title: tr.title,
-            excerpt: tr.excerpt || null,
-            body: tr.body || null,
-            meta_description: tr.meta_description || null,
-          })),
-      },
-    }),
+    mutationFn: () =>
+      upsert({
+        data: {
+          id: isNew ? null : id,
+          slug,
+          status,
+          cover_image_url: coverImageUrl || null,
+          translations: SUPPORTED_LANGUAGES.map((l) => translations[l.code])
+            .filter((tr) => tr.title.trim().length > 0)
+            .map((tr) => ({
+              locale: tr.locale,
+              title: tr.title,
+              excerpt: tr.excerpt || null,
+              body: tr.body || null,
+              meta_description: tr.meta_description || null,
+            })),
+        },
+      }),
     onSuccess: ({ id: newId }) => {
       if (isNew && newId) navigate({ to: "/admin/posts/$id", params: { id: newId } });
     },
@@ -120,23 +140,39 @@ function AdminPostEditor() {
   return (
     <section className="bg-cream py-12">
       <div className="mx-auto max-w-5xl px-6">
-        <Link to="/admin" className="text-xs uppercase tracking-[0.18em] text-gold hover:text-forest">
+        <Link
+          to="/admin"
+          className="text-xs uppercase tracking-[0.18em] text-gold hover:text-forest"
+        >
           ← {t("admin.backToPosts")}
         </Link>
-        <h1 className="mt-4 font-serif text-3xl text-forest">{isNew ? t("admin.newPost") : t("admin.editPost")}</h1>
+        <h1 className="mt-4 font-serif text-3xl text-forest">
+          {isNew ? t("admin.newPost") : t("admin.editPost")}
+        </h1>
 
         <div className="mt-8 grid gap-6 rounded-xl bg-card p-6 ring-1 ring-gold/20 lg:grid-cols-3">
           <label className="block lg:col-span-2">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.slug")}</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.slug")}
+            </span>
             <input
               value={slug}
-              onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, ""))}
+              onChange={(e) =>
+                setSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-]+/g, "-")
+                    .replace(/^-+|-+$/g, ""),
+                )
+              }
               placeholder={t("admin.slugHint")}
               className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.status")}</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.status")}
+            </span>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as "draft" | "published")}
@@ -147,7 +183,9 @@ function AdminPostEditor() {
             </select>
           </label>
           <label className="block lg:col-span-3">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.cover")}</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.cover")}
+            </span>
             <input
               value={coverImageUrl}
               onChange={(e) => setCoverImageUrl(e.target.value)}
@@ -176,37 +214,65 @@ function AdminPostEditor() {
 
         <div className="mt-4 grid gap-4 rounded-xl bg-card p-6 ring-1 ring-gold/20">
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.postTitle")} ({activeLocale})</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.postTitle")} ({activeLocale})
+            </span>
             <input
               value={current.title}
-              onChange={(e) => setTranslations((s) => ({ ...s, [activeLocale]: { ...s[activeLocale], title: e.target.value } }))}
+              onChange={(e) =>
+                setTranslations((s) => ({
+                  ...s,
+                  [activeLocale]: { ...s[activeLocale], title: e.target.value },
+                }))
+              }
               className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-gold"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.excerpt")}</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.excerpt")}
+            </span>
             <textarea
               rows={2}
               value={current.excerpt}
-              onChange={(e) => setTranslations((s) => ({ ...s, [activeLocale]: { ...s[activeLocale], excerpt: e.target.value } }))}
+              onChange={(e) =>
+                setTranslations((s) => ({
+                  ...s,
+                  [activeLocale]: { ...s[activeLocale], excerpt: e.target.value },
+                }))
+              }
               className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.body")}</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.body")}
+            </span>
             <textarea
               rows={14}
               value={current.body}
-              onChange={(e) => setTranslations((s) => ({ ...s, [activeLocale]: { ...s[activeLocale], body: e.target.value } }))}
+              onChange={(e) =>
+                setTranslations((s) => ({
+                  ...s,
+                  [activeLocale]: { ...s[activeLocale], body: e.target.value },
+                }))
+              }
               className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-gold"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.15em] text-forest">{t("admin.metaDescription")}</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-forest">
+              {t("admin.metaDescription")}
+            </span>
             <input
               maxLength={200}
               value={current.meta_description}
-              onChange={(e) => setTranslations((s) => ({ ...s, [activeLocale]: { ...s[activeLocale], meta_description: e.target.value } }))}
+              onChange={(e) =>
+                setTranslations((s) => ({
+                  ...s,
+                  [activeLocale]: { ...s[activeLocale], meta_description: e.target.value },
+                }))
+              }
               className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
             />
           </label>
@@ -220,8 +286,12 @@ function AdminPostEditor() {
           >
             {saveMutation.isPending ? t("admin.saving") : t("admin.save")}
           </button>
-          {saveMutation.isSuccess && <span className="text-sm text-forest">{t("admin.saved")} ✓</span>}
-          {saveMutation.isError && <span className="text-sm text-red-700">{t("admin.saveError")}</span>}
+          {saveMutation.isSuccess && (
+            <span className="text-sm text-forest">{t("admin.saved")} ✓</span>
+          )}
+          {saveMutation.isError && (
+            <span className="text-sm text-red-700">{t("admin.saveError")}</span>
+          )}
         </div>
       </div>
     </section>

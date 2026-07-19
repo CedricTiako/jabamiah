@@ -13,7 +13,10 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }
@@ -28,7 +31,9 @@ export interface PublicSettings {
   legal_publication_director: string;
 }
 
-function parseSettings(rows: Array<{ key: string; value: string | null }> | null): Record<string, string> {
+function parseSettings(
+  rows: Array<{ key: string; value: string | null }> | null,
+): Record<string, string> {
   const map: Record<string, string> = {};
   for (const row of rows ?? []) {
     map[row.key] = row.value ?? "";
@@ -40,13 +45,18 @@ export const getPublicSettings = createServerFn({ method: "GET" }).handler(
   async (): Promise<PublicSettings> => {
     const sb = getPublicClient();
     const { data } = await sb.from("site_settings" as never).select("key, value");
-    const map = parseSettings(data as unknown as Array<{ key: string; value: string | null }> | null);
+    const map = parseSettings(
+      data as unknown as Array<{ key: string; value: string | null }> | null,
+    );
 
     let amounts: number[] = [5, 10, 20, 50];
     try {
       const parsed = JSON.parse(map.donation_amounts ?? "[5,10,20,50]");
-      if (Array.isArray(parsed)) amounts = (parsed as unknown[]).map(Number).filter((n) => !isNaN(n as number));
-    } catch {}
+      if (Array.isArray(parsed))
+        amounts = (parsed as unknown[]).map(Number).filter((n) => !isNaN(n as number));
+    } catch (error) {
+      void error;
+    }
     return {
       paypal_client_id: map.paypal_client_id ?? "",
       donation_amounts: amounts,
@@ -58,7 +68,6 @@ export const getPublicSettings = createServerFn({ method: "GET" }).handler(
     };
   },
 );
-
 
 export const adminGetSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -81,4 +90,3 @@ export const adminUpdateSetting = createServerFn({ method: "POST" })
     if (error) throw error;
     return { success: true };
   });
-

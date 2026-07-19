@@ -15,7 +15,7 @@ self.addEventListener("install", (event) => {
     caches
       .open(CACHE_VERSION)
       .then((cache) => cache.addAll(APP_SHELL))
-      .catch(() => {})
+      .catch(() => {}),
   );
   self.skipWaiting();
 });
@@ -24,7 +24,9 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_VERSION).map((key) => caches.delete(key))))
+      .then((keys) =>
+        Promise.all(keys.filter((key) => key !== CACHE_VERSION).map((key) => caches.delete(key))),
+      ),
   );
   self.clients.claim();
 });
@@ -40,7 +42,9 @@ self.addEventListener("fetch", (event) => {
   // Navigations: network-first, falls back to the cached shell when offline.
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => caches.match("/").then((cached) => cached || caches.match(request)))
+      fetch(request).catch(() =>
+        caches.match("/").then((cached) => cached || caches.match(request)),
+      ),
     );
     return;
   }
@@ -55,8 +59,8 @@ self.addEventListener("fetch", (event) => {
             const copy = response.clone();
             caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
             return response;
-          })
-      )
+          }),
+      ),
     );
   }
 });

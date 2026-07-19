@@ -24,7 +24,9 @@ const LOCATIONS = [
   { value: "__custom__", label: "Autre (préciser)…" },
 ];
 
-const KNOWN_LOCATION_VALUES = new Set(LOCATIONS.map((l) => l.value).filter((v) => v !== "__custom__"));
+const KNOWN_LOCATION_VALUES = new Set(
+  LOCATIONS.map((l) => l.value).filter((v) => v !== "__custom__"),
+);
 
 const EMPTY = {
   client_id: "",
@@ -117,7 +119,8 @@ export function NewAppointmentDrawer({
           starts_at: new Date(`${form.date}T${form.time}`).toISOString(),
           duration_minutes: form.duration_minutes,
           session_type: form.session_type || null,
-          location: (form.location === "__custom__" ? form.customLocation.trim() : form.location) || null,
+          location:
+            (form.location === "__custom__" ? form.customLocation.trim() : form.location) || null,
           note: form.note || null,
         },
       }),
@@ -133,7 +136,10 @@ export function NewAppointmentDrawer({
     setForm((s) => ({ ...s, [key]: value }));
 
   const canSubmit =
-    form.client_id && form.date && form.time && (form.location !== "__custom__" || form.customLocation.trim());
+    form.client_id &&
+    form.date &&
+    form.time &&
+    (form.location !== "__custom__" || form.customLocation.trim());
 
   return (
     <Drawer open={isOpen} onOpenChange={setOpen}>
@@ -164,7 +170,9 @@ export function NewAppointmentDrawer({
               >
                 <option value="">Sélectionner un client…</option>
                 {(clients ?? []).map((c) => (
-                  <option key={c.id} value={c.id}>{c.full_name}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.full_name}
+                  </option>
                 ))}
               </select>
             </label>
@@ -179,14 +187,18 @@ export function NewAppointmentDrawer({
               />
             </label>
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Type de séance</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Type de séance
+              </span>
               <select
                 value={form.session_type}
                 onChange={(e) => field("session_type", e.target.value)}
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {SESSION_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
                 ))}
               </select>
             </label>
@@ -198,7 +210,9 @@ export function NewAppointmentDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {DURATIONS.map((d) => (
-                  <option key={d} value={d}>{d} min</option>
+                  <option key={d} value={d}>
+                    {d} min
+                  </option>
                 ))}
               </select>
             </label>
@@ -210,7 +224,9 @@ export function NewAppointmentDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {LOCATIONS.map((l) => (
-                  <option key={l.value} value={l.value}>{l.label}</option>
+                  <option key={l.value} value={l.value}>
+                    {l.label}
+                  </option>
                 ))}
               </select>
               {form.location === "__custom__" && (
@@ -241,7 +257,11 @@ export function NewAppointmentDrawer({
               disabled={saveMutation.isPending || !canSubmit}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {saveMutation.isPending ? "Enregistrement…" : appointment ? "Enregistrer" : "Créer le rendez-vous"}
+              {saveMutation.isPending
+                ? "Enregistrement…"
+                : appointment
+                  ? "Enregistrer"
+                  : "Créer le rendez-vous"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -249,7 +269,9 @@ export function NewAppointmentDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>

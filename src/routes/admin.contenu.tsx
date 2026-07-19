@@ -18,7 +18,9 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/contenu")({
-  head: () => ({ meta: [{ title: "Contenu — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "Contenu — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: ContenuPage,
 });
 
@@ -73,18 +75,26 @@ function ContenuPage() {
             </thead>
             <tbody className="divide-y divide-gold/10">
               {posts.map((p) => {
-                const fr = (p.post_translations as Array<{ title: string; locale: string }> | null)?.find((x) => x.locale === "fr");
+                const fr = (
+                  p.post_translations as Array<{ title: string; locale: string }> | null
+                )?.find((x) => x.locale === "fr");
                 return (
                   <tr key={p.id} className="hover:bg-cream-warm/30">
                     <td className="px-4 py-3 text-forest">{fr?.title ?? p.slug}</td>
                     <td className="px-4 py-3 font-mono text-xs text-earth/70">{p.slug}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-xs ${p.status === "published" ? "bg-forest text-cream" : "bg-cream-warm text-earth"}`}>
+                      <span
+                        className={`inline-block rounded-full px-2 py-0.5 text-xs ${p.status === "published" ? "bg-forest text-cream" : "bg-cream-warm text-earth"}`}
+                      >
                         {p.status === "published" ? "Publié" : "Brouillon"}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Link to="/admin/posts/$id" params={{ id: p.id }} className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest">
+                      <Link
+                        to="/admin/posts/$id"
+                        params={{ id: p.id }}
+                        className="text-xs uppercase tracking-[0.15em] text-gold hover:text-forest"
+                      >
                         Éditer
                       </Link>
                       <button

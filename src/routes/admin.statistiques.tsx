@@ -7,7 +7,12 @@ import { adminListConsultations } from "../lib/consultations.functions";
 import { adminListClients } from "../lib/clients.functions";
 
 export const Route = createFileRoute("/admin/statistiques")({
-  head: () => ({ meta: [{ title: "Statistiques — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Statistiques — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: StatsPage,
 });
 
@@ -19,7 +24,13 @@ const SESSION_TYPE_LABELS: Record<string, string> = {
   guidance: "Guidance spirituelle",
 };
 
-const SEGMENT_COLORS = ["bg-forest", "bg-[color:var(--gold)]", "bg-[color:var(--rose-text)]", "bg-forest-soft", "bg-earth/40"];
+const SEGMENT_COLORS = [
+  "bg-forest",
+  "bg-[color:var(--gold)]",
+  "bg-[color:var(--rose-text)]",
+  "bg-forest-soft",
+  "bg-earth/40",
+];
 
 const MONTH_LABELS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
@@ -49,13 +60,17 @@ function StatsPage() {
   const last12Start = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
   const prior12Start = new Date(now.getTime() - 2 * 365 * 24 * 60 * 60 * 1000);
 
-  const consultationsLast12 = (consultations ?? []).filter((c) => new Date(c.consultation_date) >= last12Start).length;
+  const consultationsLast12 = (consultations ?? []).filter(
+    (c) => new Date(c.consultation_date) >= last12Start,
+  ).length;
   const consultationsPrior12 = (consultations ?? []).filter((c) => {
     const d = new Date(c.consultation_date);
     return d >= prior12Start && d < last12Start;
   }).length;
 
-  const newClientsLast12 = (clients ?? []).filter((c) => new Date(c.created_at) >= last12Start).length;
+  const newClientsLast12 = (clients ?? []).filter(
+    (c) => new Date(c.created_at) >= last12Start,
+  ).length;
   const newClientsPrior12 = (clients ?? []).filter((c) => {
     const d = new Date(c.created_at);
     return d >= prior12Start && d < last12Start;
@@ -67,14 +82,29 @@ function StatsPage() {
   }
   const clientsWithConsultation = consultationsByClient.size;
   const returningClients = [...consultationsByClient.values()].filter((n) => n >= 2).length;
-  const retourRate = clientsWithConsultation > 0 ? Math.round((returningClients / clientsWithConsultation) * 100) : 0;
+  const retourRate =
+    clientsWithConsultation > 0
+      ? Math.round((returningClients / clientsWithConsultation) * 100)
+      : 0;
 
   const totalClients = clients?.length ?? 0;
 
   const kpis = [
-    { label: "Consultations (12 mois)", value: String(consultationsLast12), delta: pctChange(consultationsLast12, consultationsPrior12) },
-    { label: "Nouveaux clients (12 mois)", value: String(newClientsLast12), delta: pctChange(newClientsLast12, newClientsPrior12) },
-    { label: "Taux de retour", value: `${retourRate}%`, delta: `${returningClients}/${clientsWithConsultation} clients` },
+    {
+      label: "Consultations (12 mois)",
+      value: String(consultationsLast12),
+      delta: pctChange(consultationsLast12, consultationsPrior12),
+    },
+    {
+      label: "Nouveaux clients (12 mois)",
+      value: String(newClientsLast12),
+      delta: pctChange(newClientsLast12, newClientsPrior12),
+    },
+    {
+      label: "Taux de retour",
+      value: `${retourRate}%`,
+      delta: `${returningClients}/${clientsWithConsultation} clients`,
+    },
     { label: "Total clients", value: String(totalClients), delta: "au total" },
   ];
 
@@ -99,7 +129,11 @@ function StatsPage() {
     }));
 
   return (
-    <AdminShell title="Statistiques" subtitle="Vue analytique de votre activité" onSignOut={signOut}>
+    <AdminShell
+      title="Statistiques"
+      subtitle="Vue analytique de votre activité"
+      onSignOut={signOut}
+    >
       {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
 
       <div className="grid gap-4 md:grid-cols-4">
@@ -114,11 +148,16 @@ function StatsPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
-          <h3 className="font-serif text-xl text-forest">Consultations par mois ({now.getFullYear()})</h3>
+          <h3 className="font-serif text-xl text-forest">
+            Consultations par mois ({now.getFullYear()})
+          </h3>
           <div className="mt-6 flex h-56 items-end gap-2">
             {monthlyCounts.map((v, i) => (
               <div key={i} className="flex-1">
-                <div className="rounded-t bg-forest" style={{ height: `${(v / maxMonthly) * 100}%` }} />
+                <div
+                  className="rounded-t bg-forest"
+                  style={{ height: `${(v / maxMonthly) * 100}%` }}
+                />
                 <p className="mt-1 text-center text-[10px] text-earth/60">{MONTH_LABELS[i]}</p>
               </div>
             ))}
@@ -127,7 +166,9 @@ function StatsPage() {
 
         <div className="rounded-xl bg-card p-6 ring-1 ring-gold/15">
           <h3 className="font-serif text-xl text-forest">Répartition des soins</h3>
-          {breakdown.length === 0 && <p className="mt-6 text-sm text-earth/60">Pas encore de données.</p>}
+          {breakdown.length === 0 && (
+            <p className="mt-6 text-sm text-earth/60">Pas encore de données.</p>
+          )}
           <ul className="mt-6 space-y-3">
             {breakdown.map((b, i) => (
               <li key={b.name}>
@@ -136,7 +177,10 @@ function StatsPage() {
                   <span className="text-forest font-medium">{b.pct}%</span>
                 </div>
                 <div className="mt-1 h-2 rounded-full bg-cream-warm">
-                  <div className={`h-full rounded-full ${SEGMENT_COLORS[i % SEGMENT_COLORS.length]}`} style={{ width: `${b.pct}%` }} />
+                  <div
+                    className={`h-full rounded-full ${SEGMENT_COLORS[i % SEGMENT_COLORS.length]}`}
+                    style={{ width: `${b.pct}%` }}
+                  />
                 </div>
               </li>
             ))}

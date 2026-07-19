@@ -16,7 +16,9 @@ export function LanguageSwitcher({ variant = "light" }: Props) {
       : "border-gold/30 bg-cream-warm/40 text-forest hover:bg-cream-warm";
 
   return (
-    <label className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs uppercase tracking-[0.15em] ${tone}`}>
+    <label
+      className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs uppercase tracking-[0.15em] ${tone}`}
+    >
       <Globe className="size-3.5 text-gold" aria-hidden="true" />
       <span className="sr-only">{t("nav.languageLabel")}</span>
       <select

@@ -7,7 +7,12 @@ import { adminListEnergyAssessments } from "../lib/energy-assessments.functions"
 import { adminListConsultations } from "../lib/consultations.functions";
 
 export const Route = createFileRoute("/admin/suivi")({
-  head: () => ({ meta: [{ title: "Suivi & Évolution — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Suivi & Évolution — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: SuiviPage,
 });
 
@@ -99,7 +104,11 @@ function SuiviPage() {
   });
 
   return (
-    <AdminShell title="Suivi & Évolution" subtitle="Progression globale de vos clients" onSignOut={signOut}>
+    <AdminShell
+      title="Suivi & Évolution"
+      subtitle="Progression globale de vos clients"
+      onSignOut={signOut}
+    >
       {isLoading && <p className="text-sm text-earth/60">Chargement…</p>}
       {!isLoading && clientProgress.length === 0 && (
         <p className="text-sm text-earth/60">Aucun bilan énergétique enregistré pour l'instant.</p>
@@ -109,11 +118,16 @@ function SuiviPage() {
         {clientProgress.map((c) => (
           <div key={c.clientId} className="rounded-xl bg-card p-5 ring-1 ring-gold/15">
             <p className="text-sm font-medium text-forest">{c.name}</p>
-            <p className="text-xs text-earth/60">{c.sessions} séance{c.sessions > 1 ? "s" : ""}</p>
+            <p className="text-xs text-earth/60">
+              {c.sessions} séance{c.sessions > 1 ? "s" : ""}
+            </p>
             <div className="mt-4 flex items-baseline gap-2">
               <p className="font-serif text-3xl text-forest">{c.score}%</p>
               {c.trend !== null && (
-                <span className="text-xs text-gold">{c.trend >= 0 ? "+" : ""}{c.trend} pts</span>
+                <span className="text-xs text-gold">
+                  {c.trend >= 0 ? "+" : ""}
+                  {c.trend} pts
+                </span>
               )}
             </div>
             <div className="mt-3 h-2 rounded-full bg-cream-warm">
@@ -128,7 +142,10 @@ function SuiviPage() {
         <div className="mt-6 flex h-48 items-end gap-2">
           {monthlyAverages.map((v, i) => (
             <div key={i} className="flex-1">
-              <div className="rounded-t bg-linear-to-t from-forest to-forest-soft" style={{ height: `${v}%` }} />
+              <div
+                className="rounded-t bg-linear-to-t from-forest to-forest-soft"
+                style={{ height: `${v}%` }}
+              />
               <p className="mt-1 text-center text-[10px] text-earth/60">{months[i].label}</p>
             </div>
           ))}

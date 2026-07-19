@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminShell } from "../components/admin/admin-shell";
-import { NewConsultationDrawer, type ConsultationRecord } from "../components/admin/new-consultation-drawer";
+import {
+  NewConsultationDrawer,
+  type ConsultationRecord,
+} from "../components/admin/new-consultation-drawer";
 import { useAdmin } from "../lib/admin-context";
 import { Edit3, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -19,12 +22,23 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/consultations")({
-  head: () => ({ meta: [{ title: "Consultations — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Consultations — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: ConsultationsPage,
 });
 
 function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  return new Date(iso).toLocaleString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function ConsultationsPage() {
@@ -56,7 +70,9 @@ function ConsultationsPage() {
       const d = new Date(r.consultation_date);
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     });
-    const thisYear = rows.filter((r) => new Date(r.consultation_date).getFullYear() === now.getFullYear());
+    const thisYear = rows.filter(
+      (r) => new Date(r.consultation_date).getFullYear() === now.getFullYear(),
+    );
     const uniqueClients = new Set(rows.map((r) => r.client_id)).size;
     return { thisMonth: thisMonth.length, thisYear: thisYear.length, uniqueClients };
   }, [rows]);
@@ -68,7 +84,11 @@ function ConsultationsPage() {
       onSignOut={signOut}
       actions={<NewConsultationDrawer />}
     >
-      <NewConsultationDrawer consultation={editing ?? undefined} open={!!editing} onOpenChange={(v) => !v && setEditing(null)} />
+      <NewConsultationDrawer
+        consultation={editing ?? undefined}
+        open={!!editing}
+        onOpenChange={(v) => !v && setEditing(null)}
+      />
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
         {[
           ["Ce mois", String(stats.thisMonth)],
@@ -96,10 +116,18 @@ function ConsultationsPage() {
           </thead>
           <tbody className="divide-y divide-gold/10">
             {isLoading && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">
+                  Chargement…
+                </td>
+              </tr>
             )}
             {!isLoading && rows.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Aucune consultation pour le moment.</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">
+                  Aucune consultation pour le moment.
+                </td>
+              </tr>
             )}
             {rows.map((r) => {
               const clientName = (r.clients as { full_name: string } | null)?.full_name ?? "Client";

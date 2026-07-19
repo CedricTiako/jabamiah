@@ -42,10 +42,10 @@ function today() {
 }
 
 const STATUS_TONE: Record<string, "green" | "gold" | "rose" | "neutral"> = {
-  "Confirmé": "green",
-  "Planifié": "gold",
-  "Honoré": "green",
-  "Annulé": "rose",
+  Confirmé: "green",
+  Planifié: "gold",
+  Honoré: "green",
+  Annulé: "rose",
   "No-show": "rose",
 };
 
@@ -59,11 +59,23 @@ function AdminDashboard() {
   const listConsultations = useServerFn(adminListConsultations);
 
   const { data: posts } = useQuery({ queryKey: ["admin-posts"], queryFn: () => listPosts() });
-  const { data: messages } = useQuery({ queryKey: ["admin-messages"], queryFn: () => listMessages() });
-  const { data: payments } = useQuery({ queryKey: ["admin-payments"], queryFn: () => listPayments() });
+  const { data: messages } = useQuery({
+    queryKey: ["admin-messages"],
+    queryFn: () => listMessages(),
+  });
+  const { data: payments } = useQuery({
+    queryKey: ["admin-payments"],
+    queryFn: () => listPayments(),
+  });
   const { data: clients } = useQuery({ queryKey: ["admin-clients"], queryFn: () => listClients() });
-  const { data: appointments } = useQuery({ queryKey: ["admin-appointments"], queryFn: () => listAppointments() });
-  const { data: consultations } = useQuery({ queryKey: ["admin-consultations"], queryFn: () => listConsultations() });
+  const { data: appointments } = useQuery({
+    queryKey: ["admin-appointments"],
+    queryFn: () => listAppointments(),
+  });
+  const { data: consultations } = useQuery({
+    queryKey: ["admin-consultations"],
+    queryFn: () => listConsultations(),
+  });
 
   const draftCount = (posts ?? []).filter((p) => p.status === "draft").length;
   const publishedCount = (posts ?? []).filter((p) => p.status === "published").length;
@@ -83,7 +95,8 @@ function AdminDashboard() {
       return d.getFullYear() === lastMonth.getFullYear() && d.getMonth() === lastMonth.getMonth();
     })
     .reduce((s, p) => s + p.amount, 0);
-  const monthDeltaPct = lastMonthTotal > 0 ? Math.round(((monthTotal - lastMonthTotal) / lastMonthTotal) * 100) : null;
+  const monthDeltaPct =
+    lastMonthTotal > 0 ? Math.round(((monthTotal - lastMonthTotal) / lastMonthTotal) * 100) : null;
 
   const weekAhead = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
   const upcoming = (appointments ?? [])
@@ -108,12 +121,20 @@ function AdminDashboard() {
   const activity: ActivityItem[] = [
     ...(messages ?? []).slice(0, 3).map((m) => ({
       text: `Nouveau message de ${m.name}`,
-      when: new Date(m.created_at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+      when: new Date(m.created_at).toLocaleString("fr-FR", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       date: new Date(m.created_at),
     })),
     ...(consultations ?? []).slice(0, 3).map((c) => ({
       text: `Consultation ${c.clients?.full_name ?? ""} clôturée (compte-rendu ajouté)`.trim(),
-      when: new Date(c.consultation_date).toLocaleString("fr-FR", { day: "numeric", month: "short" }),
+      when: new Date(c.consultation_date).toLocaleString("fr-FR", {
+        day: "numeric",
+        month: "short",
+      }),
       date: new Date(c.consultation_date),
     })),
     ...(payments ?? []).slice(0, 3).map((p) => ({
@@ -141,7 +162,10 @@ function AdminDashboard() {
             </h2>
             <p className="mt-4 max-w-xl text-sm text-cream/75">
               Vous avez <span className="text-cream">{weekCount} rendez-vous</span> cette semaine et{" "}
-              <span className="text-cream">{messagesCount} message{messagesCount > 1 ? "s" : ""}</span> en attente.
+              <span className="text-cream">
+                {messagesCount} message{messagesCount > 1 ? "s" : ""}
+              </span>{" "}
+              en attente.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -163,10 +187,33 @@ function AdminDashboard() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <KpiCard label="Clients actifs" value={String(activeClientsCount)} delta={`+${newClientsThisMonth} ce mois`} trend="up" icon={Users} />
-        <KpiCard label="Consultations" value={String((consultations ?? []).length)} delta={`${consultationsThisWeek} cette semaine`} trend="up" icon={Sparkles} />
-        <KpiCard label="Messages" value={String(messagesCount)} delta="via formulaire" icon={MessageSquare} />
-        <KpiCard label="Nouveaux clients" value={String(newClientsThisMonth)} delta="ce mois-ci" trend="up" icon={TrendingUp} />
+        <KpiCard
+          label="Clients actifs"
+          value={String(activeClientsCount)}
+          delta={`+${newClientsThisMonth} ce mois`}
+          trend="up"
+          icon={Users}
+        />
+        <KpiCard
+          label="Consultations"
+          value={String((consultations ?? []).length)}
+          delta={`${consultationsThisWeek} cette semaine`}
+          trend="up"
+          icon={Sparkles}
+        />
+        <KpiCard
+          label="Messages"
+          value={String(messagesCount)}
+          delta="via formulaire"
+          icon={MessageSquare}
+        />
+        <KpiCard
+          label="Nouveaux clients"
+          value={String(newClientsThisMonth)}
+          delta="ce mois-ci"
+          trend="up"
+          icon={TrendingUp}
+        />
       </div>
 
       {/* Main grid */}
@@ -178,7 +225,9 @@ function AdminDashboard() {
           title="Prochains rendez-vous"
           action={{ to: "/admin/agenda", label: "Tout voir" }}
         >
-          {upcoming.length === 0 && <p className="py-3.5 text-sm text-earth/60">Aucun rendez-vous à venir.</p>}
+          {upcoming.length === 0 && (
+            <p className="py-3.5 text-sm text-earth/60">Aucun rendez-vous à venir.</p>
+          )}
           <ul className="divide-y divide-gold/10">
             {upcoming.map((r) => {
               const name = r.clients?.full_name ?? "Client";
@@ -193,7 +242,11 @@ function AdminDashboard() {
                 <li key={r.id} className="flex items-center justify-between gap-4 py-3.5">
                   <div className="flex min-w-0 items-center gap-4">
                     <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-forest/8 font-serif text-sm text-forest ring-1 ring-forest/10">
-                      {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                      {name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)}
                     </div>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium text-forest">{name}</p>
@@ -214,7 +267,9 @@ function AdminDashboard() {
 
         {/* Activity feed */}
         <SectionCard eyebrow="Journal" title="Activité récente">
-          {activity.length === 0 && <p className="text-sm text-earth/60">Aucune activité récente.</p>}
+          {activity.length === 0 && (
+            <p className="text-sm text-earth/60">Aucune activité récente.</p>
+          )}
           <ol className="relative space-y-4 border-l border-gold/20 pl-5">
             {activity.map((a, i) => (
               <li key={a.text + i} className="relative">
@@ -282,12 +337,17 @@ function AdminDashboard() {
               Cagnotte solidaire
             </p>
           </div>
-          <p className="relative mt-4 font-serif text-4xl text-[color:var(--rose-text)]">{monthTotal.toFixed(0)} €</p>
+          <p className="relative mt-4 font-serif text-4xl text-[color:var(--rose-text)]">
+            {monthTotal.toFixed(0)} €
+          </p>
           <p className="relative mt-1 text-xs text-earth/70">collectés ce mois-ci</p>
           {monthDeltaPct !== null && (
             <div className="relative mt-3 flex items-center gap-2 text-xs text-earth/70">
               <TrendingUp className="h-3.5 w-3.5 text-[color:var(--rose-text)]" />
-              <span>{monthDeltaPct >= 0 ? "+" : ""}{monthDeltaPct}% vs mois dernier</span>
+              <span>
+                {monthDeltaPct >= 0 ? "+" : ""}
+                {monthDeltaPct}% vs mois dernier
+              </span>
             </div>
           )}
         </section>

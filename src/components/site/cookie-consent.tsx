@@ -39,9 +39,9 @@ export function CookieConsent() {
         <div className="flex-1 text-sm text-earth/80">
           <p className="font-serif text-lg text-forest">Votre vie privée</p>
           <p className="mt-1 leading-relaxed">
-            Nous utilisons Google Analytics pour mesurer l'audience du site de manière
-            anonyme. Ces cookies ne sont déposés qu'avec votre accord. Vous pouvez modifier
-            votre choix à tout moment depuis la page{" "}
+            Nous utilisons Google Analytics pour mesurer l'audience du site de manière anonyme. Ces
+            cookies ne sont déposés qu'avec votre accord. Vous pouvez modifier votre choix à tout
+            moment depuis la page{" "}
             <Link to="/cookies" className="underline hover:text-forest">
               Cookies
             </Link>

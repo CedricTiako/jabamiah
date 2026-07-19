@@ -14,7 +14,10 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }
@@ -83,7 +86,10 @@ export const adminUpsertEnergyAssessment = createServerFn({ method: "POST" })
     };
 
     if (data.id) {
-      const { error } = await context.supabase.from("energy_assessments").update(payload).eq("id", data.id);
+      const { error } = await context.supabase
+        .from("energy_assessments")
+        .update(payload)
+        .eq("id", data.id);
       if (error) throw error;
       return { id: data.id };
     }

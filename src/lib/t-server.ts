@@ -9,7 +9,14 @@ import { pt } from "../i18n/locales/pt";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const resources: Record<string, { translation: Record<string, any> }> = {
-  fr, en, es, de, it, nl, pl, pt,
+  fr,
+  en,
+  es,
+  de,
+  it,
+  nl,
+  pl,
+  pt,
 };
 
 export function tServer(locale: string, key: string): string {

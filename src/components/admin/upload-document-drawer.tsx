@@ -27,7 +27,13 @@ function sanitizeFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
 }
 
-export function UploadDocumentDrawer({ defaultClientId, onCreated }: { defaultClientId?: string; onCreated?: (id: string) => void }) {
+export function UploadDocumentDrawer({
+  defaultClientId,
+  onCreated,
+}: {
+  defaultClientId?: string;
+  onCreated?: (id: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ ...EMPTY, client_id: defaultClientId ?? "" });
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -46,9 +52,11 @@ export function UploadDocumentDrawer({ defaultClientId, onCreated }: { defaultCl
       if (!form.file) throw new Error("Aucun fichier sélectionné.");
       setUploadError(null);
       const path = `${form.client_id || "general"}/${Date.now()}-${sanitizeFileName(form.file.name)}`;
-      const { error: uploadErr } = await supabase.storage.from("client-documents").upload(path, form.file, {
-        contentType: form.file.type || undefined,
-      });
+      const { error: uploadErr } = await supabase.storage
+        .from("client-documents")
+        .upload(path, form.file, {
+          contentType: form.file.type || undefined,
+        });
       if (uploadErr) throw uploadErr;
 
       return createDocument({
@@ -89,7 +97,9 @@ export function UploadDocumentDrawer({ defaultClientId, onCreated }: { defaultCl
       <DrawerContent className="bg-cream">
         <div className="mx-auto w-full max-w-2xl">
           <DrawerHeader>
-            <DrawerTitle className="font-serif text-2xl text-forest">Importer un document</DrawerTitle>
+            <DrawerTitle className="font-serif text-2xl text-forest">
+              Importer un document
+            </DrawerTitle>
             <DrawerDescription>PDF, image ou modèle réutilisable.</DrawerDescription>
           </DrawerHeader>
 
@@ -104,7 +114,9 @@ export function UploadDocumentDrawer({ defaultClientId, onCreated }: { defaultCl
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Titre du document *</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Titre du document *
+              </span>
               <input
                 value={form.title}
                 onChange={(e) => field("title", e.target.value)}
@@ -119,13 +131,17 @@ export function UploadDocumentDrawer({ defaultClientId, onCreated }: { defaultCl
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {DOC_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
                 ))}
               </select>
             </label>
             {defaultClientId === undefined && (
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.15em] text-forest">Client associé</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                  Client associé
+                </span>
                 <select
                   value={form.client_id}
                   onChange={(e) => field("client_id", e.target.value)}
@@ -133,7 +149,9 @@ export function UploadDocumentDrawer({ defaultClientId, onCreated }: { defaultCl
                 >
                   <option value="">Aucun (document général)</option>
                   {(clients ?? []).map((c) => (
-                    <option key={c.id} value={c.id}>{c.full_name}</option>
+                    <option key={c.id} value={c.id}>
+                      {c.full_name}
+                    </option>
                   ))}
                 </select>
               </label>

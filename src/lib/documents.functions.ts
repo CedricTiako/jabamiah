@@ -14,12 +14,16 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }
 
-const DOCUMENT_COLUMNS = "id, client_id, title, doc_type, description, storage_path, mime_type, file_size, created_at";
+const DOCUMENT_COLUMNS =
+  "id, client_id, title, doc_type, description, storage_path, mime_type, file_size, created_at";
 
 export const adminListDocuments = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -110,14 +114,21 @@ export const adminDeleteDocument = createServerFn({ method: "POST" })
     if (getErr) throw getErr;
     if (!doc) throw new Error("Document introuvable (déjà supprimé ?).");
 
-    const { error: storageErr } = await context.supabase.storage.from("client-documents").remove([doc.storage_path]);
+    const { error: storageErr } = await context.supabase.storage
+      .from("client-documents")
+      .remove([doc.storage_path]);
     if (storageErr) throw storageErr;
 
     // .delete() alone reports success even when RLS or a race silently matches zero rows —
     // require the deleted row back to confirm it actually happened.
-    const { data: deleted, error } = await context.supabase.from("documents").delete().eq("id", data.id).select("id");
+    const { data: deleted, error } = await context.supabase
+      .from("documents")
+      .delete()
+      .eq("id", data.id)
+      .select("id");
     if (error) throw error;
-    if (!deleted || deleted.length === 0) throw new Error("La suppression n'a affecté aucune ligne — veuillez réessayer.");
+    if (!deleted || deleted.length === 0)
+      throw new Error("La suppression n'a affecté aucune ligne — veuillez réessayer.");
     return { ok: true };
   });
 

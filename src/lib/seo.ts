@@ -14,7 +14,9 @@ export function absoluteUrl(path: string): string {
  * Since the app keeps the same URL across languages (no /en/, /de/ prefix),
  * we still emit hreflang tags so search engines know the page is multilingual.
  */
-export function buildHreflangLinks(path: string): Array<{ rel: string; hrefLang: string; href: string }> {
+export function buildHreflangLinks(
+  path: string,
+): Array<{ rel: string; hrefLang: string; href: string }> {
   const href = absoluteUrl(path);
   const links: Array<{ rel: string; hrefLang: string; href: string }> = SUPPORTED_LANGUAGES.map(
     (lang) => ({ rel: "alternate", hrefLang: lang.code, href }),
@@ -33,7 +35,13 @@ interface BuildHeadInput {
 
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.jpg`;
 
-export function buildSeoHead({ path, title, description, image, type = "website" }: BuildHeadInput) {
+export function buildSeoHead({
+  path,
+  title,
+  description,
+  image,
+  type = "website",
+}: BuildHeadInput) {
   const url = absoluteUrl(path);
   const ogImage = image ?? DEFAULT_OG_IMAGE;
   const meta: Array<Record<string, string>> = [
@@ -51,9 +59,6 @@ export function buildSeoHead({ path, title, description, image, type = "website"
     { name: "twitter:description", content: description },
     { name: "twitter:image", content: ogImage },
   ];
-  const links = [
-    { rel: "canonical", href: url },
-    ...buildHreflangLinks(path),
-  ];
+  const links = [{ rel: "canonical", href: url }, ...buildHreflangLinks(path)];
   return { meta, links };
 }

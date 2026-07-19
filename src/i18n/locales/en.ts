@@ -25,7 +25,8 @@
       discoverApproaches: "Discover my approaches",
     },
     footer: {
-      tagline: "Love, light and healing are within each of us. I walk this path with you with kindness.",
+      tagline:
+        "Love, light and healing are within each of us. I walk this path with you with kindness.",
       consultations: "Consultations",
       free: "Free",
       byAppt: "By appointment",
@@ -44,7 +45,8 @@
       heroTitle1: "Find balance",
       heroTitle2: "in body, mind",
       heroTitle3: "and soul.",
-      heroSubtitle: "Natural and holistic approaches to reactivate your vital energy, calm your mind and guide you to your full potential.",
+      heroSubtitle:
+        "Natural and holistic approaches to reactivate your vital energy, calm your mind and guide you to your full potential.",
       heroDiscover: "Discover",
       heroMyApproaches: "my approaches",
       heroPeopleHelped: "500+ people supported",
@@ -63,24 +65,45 @@
       values: [
         { title: "Natural approach", text: "Gentle methods that respect who you are." },
         { title: "Listening & kindness", text: "A human, non-judgmental and trusting support." },
-        { title: "Energy & harmony", text: "Rebalance your energies and rediscover your vitality." },
+        {
+          title: "Energy & harmony",
+          text: "Rebalance your energies and rediscover your vitality.",
+        },
         { title: "Global support", text: "A commitment to the good of all, here and elsewhere." },
       ],
       approachesEyebrow: "My approaches",
       approachesTitle1: "Five paths",
       approachesTitle2: "to your balance",
-      approachesSubtitle: "Each soul is unique. I offer several complementary approaches to meet your deepest needs.",
+      approachesSubtitle:
+        "Each soul is unique. I offer several complementary approaches to meet your deepest needs.",
       approaches: [
-        { title: "Energy healing", text: "Rebalance your energies, release blockages and find your harmony." },
-        { title: "Healing through thought", text: "Transform limiting thoughts and activate your self-healing power." },
-        { title: "Plants & natural remedies", text: "The wisdom of plants serving your well-being and natural balance." },
-        { title: "Global harmonisation", text: "Working on body, mind and soul for deep, lasting harmony." },
-        { title: "Spiritual development", text: "Raise your consciousness and reconnect to your deepest essence." },
+        {
+          title: "Energy healing",
+          text: "Rebalance your energies, release blockages and find your harmony.",
+        },
+        {
+          title: "Healing through thought",
+          text: "Transform limiting thoughts and activate your self-healing power.",
+        },
+        {
+          title: "Plants & natural remedies",
+          text: "The wisdom of plants serving your well-being and natural balance.",
+        },
+        {
+          title: "Global harmonisation",
+          text: "Working on body, mind and soul for deep, lasting harmony.",
+        },
+        {
+          title: "Spiritual development",
+          text: "Raise your consciousness and reconnect to your deepest essence.",
+        },
       ],
       gagnoteEyebrow: "Solidarity jar",
       gagnoteTitle: "My consultations are 100% free",
-      gagnoteP1: "I have never wanted to charge for my care. Help must remain accessible to all, unconditionally.",
-      gagnoteP2: "If you wish, you can contribute to the solidarity jar: free donations help support those most in need.",
+      gagnoteP1:
+        "I have never wanted to charge for my care. Help must remain accessible to all, unconditionally.",
+      gagnoteP2:
+        "If you wish, you can contribute to the solidarity jar: free donations help support those most in need.",
       gagnoteCta: "Learn more about this approach",
       gagnoteDonate: "Make a donation",
       quote: '"The good you do today always returns to your soul."',
@@ -90,7 +113,8 @@
       heroTitle1: "A path of the heart",
       heroTitle2: "in service of humanity.",
       heroP1: "I am a human being first, guided by light, love and a deep need to help others.",
-      heroP2: "I have always felt this duty to do good, to bring comfort, to listen, to support and to ease invisible suffering.",
+      heroP2:
+        "I have always felt this duty to do good, to bring comfort, to listen, to support and to ease invisible suffering.",
       badgeFreeTitle: "My consultations are",
       badgeFreeSub: "completely free",
       badgeRdv: "By appointment",
@@ -99,30 +123,53 @@
       whyIntro: "I help people because I feel called to do good.",
       whyP1: "I have always wanted to be a good person.",
       whyP2: "Even though, like everyone, we sometimes do things we shouldn't.",
-      whyP3: "But deep down, my soul reminds me of the path to follow to always be better with myself and with others.",
+      whyP3:
+        "But deep down, my soul reminds me of the path to follow to always be better with myself and with others.",
       values: [
         { title: "Kindness is my compass.", text: "It guides each of my actions." },
-        { title: "Unconditional love is my strength.", text: "It allows me to welcome every being with respect and without judgement." },
-        { title: "Lifting up the soul is my mission.", text: "Helping each person reconnect to their light and find balance again." },
+        {
+          title: "Unconditional love is my strength.",
+          text: "It allows me to welcome every being with respect and without judgement.",
+        },
+        {
+          title: "Lifting up the soul is my mission.",
+          text: "Helping each person reconnect to their light and find balance again.",
+        },
       ],
       pillarsTitle: "The pillars of my work",
       pillarsSubtitle: "A holistic approach at the crossroads of listening, energy and nature.",
       pillars: [
-        { title: "Listening & welcome", text: "I listen with my heart, with kindness and full respect for who you are." },
-        { title: "Energy & balance", text: "I use energy care and natural methods to reharmonise your being." },
-        { title: "Plants & nature", text: "Medicinal plants and natural remedies are powerful allies for body and soul." },
-        { title: "Guidance & light", text: "I guide you toward your own answers so you regain your inner strength." },
-        { title: "Evolution & peace", text: "My role is to help you move forward on your life's path, at peace with yourself and others." },
+        {
+          title: "Listening & welcome",
+          text: "I listen with my heart, with kindness and full respect for who you are.",
+        },
+        {
+          title: "Energy & balance",
+          text: "I use energy care and natural methods to reharmonise your being.",
+        },
+        {
+          title: "Plants & nature",
+          text: "Medicinal plants and natural remedies are powerful allies for body and soul.",
+        },
+        {
+          title: "Guidance & light",
+          text: "I guide you toward your own answers so you regain your inner strength.",
+        },
+        {
+          title: "Evolution & peace",
+          text: "My role is to help you move forward on your life's path, at peace with yourself and others.",
+        },
       ],
       ctaEyebrow: "Book your session",
       ctaTitle: "A free consultation, in full trust",
-      ctaSub: "Whatever your path, I will be there to support you with kindness and confidentiality.",
+      ctaSub:
+        "Whatever your path, I will be there to support you with kindness and confidentiality.",
       ctaButton: "Book an appointment",
       miniConfidential: { title: "Confidentiality", text: "Our exchanges stay between us." },
       miniListening: { title: "Sincere listening", text: "No judgement, at your own pace." },
       miniFree: { title: "Always free", text: "No contribution required." },
-      quote: '”The good you do today always returns to your soul.”',
-      quoteFooter: '”The love you give always returns, transformed into light.”',
+      quote: "”The good you do today always returns to your soul.”",
+      quoteFooter: "”The love you give always returns, transformed into light.”",
     },
     contact: {
       eyebrow: "Contact",
@@ -199,16 +246,54 @@
     },
     seo: {
       siteName: "Jabamiah",
-      home: { title: "Jabamiah — Energy healing & parallel medicine", description: "Free energy consultations with Jabamiah, medium and holistic therapist in Forges-les-Eaux. Care, plants and support for body, mind and soul." },
-      about: { title: "About — Jabamiah, a path of the heart in service of humanity", description: "Meet Jabamiah, medium and holistic therapist driven by love and the need to help. Free energy consultations by appointment." },
-      contact: { title: "Contact — Jabamiah", description: "Get in touch with Jabamiah for a free energy consultation: WhatsApp, phone, email or online booking." },
-      soins: { title: "Care & Therapies — Jabamiah", description: "Five complementary approaches: energy healing, healing through thought, plants, harmonisation, spiritual development. Free consultations." },
-      plantes: { title: "Plants & Natural Remedies — Jabamiah", description: "Discover the medicinal plants and natural remedies Jabamiah uses to support your daily well-being." },
-      temoignages: { title: "Testimonials — Jabamiah", description: "Read the testimonials of those who have been supported by Jabamiah on the path of well-being and healing." },
-      blog: { title: "Blog — Jabamiah", description: "Reflections, meditations and guidance on energy healing, plants and the soul's journey." },
-      mentions: { title: "Legal notice — Jabamiah", description: "Legal notice of the Jabamiah website." },
-      privacy: { title: "Privacy policy — Jabamiah", description: "Privacy policy of the Jabamiah website." },
-      donate: { title: "Make a donation — Jabamiah solidarity fund", description: "Support Jabamiah's mission: free consultations, donations passed on to the French Cancer League and solidarity associations." },
+      home: {
+        title: "Jabamiah — Energy healing & parallel medicine",
+        description:
+          "Free energy consultations with Jabamiah, medium and holistic therapist in Forges-les-Eaux. Care, plants and support for body, mind and soul.",
+      },
+      about: {
+        title: "About — Jabamiah, a path of the heart in service of humanity",
+        description:
+          "Meet Jabamiah, medium and holistic therapist driven by love and the need to help. Free energy consultations by appointment.",
+      },
+      contact: {
+        title: "Contact — Jabamiah",
+        description:
+          "Get in touch with Jabamiah for a free energy consultation: WhatsApp, phone, email or online booking.",
+      },
+      soins: {
+        title: "Care & Therapies — Jabamiah",
+        description:
+          "Five complementary approaches: energy healing, healing through thought, plants, harmonisation, spiritual development. Free consultations.",
+      },
+      plantes: {
+        title: "Plants & Natural Remedies — Jabamiah",
+        description:
+          "Discover the medicinal plants and natural remedies Jabamiah uses to support your daily well-being.",
+      },
+      temoignages: {
+        title: "Testimonials — Jabamiah",
+        description:
+          "Read the testimonials of those who have been supported by Jabamiah on the path of well-being and healing.",
+      },
+      blog: {
+        title: "Blog — Jabamiah",
+        description:
+          "Reflections, meditations and guidance on energy healing, plants and the soul's journey.",
+      },
+      mentions: {
+        title: "Legal notice — Jabamiah",
+        description: "Legal notice of the Jabamiah website.",
+      },
+      privacy: {
+        title: "Privacy policy — Jabamiah",
+        description: "Privacy policy of the Jabamiah website.",
+      },
+      donate: {
+        title: "Make a donation — Jabamiah solidarity fund",
+        description:
+          "Support Jabamiah's mission: free consultations, donations passed on to the French Cancer League and solidarity associations.",
+      },
     },
     therapiesPage: {
       eyebrow: "Care & Therapies",
@@ -217,9 +302,18 @@
       subtitle: "Each approach is unique and adapted to your story, pace and deepest needs.",
       stepsTitle: "How a session unfolds",
       steps: [
-        { title: "Welcome & listening", text: "Time to share so I can understand your request, your story and your expectations, with full kindness." },
-        { title: "Personalised care", text: "Based on your needs, I choose the most suitable approach(es): energy, plants, guidance, harmonisation." },
-        { title: "Debrief & grounding", text: "We take time to talk things through, share natural advice and support you after the session." },
+        {
+          title: "Welcome & listening",
+          text: "Time to share so I can understand your request, your story and your expectations, with full kindness.",
+        },
+        {
+          title: "Personalised care",
+          text: "Based on your needs, I choose the most suitable approach(es): energy, plants, guidance, harmonisation.",
+        },
+        {
+          title: "Debrief & grounding",
+          text: "We take time to talk things through, share natural advice and support you after the session.",
+        },
       ],
       benefits: "Benefits",
       forWhom: "For whom?",
@@ -229,36 +323,51 @@
       eyebrow: "Plants & Remedies",
       title1: "The wisdom of nature",
       title2: "at the service of your health",
-      subtitle: "Medicinal plants have always accompanied me. Discover the ones I use and their virtues.",
+      subtitle:
+        "Medicinal plants have always accompanied me. Discover the ones I use and their virtues.",
       remediesTitle: "My natural remedies",
       remedies: [
-        { title: "Herbal teas & infusions", text: "Custom blends for your needs: digestion, sleep, stress, immunity." },
-        { title: "Flower elixirs", text: "To rebalance emotions and gently release inner blockages." },
-        { title: "Oils & ointments", text: "Natural preparations to ease body tensions and nourish the skin." },
+        {
+          title: "Herbal teas & infusions",
+          text: "Custom blends for your needs: digestion, sleep, stress, immunity.",
+        },
+        {
+          title: "Flower elixirs",
+          text: "To rebalance emotions and gently release inner blockages.",
+        },
+        {
+          title: "Oils & ointments",
+          text: "Natural preparations to ease body tensions and nourish the skin.",
+        },
       ],
       latinName: "Latin name",
       properties: "Properties",
       uses: "Uses",
       disclaimerTitle: "Important information",
-      disclaimer: "Medicinal plants are precious allies but never replace medical advice. Always consult your doctor in case of ongoing treatment, pregnancy or illness.",
+      disclaimer:
+        "Medicinal plants are precious allies but never replace medical advice. Always consult your doctor in case of ongoing treatment, pregnancy or illness.",
     },
     donate: {
       eyebrow: "Solidarity fund",
       title: "Your donations change lives",
-      subtitle: "My consultations are 100% free. Your voluntary donations are entirely passed on to associations and the French Cancer League.",
+      subtitle:
+        "My consultations are 100% free. Your voluntary donations are entirely passed on to associations and the French Cancer League.",
       causesTitle: "Supported causes",
       amountTitle: "Choose an amount",
       customAmount: "Other amount (€)",
       payTitle: "Make a secure donation",
       pending: "Online payment coming soon",
-      pendingSub: "The online donation fund will be activated very soon. In the meantime, please contact me directly via WhatsApp or email.",
+      pendingSub:
+        "The online donation fund will be activated very soon. In the meantime, please contact me directly via WhatsApp or email.",
       contactCta: "Contact via WhatsApp",
       cause1Name: "French Cancer League",
-      cause1Text: "Funding research, supporting patients and their loved ones, prevention and screening.",
+      cause1Text:
+        "Funding research, supporting patients and their loved ones, prevention and screening.",
       cause2Name: "Solidarity associations",
       cause2Text: "Support for vulnerable people and local social accompaniment.",
       transparencyTitle: "Transparency commitment",
-      transparencyText: "100% of your donations go directly to partner associations. No commission is taken.",
+      transparencyText:
+        "100% of your donations go directly to partner associations. No commission is taken.",
       altContact: "Or contact me directly",
     },
     testimonialsPage: {
@@ -268,7 +377,8 @@
       subtitle: "Words from the heart, shared by those who have been supported.",
       filterAll: "All",
       shareTitle: "Share your experience",
-      shareText: "Your testimonial may light another soul's path. If you'd like to share yours, write to me.",
+      shareText:
+        "Your testimonial may light another soul's path. If you'd like to share yours, write to me.",
       shareCta: "Contact me",
     },
   },

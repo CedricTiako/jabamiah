@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { UserPlus, Trash2 } from "lucide-react";
-import { adminListTeam, adminInviteTeamMember, adminRevokeTeamMember } from "../../lib/team.functions";
+import {
+  adminListTeam,
+  adminInviteTeamMember,
+  adminRevokeTeamMember,
+} from "../../lib/team.functions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,14 +24,20 @@ export function TeamPanel() {
   const invite = useServerFn(adminInviteTeamMember);
   const revoke = useServerFn(adminRevokeTeamMember);
 
-  const { data: members, isLoading, isError } = useQuery({
+  const {
+    data: members,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["admin-team"],
     queryFn: () => listTeam(),
     retry: 1,
   });
 
   const [email, setEmail] = useState("");
-  const [pendingRevoke, setPendingRevoke] = useState<{ user_id: string; email: string } | null>(null);
+  const [pendingRevoke, setPendingRevoke] = useState<{ user_id: string; email: string } | null>(
+    null,
+  );
 
   const inviteMutation = useMutation({
     mutationFn: () => invite({ data: { email: email.trim() } }),
@@ -91,22 +101,22 @@ export function TeamPanel() {
           disabled={inviteMutation.isPending || !email.trim()}
           className="inline-flex items-center gap-2 rounded-md bg-forest px-4 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-60"
         >
-          <UserPlus className="h-3.5 w-3.5" /> {inviteMutation.isPending ? "Invitation…" : "Inviter"}
+          <UserPlus className="h-3.5 w-3.5" />{" "}
+          {inviteMutation.isPending ? "Invitation…" : "Inviter"}
         </button>
       </div>
       {inviteMutation.isError && (
         <p className="mt-2 text-sm text-red-700">Erreur lors de l'invitation.</p>
       )}
-      {inviteMutation.isSuccess && (
-        <p className="mt-2 text-sm text-forest">Invitation envoyée ✓</p>
-      )}
+      {inviteMutation.isSuccess && <p className="mt-2 text-sm text-forest">Invitation envoyée ✓</p>}
 
       <AlertDialog open={!!pendingRevoke} onOpenChange={(v) => !v && setPendingRevoke(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Révoquer l'accès admin ?</AlertDialogTitle>
             <AlertDialogDescription>
-              « {pendingRevoke?.email} » n'aura plus accès au tableau de bord admin. Son compte n'est pas supprimé.
+              « {pendingRevoke?.email} » n'aura plus accès au tableau de bord admin. Son compte
+              n'est pas supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -14,30 +14,40 @@ const ReviewSchema = z.object({
 export const Route = createFileRoute("/api/public/reviews")({
   server: {
     handlers: {
-      OPTIONS: async () => new Response(null, {
-        status: 204,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }),
+      OPTIONS: async () =>
+        new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          },
+        }),
       POST: async ({ request }) => {
-        const corsHeaders = { "Access-Control-Allow-Origin": "*", "Content-Type": "application/json" } as const;
+        const corsHeaders = {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        } as const;
 
         let body: unknown;
         try {
           body = await request.json();
         } catch {
-          return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400, headers: corsHeaders });
+          return new Response(JSON.stringify({ error: "Invalid JSON" }), {
+            status: 400,
+            headers: corsHeaders,
+          });
         }
 
         const parsed = ReviewSchema.safeParse(body);
         if (!parsed.success) {
-          return new Response(JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }), {
-            status: 400,
-            headers: corsHeaders,
-          });
+          return new Response(
+            JSON.stringify({ error: "Validation failed", details: parsed.error.flatten() }),
+            {
+              status: 400,
+              headers: corsHeaders,
+            },
+          );
         }
 
         const { author_name, author_email, rating, body: reviewBody, website } = parsed.data;
@@ -51,7 +61,10 @@ export const Route = createFileRoute("/api/public/reviews")({
         const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
         if (!url || !serviceKey) {
           console.error("[reviews] missing Supabase service role env");
-          return new Response(JSON.stringify({ error: "Service not configured" }), { status: 500, headers: corsHeaders });
+          return new Response(JSON.stringify({ error: "Service not configured" }), {
+            status: 500,
+            headers: corsHeaders,
+          });
         }
 
         const admin = createClient(url, serviceKey, {
@@ -67,11 +80,15 @@ export const Route = createFileRoute("/api/public/reviews")({
         });
         if (error) {
           console.error("[reviews] insert failed", error);
-          return new Response(JSON.stringify({ error: "Submission failed" }), { status: 500, headers: corsHeaders });
+          return new Response(JSON.stringify({ error: "Submission failed" }), {
+            status: 500,
+            headers: corsHeaders,
+          });
         }
 
         try {
-          const { sendOwnerNotification, newReviewPendingEmail } = await import("../../../lib/email.server");
+          const { sendOwnerNotification, newReviewPendingEmail } =
+            await import("../../../lib/email.server");
           await sendOwnerNotification({
             subject: `[Jabamiah] Nouvel avis de ${author_name} à modérer`,
             html: newReviewPendingEmail(author_name, rating, reviewBody),

@@ -19,26 +19,38 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/avis")({
-  head: () => ({ meta: [{ title: "Avis clients — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Avis clients — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: AvisPage,
 });
 
 const TABS = ["En attente", "Approuvés", "Refusés"] as const;
 const TAB_STATUS: Record<(typeof TABS)[number], string> = {
   "En attente": "pending",
-  "Approuvés": "approved",
-  "Refusés": "rejected",
+  Approuvés: "approved",
+  Refusés: "rejected",
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  return new Date(iso).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 function Stars({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }, (_, i) => (
-        <Star key={i} className={`h-3.5 w-3.5 ${i < rating ? "fill-gold text-gold" : "text-earth/25"}`} />
+        <Star
+          key={i}
+          className={`h-3.5 w-3.5 ${i < rating ? "fill-gold text-gold" : "text-earth/25"}`}
+        />
       ))}
     </div>
   );
@@ -51,7 +63,10 @@ function AvisPage() {
   const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
 
   const list = useServerFn(adminListReviews);
-  const { data: reviews, isLoading } = useQuery({ queryKey: ["admin-reviews"], queryFn: () => list() });
+  const { data: reviews, isLoading } = useQuery({
+    queryKey: ["admin-reviews"],
+    queryFn: () => list(),
+  });
 
   const moderate = useServerFn(adminModerateReview);
   const moderateMutation = useMutation({
@@ -72,19 +87,27 @@ function AvisPage() {
   const pendingCount = (reviews ?? []).filter((r) => r.status === "pending").length;
 
   return (
-    <AdminShell title="Avis clients" subtitle="Modération des témoignages soumis publiquement" onSignOut={signOut}>
+    <AdminShell
+      title="Avis clients"
+      subtitle="Modération des témoignages soumis publiquement"
+      onSignOut={signOut}
+    >
       <div className="mb-6 flex gap-1 border-b border-gold/15">
         {TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`flex-shrink-0 border-b-2 px-4 py-3 text-sm transition ${
-              tab === t ? "border-gold font-medium text-forest" : "border-transparent text-earth/60 hover:text-forest"
+              tab === t
+                ? "border-gold font-medium text-forest"
+                : "border-transparent text-earth/60 hover:text-forest"
             }`}
           >
             {t}
             {t === "En attente" && pendingCount > 0 && (
-              <span className="ml-2 rounded-full bg-forest px-1.5 py-0.5 text-[10px] text-cream">{pendingCount}</span>
+              <span className="ml-2 rounded-full bg-forest px-1.5 py-0.5 text-[10px] text-cream">
+                {pendingCount}
+              </span>
             )}
           </button>
         ))}
@@ -103,7 +126,10 @@ function AvisPage() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium text-forest">{r.author_name}</p>
-                <p className="text-xs text-earth/60">{formatDate(r.created_at)}{r.author_email ? ` · ${r.author_email}` : ""}</p>
+                <p className="text-xs text-earth/60">
+                  {formatDate(r.created_at)}
+                  {r.author_email ? ` · ${r.author_email}` : ""}
+                </p>
               </div>
               <Stars rating={r.rating} />
             </div>

@@ -49,13 +49,17 @@ export const Route = createFileRoute("/blog/$slug")({
   notFoundComponent: () => (
     <section className="bg-cream py-20 text-center">
       <h1 className="font-serif text-3xl text-forest">Article introuvable</h1>
-      <Link to="/blog" className="mt-6 inline-block text-sm uppercase tracking-[0.18em] text-gold">← Retour au blog</Link>
+      <Link to="/blog" className="mt-6 inline-block text-sm uppercase tracking-[0.18em] text-gold">
+        ← Retour au blog
+      </Link>
     </section>
   ),
   errorComponent: () => (
     <section className="bg-cream py-20 text-center">
       <h1 className="font-serif text-3xl text-forest">Une erreur est survenue</h1>
-      <Link to="/blog" className="mt-6 inline-block text-sm uppercase tracking-[0.18em] text-gold">← Retour au blog</Link>
+      <Link to="/blog" className="mt-6 inline-block text-sm uppercase tracking-[0.18em] text-gold">
+        ← Retour au blog
+      </Link>
     </section>
   ),
 });
@@ -76,20 +80,26 @@ function BlogDetail() {
   return (
     <article className="bg-cream py-20">
       <div className="mx-auto max-w-3xl px-6">
-        <Link to="/blog" className="text-xs uppercase tracking-[0.18em] text-gold hover:text-forest">
+        <Link
+          to="/blog"
+          className="text-xs uppercase tracking-[0.18em] text-gold hover:text-forest"
+        >
           ← {t("blog.backToList")}
         </Link>
         {post.published_at && (
           <time className="mt-6 block text-xs uppercase tracking-[0.18em] text-earth/70">
-            {t("blog.publishedOn")} {new Date(post.published_at).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+            {t("blog.publishedOn")}{" "}
+            {new Date(post.published_at).toLocaleDateString(locale, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </time>
         )}
         <h1 className="mt-4 font-serif text-4xl leading-tight text-forest md:text-5xl">
           {post.title}
         </h1>
-        {post.excerpt && (
-          <p className="mt-4 text-lg text-earth/80">{post.excerpt}</p>
-        )}
+        {post.excerpt && <p className="mt-4 text-lg text-earth/80">{post.excerpt}</p>}
         {post.cover_image_url && (
           <img
             src={post.cover_image_url}

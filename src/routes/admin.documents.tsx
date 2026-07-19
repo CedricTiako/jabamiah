@@ -6,7 +6,11 @@ import { FileText, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { adminDeleteDocument, adminGetDocumentSignedUrl, adminListDocuments } from "../lib/documents.functions";
+import {
+  adminDeleteDocument,
+  adminGetDocumentSignedUrl,
+  adminListDocuments,
+} from "../lib/documents.functions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +23,12 @@ import {
 } from "../components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/documents")({
-  head: () => ({ meta: [{ title: "Documents — Jabamiah Admin" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Documents — Jabamiah Admin" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: DocumentsPage,
 });
 
@@ -103,10 +112,18 @@ function DocumentsPage() {
           </thead>
           <tbody className="divide-y divide-gold/10">
             {isLoading && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Chargement…</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">
+                  Chargement…
+                </td>
+              </tr>
             )}
             {!isLoading && filtered.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">Aucun document pour le moment.</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-sm text-earth/60">
+                  Aucun document pour le moment.
+                </td>
+              </tr>
             )}
             {filtered.map((d) => (
               <tr key={d.id} className="hover:bg-cream-warm/30">
@@ -118,7 +135,9 @@ function DocumentsPage() {
                     <span className="font-medium text-forest">{d.title}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-earth/80">{(d.clients as { full_name: string } | null)?.full_name ?? "—"}</td>
+                <td className="px-4 py-3 text-earth/80">
+                  {(d.clients as { full_name: string } | null)?.full_name ?? "—"}
+                </td>
                 <td className="px-4 py-3 text-earth/70">{d.doc_type ?? "—"}</td>
                 <td className="px-4 py-3 text-earth/70">{formatSize(d.file_size)}</td>
                 <td className="px-4 py-3 text-earth/70">{formatDate(d.created_at)}</td>

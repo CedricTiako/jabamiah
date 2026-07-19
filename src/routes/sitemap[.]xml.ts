@@ -62,8 +62,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const urls = entries.map((e) => {
           const loc = `${BASE_URL}${e.path === "/" ? "" : e.path}`;
           const alternates = SUPPORTED_LANGUAGES.map(
-            (l) =>
-              `    <xhtml:link rel="alternate" hreflang="${l.code}" href="${loc}"/>`,
+            (l) => `    <xhtml:link rel="alternate" hreflang="${l.code}" href="${loc}"/>`,
           ).join("\n");
           return [
             "  <url>",

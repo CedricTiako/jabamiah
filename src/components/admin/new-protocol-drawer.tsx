@@ -56,7 +56,8 @@ export function NewProtocolDrawer({
         name: protocol.name,
         description: protocol.description,
         category: protocol.category ?? "",
-        duration_minutes: protocol.duration_minutes != null ? String(protocol.duration_minutes) : "45",
+        duration_minutes:
+          protocol.duration_minutes != null ? String(protocol.duration_minutes) : "45",
         steps: protocol.steps ?? "",
         warnings: protocol.warnings ?? "",
       });
@@ -74,12 +75,7 @@ export function NewProtocolDrawer({
           name: form.name,
           description: form.description,
           category: (form.category || null) as
-            | "energetique"
-            | "meditation"
-            | "respiration"
-            | "harmonisation"
-            | "purification"
-            | null,
+            "energetique" | "meditation" | "respiration" | "harmonisation" | "purification" | null,
           duration_minutes: form.duration_minutes ? parseInt(form.duration_minutes, 10) : null,
           steps: form.steps || null,
           warnings: form.warnings || null,
@@ -109,12 +105,16 @@ export function NewProtocolDrawer({
             <DrawerTitle className="font-serif text-2xl text-forest">
               {protocol ? "Modifier le protocole" : "Nouveau protocole"}
             </DrawerTitle>
-            <DrawerDescription>Ajouter ou ajuster un rituel ou une technique de votre bibliothèque.</DrawerDescription>
+            <DrawerDescription>
+              Ajouter ou ajuster un rituel ou une technique de votre bibliothèque.
+            </DrawerDescription>
           </DrawerHeader>
 
           <div className="grid gap-4 px-4 pb-4 sm:grid-cols-2">
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Nom du protocole *</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Nom du protocole *
+              </span>
               <input
                 value={form.name}
                 onChange={(e) => field("name", e.target.value)}
@@ -123,7 +123,9 @@ export function NewProtocolDrawer({
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Description courte *</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Description courte *
+              </span>
               <textarea
                 rows={2}
                 value={form.description}
@@ -141,7 +143,9 @@ export function NewProtocolDrawer({
               >
                 <option value="">—</option>
                 {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </label>
@@ -156,7 +160,9 @@ export function NewProtocolDrawer({
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Étapes détaillées</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Étapes détaillées
+              </span>
               <textarea
                 rows={6}
                 value={form.steps}
@@ -166,7 +172,9 @@ export function NewProtocolDrawer({
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Contre-indications</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Contre-indications
+              </span>
               <textarea
                 rows={2}
                 value={form.warnings}
@@ -182,7 +190,11 @@ export function NewProtocolDrawer({
               disabled={saveMutation.isPending || !form.name.trim() || !form.description.trim()}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {saveMutation.isPending ? "Enregistrement…" : protocol ? "Enregistrer" : "Créer le protocole"}
+              {saveMutation.isPending
+                ? "Enregistrement…"
+                : protocol
+                  ? "Enregistrer"
+                  : "Créer le protocole"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -190,7 +202,9 @@ export function NewProtocolDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>

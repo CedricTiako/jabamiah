@@ -7,7 +7,9 @@ import { Toaster } from "../components/ui/sonner";
 import { AdminContext } from "../lib/admin-context";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin — Jabamiah" }, { name: "robots", content: "noindex,nofollow" }] }),
+  head: () => ({
+    meta: [{ title: "Admin — Jabamiah" }, { name: "robots", content: "noindex,nofollow" }],
+  }),
   component: AdminLayout,
 });
 
@@ -27,7 +29,9 @@ function AdminLayout() {
 
   useEffect(() => {
     if (authState === "auth") {
-      check().then(setAdminCheck).catch(() => setAdminCheck({ isAdmin: false, userId: "" }));
+      check()
+        .then(setAdminCheck)
+        .catch(() => setAdminCheck({ isAdmin: false, userId: "" }));
     } else {
       setAdminCheck(null);
     }
@@ -48,7 +52,9 @@ function AdminLayout() {
   }
 
   if (authState === "loading" || (authState === "auth" && !adminCheck)) {
-    return <div className="grid min-h-screen place-items-center bg-cream text-earth/70">Chargement…</div>;
+    return (
+      <div className="grid min-h-screen place-items-center bg-cream text-earth/70">Chargement…</div>
+    );
   }
 
   if (authState === "anon") {
@@ -56,18 +62,35 @@ function AdminLayout() {
       <section className="grid min-h-screen place-items-center bg-cream px-4 py-12">
         <div className="w-full max-w-sm rounded-xl bg-card p-8 ring-1 ring-gold/20">
           <h1 className="font-serif text-3xl text-forest">Jabamiah Admin</h1>
-          <p className="mt-2 text-sm text-earth/70">Connectez-vous pour accéder au tableau de bord.</p>
+          <p className="mt-2 text-sm text-earth/70">
+            Connectez-vous pour accéder au tableau de bord.
+          </p>
           <form onSubmit={handleSignIn} className="mt-6 space-y-4">
             <label className="block">
               <span className="text-xs uppercase tracking-[0.15em] text-forest">Email</span>
-              <input name="email" type="email" required autoComplete="email" className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+              <input
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              />
             </label>
             <label className="block">
               <span className="text-xs uppercase tracking-[0.15em] text-forest">Mot de passe</span>
-              <input name="password" type="password" required autoComplete="current-password" className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+              <input
+                name="password"
+                type="password"
+                required
+                autoComplete="current-password"
+                className="mt-1 w-full rounded-md border border-gold/30 bg-cream-warm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              />
             </label>
             {authError && <p className="text-sm text-red-700">{authError}</p>}
-            <button type="submit" className="w-full rounded-md bg-forest px-6 py-3 text-xs uppercase tracking-[0.18em] text-cream hover:bg-forest-soft">
+            <button
+              type="submit"
+              className="w-full rounded-md bg-forest px-6 py-3 text-xs uppercase tracking-[0.18em] text-cream hover:bg-forest-soft"
+            >
               Se connecter
             </button>
           </form>
@@ -84,8 +107,13 @@ function AdminLayout() {
           <p className="mt-2 text-sm text-earth/70">
             Votre compte n'a pas les droits administrateur.
           </p>
-          <p className="mt-2 text-xs text-earth/60">User ID : <code>{adminCheck?.userId}</code></p>
-          <button onClick={handleSignOut} className="mt-6 rounded-md border border-gold/40 px-5 py-2.5 text-xs uppercase tracking-[0.18em] text-forest">
+          <p className="mt-2 text-xs text-earth/60">
+            User ID : <code>{adminCheck?.userId}</code>
+          </p>
+          <button
+            onClick={handleSignOut}
+            className="mt-6 rounded-md border border-gold/40 px-5 py-2.5 text-xs uppercase tracking-[0.18em] text-forest"
+          >
             Se déconnecter
           </button>
         </div>

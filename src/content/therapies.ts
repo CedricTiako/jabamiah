@@ -9,12 +9,7 @@ export type LocalizedList = Record<string, string[]>;
 
 export type Therapy = {
   slug: string;
-  iconName:
-    | "sparkles"
-    | "sun"
-    | "leaf"
-    | "compass"
-    | "heart-handshake";
+  iconName: "sparkles" | "sun" | "leaf" | "compass" | "heart-handshake";
   image: string;
   title: LocalizedText;
   short: LocalizedText;
@@ -177,12 +172,42 @@ export const THERAPIES: Therapy[] = [
         "Stronger self-confidence",
         "Activation of self-healing",
       ],
-      es: ["Liberación de creencias limitantes", "Reprogramación mental positiva", "Mayor confianza en sí mismo", "Activación de la autosanación"],
-      de: ["Lösung einschränkender Überzeugungen", "Positive geistige Neuprogrammierung", "Stärkeres Selbstvertrauen", "Aktivierung der Selbstheilung"],
-      it: ["Liberazione di credenze limitanti", "Riprogrammazione mentale positiva", "Maggiore fiducia in sé", "Attivazione dell'auto-guarigione"],
-      nl: ["Loslaten van beperkende overtuigingen", "Positieve mentale herprogrammering", "Sterker zelfvertrouwen", "Activering van zelfgenezing"],
-      pl: ["Uwolnienie ograniczających przekonań", "Pozytywne przeprogramowanie umysłu", "Większa pewność siebie", "Aktywacja samouzdrowienia"],
-      pt: ["Libertação de crenças limitantes", "Reprogramação mental positiva", "Maior confiança em si", "Ativação da autocura"],
+      es: [
+        "Liberación de creencias limitantes",
+        "Reprogramación mental positiva",
+        "Mayor confianza en sí mismo",
+        "Activación de la autosanación",
+      ],
+      de: [
+        "Lösung einschränkender Überzeugungen",
+        "Positive geistige Neuprogrammierung",
+        "Stärkeres Selbstvertrauen",
+        "Aktivierung der Selbstheilung",
+      ],
+      it: [
+        "Liberazione di credenze limitanti",
+        "Riprogrammazione mentale positiva",
+        "Maggiore fiducia in sé",
+        "Attivazione dell'auto-guarigione",
+      ],
+      nl: [
+        "Loslaten van beperkende overtuigingen",
+        "Positieve mentale herprogrammering",
+        "Sterker zelfvertrouwen",
+        "Activering van zelfgenezing",
+      ],
+      pl: [
+        "Uwolnienie ograniczających przekonań",
+        "Pozytywne przeprogramowanie umysłu",
+        "Większa pewność siebie",
+        "Aktywacja samouzdrowienia",
+      ],
+      pt: [
+        "Libertação de crenças limitantes",
+        "Reprogramação mental positiva",
+        "Maior confiança em si",
+        "Ativação da autocura",
+      ],
     },
     forWhom: {
       fr: "Pour celles et ceux qui souhaitent transformer leur dialogue intérieur et avancer avec confiance.",
@@ -236,13 +261,48 @@ export const THERAPIES: Therapy[] = [
         "Soutien du sommeil et de la digestion",
         "Équilibre émotionnel et hormonal",
       ],
-      en: ["Strengthened immunity", "Natural relief of tension", "Better sleep and digestion", "Emotional and hormonal balance"],
-      es: ["Refuerzo del sistema inmunitario", "Alivio natural de las tensiones", "Mejor sueño y digestión", "Equilibrio emocional y hormonal"],
-      de: ["Gestärktes Immunsystem", "Natürliche Linderung von Spannungen", "Besserer Schlaf und Verdauung", "Emotionales und hormonelles Gleichgewicht"],
-      it: ["Sistema immunitario rafforzato", "Sollievo naturale dalle tensioni", "Sonno e digestione migliori", "Equilibrio emotivo e ormonale"],
-      nl: ["Versterkte immuniteit", "Natuurlijke verlichting van spanning", "Betere slaap en spijsvertering", "Emotioneel en hormonaal evenwicht"],
-      pl: ["Wzmocniona odporność", "Naturalna ulga w napięciach", "Lepszy sen i trawienie", "Równowaga emocjonalna i hormonalna"],
-      pt: ["Reforço da imunidade", "Alívio natural das tensões", "Melhor sono e digestão", "Equilíbrio emocional e hormonal"],
+      en: [
+        "Strengthened immunity",
+        "Natural relief of tension",
+        "Better sleep and digestion",
+        "Emotional and hormonal balance",
+      ],
+      es: [
+        "Refuerzo del sistema inmunitario",
+        "Alivio natural de las tensiones",
+        "Mejor sueño y digestión",
+        "Equilibrio emocional y hormonal",
+      ],
+      de: [
+        "Gestärktes Immunsystem",
+        "Natürliche Linderung von Spannungen",
+        "Besserer Schlaf und Verdauung",
+        "Emotionales und hormonelles Gleichgewicht",
+      ],
+      it: [
+        "Sistema immunitario rafforzato",
+        "Sollievo naturale dalle tensioni",
+        "Sonno e digestione migliori",
+        "Equilibrio emotivo e ormonale",
+      ],
+      nl: [
+        "Versterkte immuniteit",
+        "Natuurlijke verlichting van spanning",
+        "Betere slaap en spijsvertering",
+        "Emotioneel en hormonaal evenwicht",
+      ],
+      pl: [
+        "Wzmocniona odporność",
+        "Naturalna ulga w napięciach",
+        "Lepszy sen i trawienie",
+        "Równowaga emocjonalna i hormonalna",
+      ],
+      pt: [
+        "Reforço da imunidade",
+        "Alívio natural das tensões",
+        "Melhor sono e digestão",
+        "Equilíbrio emocional e hormonal",
+      ],
     },
     forWhom: {
       fr: "Pour qui cherche un accompagnement naturel et complémentaire à la médecine conventionnelle.",
@@ -296,13 +356,48 @@ export const THERAPIES: Therapy[] = [
         "Clarté sur votre chemin de vie",
         "Renforcement de votre ancrage",
       ],
-      en: ["Body-mind-soul realignment", "Deep, lasting peace", "Clarity on your life path", "Stronger grounding"],
-      es: ["Realineación cuerpo-mente-alma", "Paz profunda y duradera", "Claridad en su camino de vida", "Mayor enraizamiento"],
-      de: ["Körper-Geist-Seele-Ausrichtung", "Tiefer, anhaltender Frieden", "Klarheit über Ihren Lebensweg", "Stärkere Erdung"],
-      it: ["Riallineamento corpo-mente-anima", "Pace profonda e duratura", "Chiarezza sul cammino di vita", "Radicamento più forte"],
-      nl: ["Uitlijning van lichaam, geest en ziel", "Diepe, blijvende rust", "Helderheid over uw levenspad", "Sterkere aarding"],
-      pl: ["Wyrównanie ciała, umysłu i duszy", "Głęboki, trwały spokój", "Jasność co do drogi życia", "Silniejsze zakorzenienie"],
-      pt: ["Realinhamento corpo-mente-alma", "Paz profunda e duradoura", "Clareza sobre o seu caminho de vida", "Ancoragem reforçada"],
+      en: [
+        "Body-mind-soul realignment",
+        "Deep, lasting peace",
+        "Clarity on your life path",
+        "Stronger grounding",
+      ],
+      es: [
+        "Realineación cuerpo-mente-alma",
+        "Paz profunda y duradera",
+        "Claridad en su camino de vida",
+        "Mayor enraizamiento",
+      ],
+      de: [
+        "Körper-Geist-Seele-Ausrichtung",
+        "Tiefer, anhaltender Frieden",
+        "Klarheit über Ihren Lebensweg",
+        "Stärkere Erdung",
+      ],
+      it: [
+        "Riallineamento corpo-mente-anima",
+        "Pace profonda e duratura",
+        "Chiarezza sul cammino di vita",
+        "Radicamento più forte",
+      ],
+      nl: [
+        "Uitlijning van lichaam, geest en ziel",
+        "Diepe, blijvende rust",
+        "Helderheid over uw levenspad",
+        "Sterkere aarding",
+      ],
+      pl: [
+        "Wyrównanie ciała, umysłu i duszy",
+        "Głęboki, trwały spokój",
+        "Jasność co do drogi życia",
+        "Silniejsze zakorzenienie",
+      ],
+      pt: [
+        "Realinhamento corpo-mente-alma",
+        "Paz profunda e duradoura",
+        "Clareza sobre o seu caminho de vida",
+        "Ancoragem reforçada",
+      ],
     },
     forWhom: {
       fr: "Pour les âmes en quête de sens, en transition ou souhaitant un travail en profondeur.",
@@ -356,13 +451,48 @@ export const THERAPIES: Therapy[] = [
         "Sentiment d'unité et de paix",
         "Reconnexion à votre mission de vie",
       ],
-      en: ["Gradual heart opening", "Intuition development", "Sense of unity and peace", "Reconnection to your life mission"],
-      es: ["Apertura progresiva del corazón", "Desarrollo de la intuición", "Sentido de unidad y paz", "Reconexión con su misión de vida"],
-      de: ["Schrittweise Herzöffnung", "Entwicklung der Intuition", "Gefühl von Einheit und Frieden", "Wiederverbindung mit der Lebensaufgabe"],
-      it: ["Apertura graduale del cuore", "Sviluppo dell'intuito", "Senso di unità e pace", "Riconnessione alla missione di vita"],
-      nl: ["Geleidelijke hartopening", "Ontwikkeling van intuïtie", "Gevoel van eenheid en vrede", "Verbinding met uw levensmissie"],
-      pl: ["Stopniowe otwarcie serca", "Rozwój intuicji", "Poczucie jedności i spokoju", "Połączenie z misją życia"],
-      pt: ["Abertura progressiva do coração", "Desenvolvimento da intuição", "Sentido de unidade e paz", "Reconexão com a sua missão de vida"],
+      en: [
+        "Gradual heart opening",
+        "Intuition development",
+        "Sense of unity and peace",
+        "Reconnection to your life mission",
+      ],
+      es: [
+        "Apertura progresiva del corazón",
+        "Desarrollo de la intuición",
+        "Sentido de unidad y paz",
+        "Reconexión con su misión de vida",
+      ],
+      de: [
+        "Schrittweise Herzöffnung",
+        "Entwicklung der Intuition",
+        "Gefühl von Einheit und Frieden",
+        "Wiederverbindung mit der Lebensaufgabe",
+      ],
+      it: [
+        "Apertura graduale del cuore",
+        "Sviluppo dell'intuito",
+        "Senso di unità e pace",
+        "Riconnessione alla missione di vita",
+      ],
+      nl: [
+        "Geleidelijke hartopening",
+        "Ontwikkeling van intuïtie",
+        "Gevoel van eenheid en vrede",
+        "Verbinding met uw levensmissie",
+      ],
+      pl: [
+        "Stopniowe otwarcie serca",
+        "Rozwój intuicji",
+        "Poczucie jedności i spokoju",
+        "Połączenie z misją życia",
+      ],
+      pt: [
+        "Abertura progressiva do coração",
+        "Desenvolvimento da intuição",
+        "Sentido de unidade e paz",
+        "Reconexão com a sua missão de vida",
+      ],
     },
     forWhom: {
       fr: "Pour qui souhaite ouvrir son cœur, développer son intuition et avancer sur un chemin de conscience.",

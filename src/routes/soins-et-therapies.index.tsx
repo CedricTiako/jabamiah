@@ -73,17 +73,23 @@ function TherapiesIndex() {
           <LeafDivider className="mt-5" />
 
           <div className="mt-14 grid gap-10 md:grid-cols-3">
-            {(t("therapiesPage.steps", { returnObjects: true }) as Array<{ title: string; text: string }>).map(
-              (step, idx) => (
-                <div key={idx} className="relative rounded-2xl bg-cream p-8 text-left ring-1 ring-gold/20">
-                  <span className="absolute -top-5 left-8 flex size-12 items-center justify-center rounded-full bg-forest font-serif text-xl text-gold ring-1 ring-gold/40">
-                    {idx + 1}
-                  </span>
-                  <h3 className="mt-4 font-serif text-2xl text-forest">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-earth/75">{step.text}</p>
-                </div>
-              ),
-            )}
+            {(
+              t("therapiesPage.steps", { returnObjects: true }) as Array<{
+                title: string;
+                text: string;
+              }>
+            ).map((step, idx) => (
+              <div
+                key={idx}
+                className="relative rounded-2xl bg-cream p-8 text-left ring-1 ring-gold/20"
+              >
+                <span className="absolute -top-5 left-8 flex size-12 items-center justify-center rounded-full bg-forest font-serif text-xl text-gold ring-1 ring-gold/40">
+                  {idx + 1}
+                </span>
+                <h3 className="mt-4 font-serif text-2xl text-forest">{step.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-earth/75">{step.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -14,7 +14,10 @@ function getPublicClient() {
 }
 
 async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+  const { data, error } = await ctx.supabase.rpc("has_role", {
+    _user_id: ctx.userId,
+    _role: "admin",
+  });
   if (error) throw error;
   if (!data) throw new Error("Forbidden: admin role required");
 }
@@ -25,7 +28,9 @@ export const adminListConsultations = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data, error } = await context.supabase
       .from("consultations")
-      .select("id, client_id, consultation_date, duration_minutes, mood, objectives, techniques, report, advice, clients(full_name), appointments(session_type)")
+      .select(
+        "id, client_id, consultation_date, duration_minutes, mood, objectives, techniques, report, advice, clients(full_name), appointments(session_type)",
+      )
       .order("consultation_date", { ascending: false });
     if (error) throw error;
     return data ?? [];
@@ -38,7 +43,9 @@ export const adminListConsultationsByClient = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data: rows, error } = await context.supabase
       .from("consultations")
-      .select("id, consultation_date, duration_minutes, mood, objectives, techniques, report, advice")
+      .select(
+        "id, consultation_date, duration_minutes, mood, objectives, techniques, report, advice",
+      )
       .eq("client_id", data.client_id)
       .order("consultation_date", { ascending: false });
     if (error) throw error;
@@ -74,7 +81,10 @@ export const adminUpsertConsultation = createServerFn({ method: "POST" })
     };
 
     if (data.id) {
-      const { error } = await context.supabase.from("consultations").update(payload).eq("id", data.id);
+      const { error } = await context.supabase
+        .from("consultations")
+        .update(payload)
+        .eq("id", data.id);
       if (error) throw error;
       return { id: data.id };
     }

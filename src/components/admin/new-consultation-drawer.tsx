@@ -110,7 +110,9 @@ export function NewConsultationDrawer({
       }),
     onSuccess: ({ id }) => {
       queryClient.invalidateQueries({ queryKey: ["admin-consultations"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-consultations-by-client", form.client_id] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-consultations-by-client", form.client_id],
+      });
       setForm(EMPTY);
       setOpen(false);
       onCreated?.(id);
@@ -151,7 +153,9 @@ export function NewConsultationDrawer({
               >
                 <option value="">Sélectionner un client…</option>
                 {(clients ?? []).map((c) => (
-                  <option key={c.id} value={c.id}>{c.full_name}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.full_name}
+                  </option>
                 ))}
               </select>
             </label>
@@ -173,24 +177,32 @@ export function NewConsultationDrawer({
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {DURATIONS.map((d) => (
-                  <option key={d} value={d}>{d} min</option>
+                  <option key={d} value={d}>
+                    {d} min
+                  </option>
                 ))}
               </select>
             </label>
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Ressenti global</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Ressenti global
+              </span>
               <select
                 value={form.mood}
                 onChange={(e) => field("mood", Number(e.target.value))}
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                  <option key={n} value={n}>{n} / 10</option>
+                  <option key={n} value={n}>
+                    {n} / 10
+                  </option>
                 ))}
               </select>
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Objectifs travaillés</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Objectifs travaillés
+              </span>
               <textarea
                 rows={2}
                 value={form.objectives}
@@ -199,7 +211,9 @@ export function NewConsultationDrawer({
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Techniques utilisées</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Techniques utilisées
+              </span>
               <input
                 value={form.techniques}
                 onChange={(e) => field("techniques", e.target.value)}
@@ -208,7 +222,9 @@ export function NewConsultationDrawer({
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Compte-rendu *</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Compte-rendu *
+              </span>
               <textarea
                 rows={5}
                 value={form.report}
@@ -217,7 +233,9 @@ export function NewConsultationDrawer({
               />
             </label>
             <label className="block sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.15em] text-forest">Recommandations</span>
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">
+                Recommandations
+              </span>
               <textarea
                 rows={3}
                 value={form.advice}
@@ -234,7 +252,11 @@ export function NewConsultationDrawer({
               disabled={saveMutation.isPending || !canSubmit}
               className="rounded-md bg-forest px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-cream hover:bg-forest-soft disabled:opacity-50"
             >
-              {saveMutation.isPending ? "Enregistrement…" : consultation ? "Enregistrer" : "Créer la consultation"}
+              {saveMutation.isPending
+                ? "Enregistrement…"
+                : consultation
+                  ? "Enregistrer"
+                  : "Créer la consultation"}
             </button>
             <button
               onClick={() => setOpen(false)}
@@ -242,7 +264,9 @@ export function NewConsultationDrawer({
             >
               Annuler
             </button>
-            {saveMutation.isError && <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>}
+            {saveMutation.isError && (
+              <span className="text-sm text-red-700">Erreur lors de l'enregistrement.</span>
+            )}
           </div>
         </div>
       </DrawerContent>
