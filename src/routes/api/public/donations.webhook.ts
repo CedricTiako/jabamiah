@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import type { Database } from "../../../integrations/supabase/types";
 
@@ -30,6 +30,103 @@ function amountFromSession(session: Stripe.Checkout.Session): number | null {
   return Number.isFinite(metadataAmount) && metadataAmount > 0 ? metadataAmount : null;
 }
 
+function paymentIntentId(value: Stripe.Checkout.Session["payment_intent"]): string | null {
+  if (!value) return null;
+  return typeof value === "string" ? value : value.id;
+}
+
+async function markSucceeded(supabase: SupabaseClient<Database>, session: Stripe.Checkout.Session) {
+  const amount = amountFromSession(session);
+  if (!amount || amount <= 0) {
+    console.error("[donations/webhook] invalid amount", { sessionId: session.id });
+    return;
+  }
+
+  const donorName = session.customer_details?.name ?? null;
+  const intentId = paymentIntentId(session.payment_intent);
+  const paymentDate = new Date(
+    (session.created ?? Math.floor(Date.now() / 1000)) * 1000,
+  ).toISOString();
+  const note = intentId ? `Stripe payment_intent: ${intentId}` : "Stripe checkout";
+
+  const { data: existing, error: existingError } = await supabase
+    .from("payments")
+    .select("id, status")
+    .eq("stripe_session_id", session.id)
+    .maybeSingle();
+
+  if (existingError) {
+    console.error("[donations/webhook] failed to check existing payment", existingError);
+    return;
+  }
+
+  if (existing) {
+    if (existing.status === "succeeded") return; // already processed
+    const { error } = await supabase
+      .from("payments")
+      .update({
+        status: "succeeded",
+        amount,
+        donor_name: donorName,
+        stripe_payment_intent_id: intentId,
+        note,
+      })
+      .eq("id", existing.id);
+    if (error) console.error("[donations/webhook] failed to update payment", error);
+    return;
+  }
+
+  // No pending row (e.g. it was created before this tracking was added, or the
+  // insert at checkout time failed) — insert the completed payment directly.
+  const { error } = await supabase.from("payments").insert({
+    payment_date: paymentDate,
+    amount,
+    donor_name: donorName,
+    method: "stripe_card",
+    source: "stripe",
+    status: "succeeded",
+    reference: session.id,
+    stripe_session_id: session.id,
+    stripe_payment_intent_id: intentId,
+    note,
+  });
+  if (error) console.error("[donations/webhook] failed to insert payment", error);
+}
+
+async function markSessionFailed(supabase: SupabaseClient<Database>, sessionId: string) {
+  const { error } = await supabase
+    .from("payments")
+    .update({ status: "failed" })
+    .eq("stripe_session_id", sessionId)
+    .eq("status", "pending");
+  if (error) console.error("[donations/webhook] failed to mark payment failed", error);
+}
+
+async function markRefunded(supabase: SupabaseClient<Database>, charge: Stripe.Charge) {
+  const intentId = paymentIntentId(
+    charge.payment_intent as Stripe.Checkout.Session["payment_intent"],
+  );
+  if (!intentId) return;
+
+  // `charge.refunded` also fires for partial refunds; only Stripe's own `refunded`
+  // flag tells us the charge is now fully refunded. A partial refund is logged but
+  // doesn't flip the payment to "refunded" (the donation amount itself didn't fully bounce).
+  if (!charge.refunded) {
+    console.warn("[donations/webhook] partial refund, status left unchanged", {
+      paymentIntentId: intentId,
+      amountRefunded: charge.amount_refunded,
+      amount: charge.amount,
+    });
+    return;
+  }
+
+  const { error } = await supabase
+    .from("payments")
+    .update({ status: "refunded" })
+    .eq("stripe_payment_intent_id", intentId);
+  if (error) console.error("[donations/webhook] failed to mark payment refunded", error);
+}
+
 export const Route = createFileRoute("/api/public/donations/webhook")({
   server: {
     handlers: {
@@ -55,62 +152,30 @@ export const Route = createFileRoute("/api/public/donations/webhook")({
           return new Response("Invalid signature", { status: 400 });
         }
 
-        if (
-          event.type === "checkout.session.completed" ||
-          event.type === "checkout.session.async_payment_succeeded"
-        ) {
-          const session = event.data.object as Stripe.Checkout.Session;
+        const supabase = getSupabaseAdmin();
 
-          if (session.payment_status !== "paid") {
-            return new Response("Ignored: session not paid", { status: 200 });
+        switch (event.type) {
+          case "checkout.session.completed":
+          case "checkout.session.async_payment_succeeded": {
+            const session = event.data.object as Stripe.Checkout.Session;
+            if (session.payment_status === "paid") {
+              await markSucceeded(supabase, session);
+            }
+            break;
           }
-
-          const reference = session.id;
-          const amount = amountFromSession(session);
-          if (!amount || amount <= 0) {
-            console.error("[donations/webhook] invalid amount", { sessionId: session.id });
-            return new Response("Invalid amount", { status: 400 });
+          case "checkout.session.expired":
+          case "checkout.session.async_payment_failed": {
+            const session = event.data.object as Stripe.Checkout.Session;
+            await markSessionFailed(supabase, session.id);
+            break;
           }
-
-          const supabase = getSupabaseAdmin();
-
-          const { data: existing, error: existingError } = await supabase
-            .from("payments")
-            .select("id")
-            .eq("reference", reference)
-            .maybeSingle();
-
-          if (existingError) {
-            console.error("[donations/webhook] failed to check existing payment", existingError);
-            return new Response("Database read error", { status: 500 });
+          case "charge.refunded": {
+            const charge = event.data.object as Stripe.Charge;
+            await markRefunded(supabase, charge);
+            break;
           }
-
-          if (existing?.id) {
-            return new Response("Already processed", { status: 200 });
-          }
-
-          const donorName = session.customer_details?.name ?? null;
-          const paymentDate = new Date(
-            (session.created ?? Math.floor(Date.now() / 1000)) * 1000,
-          ).toISOString();
-
-          const { error: insertError } = await supabase.from("payments").insert({
-            payment_date: paymentDate,
-            amount,
-            donor_name: donorName,
-            method: "stripe_card",
-            reference,
-            note: session.payment_intent
-              ? `Stripe payment_intent: ${session.payment_intent}`
-              : "Stripe checkout",
-            // Keep compatibility with existing DB constraint (manual|paypal).
-            source: "paypal",
-          });
-
-          if (insertError) {
-            console.error("[donations/webhook] failed to insert payment", insertError);
-            return new Response("Database write error", { status: 500 });
-          }
+          default:
+            break;
         }
 
         return new Response("ok", { status: 200 });

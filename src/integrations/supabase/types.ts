@@ -391,6 +391,9 @@ export type Database = {
           payment_date: string;
           reference: string | null;
           source: string;
+          status: string;
+          stripe_payment_intent_id: string | null;
+          stripe_session_id: string | null;
           updated_at: string;
         };
         Insert: {
@@ -405,6 +408,9 @@ export type Database = {
           payment_date?: string;
           reference?: string | null;
           source?: string;
+          status?: string;
+          stripe_payment_intent_id?: string | null;
+          stripe_session_id?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -419,6 +425,9 @@ export type Database = {
           payment_date?: string;
           reference?: string | null;
           source?: string;
+          status?: string;
+          stripe_payment_intent_id?: string | null;
+          stripe_session_id?: string | null;
           updated_at?: string;
         };
         Relationships: [

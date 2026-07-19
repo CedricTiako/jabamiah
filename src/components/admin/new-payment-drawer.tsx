@@ -15,6 +15,13 @@ const METHODS = [
   { value: "autre", label: "Autre" },
 ];
 
+const STATUSES = [
+  { value: "succeeded", label: "Reçu" },
+  { value: "pending", label: "En attente" },
+  { value: "failed", label: "Échoué" },
+  { value: "refunded", label: "Remboursé" },
+];
+
 export type PaymentRecord = {
   id: string;
   payment_date: string;
@@ -23,6 +30,7 @@ export type PaymentRecord = {
   method: string | null;
   reference: string | null;
   note: string | null;
+  status?: string;
 };
 
 function emptyForm(defaultClientId?: string) {
@@ -34,6 +42,7 @@ function emptyForm(defaultClientId?: string) {
     reference: "",
     note: "",
     client_id: defaultClientId ?? "",
+    status: "succeeded",
   };
 }
 
@@ -69,6 +78,7 @@ export function NewPaymentDrawer({
         reference: payment.reference ?? "",
         note: payment.note ?? "",
         client_id: defaultClientId ?? "",
+        status: payment.status ?? "succeeded",
       });
     } else {
       setForm(emptyForm(defaultClientId));
@@ -87,6 +97,7 @@ export function NewPaymentDrawer({
         reference: form.reference || null,
         note: form.note || null,
         client_id: form.client_id || null,
+        status: form.status,
       };
       return payment ? update({ data: { ...payload, id: payment.id } }) : create({ data: payload });
     },
@@ -168,6 +179,20 @@ export function NewPaymentDrawer({
                 placeholder="TXN-…, VIR-…"
                 className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               />
+            </label>
+            <label className="block">
+              <span className="text-xs uppercase tracking-[0.15em] text-forest">Statut</span>
+              <select
+                value={form.status}
+                onChange={(e) => field("status", e.target.value)}
+                className="mt-1 w-full rounded-md border border-gold/30 bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              >
+                {STATUSES.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
             </label>
             <label className="block sm:col-span-2">
               <span className="text-xs uppercase tracking-[0.15em] text-forest">Note</span>

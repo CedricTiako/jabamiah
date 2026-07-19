@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import Stripe from "stripe";
+import type { Database } from "../../../integrations/supabase/types";
 
 const CheckoutSchema = z.object({
   amount: z.coerce.number().positive().max(5000),
@@ -9,6 +11,15 @@ const CheckoutSchema = z.object({
 function getOrigin(request: Request): string {
   const requestUrl = new URL(request.url);
   return `${requestUrl.protocol}//${requestUrl.host}`;
+}
+
+function getSupabaseAdmin() {
+  const url = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceRoleKey) return null;
+  return createClient<Database>(url, serviceRoleKey, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
 }
 
 export const Route = createFileRoute("/api/public/donations/checkout")({
@@ -76,6 +87,25 @@ export const Route = createFileRoute("/api/public/donations/checkout")({
             success_url: `${siteUrl}/don?payment=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${siteUrl}/don?payment=cancel`,
           });
+
+          const supabase = getSupabaseAdmin();
+          if (supabase) {
+            const { error: insertError } = await supabase.from("payments").insert({
+              payment_date: new Date().toISOString(),
+              amount: parsed.data.amount,
+              method: "stripe_card",
+              source: "stripe",
+              status: "pending",
+              reference: session.id,
+              stripe_session_id: session.id,
+              note: "Stripe checkout créé — en attente de paiement",
+            });
+            // Don't block the donor's checkout on a tracking-row failure; the webhook
+            // will still insert the payment on success even if this pending row is missing.
+            if (insertError) {
+              console.error("[donations/checkout] failed to record pending payment", insertError);
+            }
+          }
 
           return new Response(JSON.stringify({ url: session.url }), {
             status: 200,

@@ -22,13 +22,16 @@ async function assertAdmin(ctx: { supabase: ReturnType<typeof getPublicClient>; 
   if (!data) throw new Error("Forbidden: admin role required");
 }
 
+const PAYMENT_COLUMNS =
+  "id, payment_date, amount, donor_name, method, reference, note, source, status, stripe_session_id, stripe_payment_intent_id, client_id";
+
 export const adminListPayments = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { data, error } = await context.supabase
       .from("payments")
-      .select("id, payment_date, amount, donor_name, method, reference, note, source, client_id")
+      .select(PAYMENT_COLUMNS)
       .order("payment_date", { ascending: false });
     if (error) throw error;
     return data ?? [];
@@ -41,12 +44,14 @@ export const adminListPaymentsByClient = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data: rows, error } = await context.supabase
       .from("payments")
-      .select("id, payment_date, amount, donor_name, method, reference, note, source")
+      .select(PAYMENT_COLUMNS)
       .eq("client_id", data.client_id)
       .order("payment_date", { ascending: false });
     if (error) throw error;
     return rows ?? [];
   });
+
+const PAYMENT_STATUSES = ["pending", "succeeded", "failed", "refunded"] as const;
 
 const CreateSchema = z.object({
   payment_date: z.string().min(1),
@@ -56,6 +61,7 @@ const CreateSchema = z.object({
   reference: z.string().max(120).nullable().optional(),
   note: z.string().max(1000).nullable().optional(),
   client_id: z.string().uuid().nullable().optional(),
+  status: z.enum(PAYMENT_STATUSES).optional(),
 });
 
 export const adminCreatePayment = createServerFn({ method: "POST" })
@@ -73,6 +79,7 @@ export const adminCreatePayment = createServerFn({ method: "POST" })
         reference: data.reference || null,
         note: data.note || null,
         client_id: data.client_id || null,
+        status: data.status ?? "succeeded",
         source: "manual",
         created_by: context.userId,
       })
@@ -99,6 +106,7 @@ export const adminUpdatePayment = createServerFn({ method: "POST" })
         reference: data.reference || null,
         note: data.note || null,
         client_id: data.client_id || null,
+        status: data.status ?? "succeeded",
       })
       .eq("id", data.id);
     if (error) throw error;

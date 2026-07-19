@@ -83,13 +83,14 @@ function AdminDashboard() {
 
   const now = new Date();
   const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const monthTotal = (payments ?? [])
+  const succeededPayments = (payments ?? []).filter((p) => p.status === "succeeded");
+  const monthTotal = succeededPayments
     .filter((p) => {
       const d = new Date(p.payment_date);
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     })
     .reduce((s, p) => s + p.amount, 0);
-  const lastMonthTotal = (payments ?? [])
+  const lastMonthTotal = succeededPayments
     .filter((p) => {
       const d = new Date(p.payment_date);
       return d.getFullYear() === lastMonth.getFullYear() && d.getMonth() === lastMonth.getMonth();
@@ -137,7 +138,7 @@ function AdminDashboard() {
       }),
       date: new Date(c.consultation_date),
     })),
-    ...(payments ?? []).slice(0, 3).map((p) => ({
+    ...succeededPayments.slice(0, 3).map((p) => ({
       text: `Don reçu — ${p.amount} €`,
       when: new Date(p.payment_date).toLocaleString("fr-FR", { day: "numeric", month: "short" }),
       date: new Date(p.payment_date),
