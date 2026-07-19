@@ -19,6 +19,7 @@ import {
   FileText,
   Settings,
   HelpCircle,
+  MessageCircleQuestion,
   Bell,
   LogOut,
   ChevronLeft,
@@ -65,6 +66,7 @@ const groups: Group[] = [
     items: [
       { to: "/admin/contenu", label: "Contenu (Blog)", icon: FileText },
       { to: "/admin/avis", label: "Avis clients", icon: Star },
+      { to: "/admin/faq", label: "FAQ", icon: MessageCircleQuestion },
       { to: "/admin/parametres", label: "Paramètres", icon: Settings },
     ],
   },

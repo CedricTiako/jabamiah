@@ -28,17 +28,23 @@ import { buildSeoHead, SITE_URL } from "../lib/seo";
 import { CALENDLY_URL, EMAIL, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from "../lib/config";
 import { getServerLocale } from "../lib/locale-server";
 import { tServer } from "../lib/t-server";
+import { listPublishedFaqs } from "../lib/faqs.functions";
 
 export const Route = createFileRoute("/")({
-  loader: async () => ({ locale: await getServerLocale() }),
+  loader: async () => ({
+    locale: await getServerLocale(),
+    faqs: await listPublishedFaqs(),
+  }),
   head: ({ loaderData }) => {
     const loc = loaderData?.locale ?? "fr";
+    const faqs = loaderData?.faqs ?? [];
     const head = buildSeoHead({
       path: "/",
       title: tServer(loc, "seo.home.title"),
       description: tServer(loc, "seo.home.description"),
       image: `${SITE_URL}${heroImage}`,
     });
+    if (faqs.length === 0) return head;
     return {
       ...head,
       scripts: [
@@ -47,40 +53,11 @@ export const Route = createFileRoute("/")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: [
-              {
-                "@type": "Question",
-                name: "Les consultations sont-elles vraiment gratuites ?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "Oui, absolument. Jabamiah n'a jamais voulu faire payer ses soins. L'aide doit rester accessible à toutes et tous, sans condition.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "Comment prendre rendez-vous avec Jabamiah ?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "Vous pouvez réserver directement en ligne via Calendly, ou contacter Jabamiah par WhatsApp, téléphone ou email.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "Les séances avec Jabamiah sont-elles disponibles à distance ?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "Oui. Jabamiah propose des consultations en présentiel à Forges-les-Eaux (Normandie) et entièrement à distance, par téléphone ou visioconférence.",
-                },
-              },
-              {
-                "@type": "Question",
-                name: "Combien de temps dure une séance avec Jabamiah ?",
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: "Une séance dure en général entre 45 minutes et 1 heure, selon votre demande et vos besoins.",
-                },
-              },
-            ],
+            mainEntity: faqs.map((f) => ({
+              "@type": "Question",
+              name: f.question,
+              acceptedAnswer: { "@type": "Answer", text: f.answer },
+            })),
           }),
         },
       ],
@@ -363,7 +340,8 @@ function GagnoteSection() {
 
 function FAQSection() {
   const { t } = useTranslation();
-  const faq = t("home.faq", { returnObjects: true }) as Array<{ question: string; answer: string }>;
+  const { faqs } = Route.useLoaderData();
+  if (faqs.length === 0) return null;
   return (
     <section className="bg-cream-warm py-20">
       <div className="mx-auto max-w-3xl px-6">
@@ -374,10 +352,10 @@ function FAQSection() {
         </div>
 
         <Accordion type="single" collapsible className="mt-12 space-y-3">
-          {faq.map((item, idx) => (
+          {faqs.map((item) => (
             <AccordionItem
-              key={item.question}
-              value={`faq-${idx}`}
+              key={item.id}
+              value={item.id}
               className="rounded-lg border-none bg-card px-6 ring-1 ring-gold/20"
             >
               <AccordionTrigger className="font-serif text-base text-forest hover:no-underline">

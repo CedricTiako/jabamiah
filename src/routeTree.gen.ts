@@ -34,6 +34,7 @@ import { Route as AdminProtocolesRouteImport } from './routes/admin.protocoles'
 import { Route as AdminParametresRouteImport } from './routes/admin.parametres'
 import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
+import { Route as AdminFaqRouteImport } from './routes/admin.faq'
 import { Route as AdminDocumentsRouteImport } from './routes/admin.documents'
 import { Route as AdminContenuRouteImport } from './routes/admin.contenu'
 import { Route as AdminConsultationsRouteImport } from './routes/admin.consultations'
@@ -174,6 +175,11 @@ const AdminMessagesRoute = AdminMessagesRouteImport.update({
   path: '/messages',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFaqRoute = AdminFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contenu': typeof AdminContenuRoute
   '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/faq': typeof AdminFaqRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/admin/parametres': typeof AdminParametresRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contenu': typeof AdminContenuRoute
   '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/faq': typeof AdminFaqRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/admin/parametres': typeof AdminParametresRoute
@@ -341,6 +349,7 @@ export interface FileRoutesById {
   '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contenu': typeof AdminContenuRoute
   '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/faq': typeof AdminFaqRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/admin/parametres': typeof AdminParametresRoute
@@ -383,6 +392,7 @@ export interface FileRouteTypes {
     | '/admin/consultations'
     | '/admin/contenu'
     | '/admin/documents'
+    | '/admin/faq'
     | '/admin/messages'
     | '/admin/paiements'
     | '/admin/parametres'
@@ -420,6 +430,7 @@ export interface FileRouteTypes {
     | '/admin/consultations'
     | '/admin/contenu'
     | '/admin/documents'
+    | '/admin/faq'
     | '/admin/messages'
     | '/admin/paiements'
     | '/admin/parametres'
@@ -460,6 +471,7 @@ export interface FileRouteTypes {
     | '/admin/consultations'
     | '/admin/contenu'
     | '/admin/documents'
+    | '/admin/faq'
     | '/admin/messages'
     | '/admin/paiements'
     | '/admin/parametres'
@@ -676,6 +688,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMessagesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/faq': {
+      id: '/admin/faq'
+      path: '/faq'
+      fullPath: '/admin/faq'
+      preLoaderRoute: typeof AdminFaqRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/documents': {
       id: '/admin/documents'
       path: '/documents'
@@ -793,6 +812,7 @@ interface AdminRouteChildren {
   AdminConsultationsRoute: typeof AdminConsultationsRoute
   AdminContenuRoute: typeof AdminContenuRoute
   AdminDocumentsRoute: typeof AdminDocumentsRoute
+  AdminFaqRoute: typeof AdminFaqRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminPaiementsRoute: typeof AdminPaiementsRoute
   AdminParametresRoute: typeof AdminParametresRoute
@@ -812,6 +832,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminConsultationsRoute: AdminConsultationsRoute,
   AdminContenuRoute: AdminContenuRoute,
   AdminDocumentsRoute: AdminDocumentsRoute,
+  AdminFaqRoute: AdminFaqRoute,
   AdminMessagesRoute: AdminMessagesRoute,
   AdminPaiementsRoute: AdminPaiementsRoute,
   AdminParametresRoute: AdminParametresRoute,
